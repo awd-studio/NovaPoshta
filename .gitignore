@@ -1,0 +1,5 @@
+# Ignore vendors
+/vendor
+
+# Ignore composer.lock file
+/composer.lock
