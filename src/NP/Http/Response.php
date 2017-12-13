@@ -30,7 +30,7 @@ class Response
     /**
      * Response constructor.
      *
-     * @param string $response - Server response.
+     * @param string $response - Server JSON response.
      */
     public function __construct($response)
     {

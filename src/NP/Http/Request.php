@@ -11,7 +11,6 @@
 
 namespace NP\Http;
 
-use NP\Model\Model;
 use NP\NP;
 
 
@@ -21,11 +20,6 @@ use NP\NP;
  */
 class Request
 {
-
-    /**
-     * @var object Current data to send.
-     */
-    private $body;
 
     /**
      * @var string - API URI.
@@ -44,13 +38,8 @@ class Request
      */
     public function __construct(NP $np, $modelName, $calledMethod)
     {
-        $data['apiKey'] = $np::getKey();
-        $data['modelName'] = $modelName;
-        $data['calledMethod'] = $calledMethod;
-        $data['methodProperties'] = (object) $np->getModel()->getMethodProperties();
-
         $this->uri = $np::NP_API_HOST;
-        $this->body = $this->buildData($data);
+        $this->body = $this->buildData($np, $modelName, $calledMethod);
 
         return $this;
     }
@@ -59,11 +48,19 @@ class Request
     /**
      * Data builder.
      *
-     * @param mixed $data
+     * @param NP     $np NovaPoshta instance.
+     * @param string $modelName
+     * @param string $calledMethod
+     *
      * @return object
      */
-    private function buildData($data)
+    private function buildData($np, $modelName, $calledMethod)
     {
+        $data['apiKey'] = $np::getKey();
+        $data['modelName'] = $modelName;
+        $data['calledMethod'] = $calledMethod;
+        $data['methodProperties'] = (object) $np->getModel()->getMethodProperties();
+
         return (object) $data;
     }
 
@@ -99,5 +96,17 @@ class Request
     public function getUri()
     {
         return $this->uri;
+    }
+
+
+    /**
+     * Execute HTTP request.
+     * @param DriverInterface $driver Current HTTP driver.
+     *
+     * @return Response
+     */
+    public function execute(DriverInterface $driver)
+    {
+        return $driver->send($this);
     }
 }

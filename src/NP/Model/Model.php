@@ -32,7 +32,7 @@ class Model
      *
      * @param array $data Data for send.
      */
-    final public function __construct(array $data)
+    final public function __construct(array $data = [])
     {
         $this->setMethodProperties($data);
     }

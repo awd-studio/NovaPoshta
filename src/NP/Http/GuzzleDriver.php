@@ -12,6 +12,7 @@
 namespace NP\Http;
 
 use GuzzleHttp\Client;
+use NP\Exception\Error;
 
 
 /**
@@ -30,18 +31,13 @@ class GuzzleDriver implements DriverInterface
     public function send(Request $request)
     {
         try {
-            $client = new Client();
-
-            $serverResponse = $client->post($request->getUri(), [
+            $serverResponse = (new Client())->post($request->getUri(), [
                 'json' => $request->getBody(),
             ]);
 
             $response = (string) $serverResponse->getBody();
         } catch (\Exception $exception) {
-            $response = json_encode([
-                'code'  => 0,
-                'error' => $exception->getMessage(),
-            ]);
+            $response = (new Error($exception->getMessage(), 4))->toJson();
         } finally {
             return new Response($response);
         }

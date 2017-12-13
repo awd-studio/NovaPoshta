@@ -2,11 +2,11 @@
 
 /**
  * @file
- * This file is part of Nova-Poshta PHP library.
+ * This file is part of NovaPoshta PHP library.
  *
  * @author   Anton Karpov <awd.com.ua@gmail.com>
  * @license  http://www.opensource.org/licenses/mit-license.php MIT
- * @link     https://github.com/awd-studio/nova-poshta
+ * @link     https://github.com/awd-studio/novaposhta
  */
 
 namespace NP\Model;
@@ -17,9 +17,9 @@ use NP\Entity\TrackList;
 /**
  * Class TrackingDocument
  *
- * @package  NP\Model
+ * @package NP\Model
  *
- * @link     https://devcenter.novaposhta.ua/docs/services/556eef34a0fe4f02049c664e/operations/55702cbba0fe4f0cf4fc53ee
+ * @link    https://devcenter.novaposhta.ua/docs/services/556eef34a0fe4f02049c664e/operations/55702cbba0fe4f0cf4fc53ee
  */
 class TrackingDocument extends Model implements TrackingDocumentsInterface
 {
@@ -37,7 +37,7 @@ class TrackingDocument extends Model implements TrackingDocumentsInterface
     /**
      * @param mixed $trackList
      *
-     * @see \NovaPoshta\Entities\TrackList::__construct()
+     * @see \NP\Entity\TrackList::__construct()
      */
     public function setTrackList($trackList)
     {
@@ -62,7 +62,7 @@ class TrackingDocument extends Model implements TrackingDocumentsInterface
      * @see  \NP\TrackList::__construct
      * @link https://devcenter.novaposhta.ua/docs/services/556eef34a0fe4f02049c664e/operations/55702cbba0fe4f0cf4fc53ee
      *
-     * @return \NP\Model\Model
+     * @return Model
      * @throws \NP\Exception\ErrorException
      */
     public function getStatusDocuments()

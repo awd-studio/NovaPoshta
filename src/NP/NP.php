@@ -11,8 +11,7 @@
 
 namespace NP;
 
-use NP\Exception\BadFunctionCallException;
-use NP\Exception\ErrorException;
+use NP\Exception\Error;
 use NP\Http\CurlDriver;
 use NP\Http\DriverInterface;
 use NP\Http\GuzzleDriver;
@@ -63,20 +62,24 @@ final class NP
      */
     private $response;
 
+    /**
+     * @var Error
+     */
+    private static $error;
+
 
     /**
      * Initialize NovaPoshta instance.
      *
-     * @param string               $key    API key.
-     * @param DriverInterface|null $driver HTTP driver.
+     * @param string          $key    API key.
+     * @param DriverInterface $driver HTTP driver.
      *
      * @return NP
-     * @throws ErrorException
      */
     public static function init($key, DriverInterface $driver = null)
     {
         self::$key = $key;
-        self::$driver = isset($driver) ? $driver : self::getDefaultDriver();
+        self::$driver = $driver ?: self::getDefaultDriver();
 
         return self::getInstance();
     }
@@ -86,7 +89,6 @@ final class NP
      * Get default HTTP driver.
      *
      * @return DriverInterface
-     * @throws ErrorException
      */
     private static function getDefaultDriver()
     {
@@ -96,9 +98,8 @@ final class NP
             try {
                 $driver = new CurlDriver;
             } catch (\Exception $exception) {
-                throw new ErrorException(
-                    'You need to install "Guzzle" library or "php_curl" extension in your project!'
-                );
+                $driver = null;
+                self::$error = new Error('', 2);
             }
         }
 
@@ -169,7 +170,6 @@ final class NP
      * @param array  $data         Data to send.
      *
      * @return self
-     * @throws BadFunctionCallException
      */
     public function with($modelName, $calledMethod, array $data = [])
     {
@@ -177,19 +177,17 @@ final class NP
 
         try {
             $reflectionMethod = new \ReflectionMethod($model, $calledMethod);
+            $this->model = $reflectionMethod->invoke(new $model($data));
+            $this->request = new Request($this, $modelName, $calledMethod);
         } catch (\ReflectionException $exception) {
             $message = "Undefined model or method \"$model::$calledMethod\"!";
             $message .= ' Error: ';
             $message .= $exception->getMessage();
 
-            throw new BadFunctionCallException($message);
+            self::$error = new Error($message, 2);
+        } finally {
+            return $this;
         }
-
-        // Invoking model method.
-        $this->model = $reflectionMethod->invoke(new $model($data));
-        $this->request = new Request($this, $modelName, $calledMethod);
-
-        return $this;
     }
 
 
@@ -200,6 +198,10 @@ final class NP
      */
     public function send()
     {
-        return $this->response = self::$driver->send($this->request);
+        if (self::$error) {
+            return $this->response = self::$error->getResponse();
+        }
+
+        return $this->response = $this->request->execute(self::$driver);
     }
 }
