@@ -28,7 +28,7 @@ class Request
     const NP_API_HOST_JSON = 'https://api.novaposhta.ua/v2.0/json/';
 
     /**
-     * @var object
+     * @var \stdClass
      */
     private $body;
 
@@ -53,16 +53,20 @@ class Request
      *
      * @param NP $np NovaPoshta instance.
      *
-     * @return object
+     * @return \stdClass
      */
-    private function buildData(NP $np)
+    private function buildData(NP $np): \stdClass
     {
-        $data['apiKey'] = $np::getKey();
-        $data['modelName'] = $np->getModel()->getModelName();
-        $data['calledMethod'] = $np->getModel()->getCalledMethod();
-        $data['methodProperties'] = (object) $np->getModel()->getMethodProperties();
+        $data = new \stdClass();
 
-        return (object) $data;
+        if ($np->getModel()) {
+            $data->apiKey = $np::getKey();
+            $data->modelName = $np->getModel()->getModelName();
+            $data->calledMethod = $np->getModel()->getCalledMethod();
+            $data->methodProperties = (object) $np->getModel()->getMethodProperties();
+        }
+
+        return $data;
     }
 
 
@@ -71,7 +75,7 @@ class Request
      *
      * @param bool $json JSON-encoded.
      *
-     * @return object
+     * @return \stdClass
      */
     public function getBody($json = false)
     {

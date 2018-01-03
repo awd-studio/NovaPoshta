@@ -190,7 +190,7 @@ final class NP
             $message .= ' Error: ';
             $message .= $exception->getMessage();
 
-            self::$error = new Error($message, 2);
+            self::$error = new Error($message, 3);
         } finally {
             return $this;
         }

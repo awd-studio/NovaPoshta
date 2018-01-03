@@ -62,26 +62,17 @@ class NPTest extends \PHPUnit_Framework_TestCase
      * @covers \NP\NP::getInstance
      * @covers \NP\Util\Singleton::getInstance
      */
-    public function testNPInstance()
+    public function testNP()
     {
         $this->assertInstanceOf(NP::class, NP::getInstance());
     }
-
-
-    // public function testNPgetDefaultDriverException()
-    // {
-    //     $this->expectException(NpException::class);
-    //
-    //     $NewAddress = new Address($this->settings);
-    //     $NewAddress->searchSettlementStreets([]);
-    // }
 
 
     /**
      * @covers \NP\NP::init
      * @covers \NP\NP::getDefaultDriver
      */
-    public function testNPinit()
+    public function testInit()
     {
         $this->assertInstanceOf(NP::class, NP::init($this->key, $this->driver));
     }
@@ -90,7 +81,7 @@ class NPTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers \NP\NP::getKey
      */
-    public function testNPgetKey()
+    public function testGetKey()
     {
         $this->assertEquals($this->key, $this->instance::getKey());
     }
@@ -99,7 +90,7 @@ class NPTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers \NP\NP::getDriver
      */
-    public function testNPgetDriver()
+    public function testGetDriver()
     {
         $this->assertEquals($this->driver, $this->instance::getDriver());
     }
@@ -108,7 +99,7 @@ class NPTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers \NP\NP::getModel
      */
-    public function testNPgetModel()
+    public function testGetModel()
     {
         $this->assertEquals(null, $this->instance->getModel());
     }
@@ -117,7 +108,7 @@ class NPTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers \NP\NP::getRequest
      */
-    public function testNPgetRequest()
+    public function testGetRequest()
     {
         $this->assertEquals(null, $this->instance->getRequest());
     }
@@ -126,7 +117,7 @@ class NPTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers \NP\NP::getResponse
      */
-    public function testNPgetResponse()
+    public function testGetResponse()
     {
         $this->assertEquals(null, $this->instance->getResponse());
     }

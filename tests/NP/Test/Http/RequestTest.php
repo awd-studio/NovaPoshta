@@ -62,36 +62,46 @@ class RequestTest extends \PHPUnit_Framework_TestCase
 
         $this->driver = new CurlDriver();
         $this->np = NP::init($this->key, $this->driver);
-        // $this->instance = new Request($this->np, 'TrackingDocument', 'getStatusDocuments');
+        $this->instance = new Request($this->np);
     }
 
 
-    public function test__construct()
+    /**
+     * @covers \NP\Http\Request::__construct
+     * @covers \NP\Http\Request::buildData
+     */
+    public function testRequest()
     {
-
+        $this->assertInstanceOf(Request::class, $this->instance);
     }
 
 
+    /**
+     * @covers \NP\Http\Request::getBody
+     * @covers \NP\Http\Request::getBodyJson
+     */
     public function testGetBody()
     {
-
+        $this->assertEquals(new \stdClass(), $this->instance->getBody());
+        $this->assertEquals(json_encode(new \stdClass()), $this->instance->getBody(true));
     }
 
 
-    public function testGetBodyJson()
-    {
-
-    }
-
-
+    /**
+     * @covers \NP\Http\Request::getUri
+     */
     public function testGetUri()
     {
-
+        $patternJson = '/(https:\/\/(?:api)?\.?novaposhta\.ua\/(?:v\d+\.\d+)\/json\/)/i';
+        $this->assertRegExp($patternJson, $this->instance->getUri());
     }
 
 
-    public function testExecute()
-    {
-
-    }
+    /**
+     * ToDo: Implement test;
+     */
+    // public function testExecute()
+    // {
+    //
+    // }
 }

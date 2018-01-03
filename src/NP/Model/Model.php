@@ -52,6 +52,8 @@ class Model
 
 
     /**
+     * Get model name.
+     *
      * @return string
      */
     public function getModelName(): string
@@ -61,6 +63,8 @@ class Model
 
 
     /**
+     * Set model name.
+     *
      * @param string $modelName
      */
     public function setModelName(string $modelName)
@@ -70,6 +74,8 @@ class Model
 
 
     /**
+     * Get called method.
+     *
      * @return string
      */
     public function getCalledMethod(): string
@@ -79,6 +85,8 @@ class Model
 
 
     /**
+     * Set called method.
+     *
      * @param string $calledMethod
      */
     public function setCalledMethod(string $calledMethod)
