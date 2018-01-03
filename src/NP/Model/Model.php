@@ -9,6 +9,8 @@
  * @link    https://github.com/awd-studio/novaposhta
  */
 
+declare(strict_types=1); // strict mode
+
 namespace NP\Model;
 
 use NP\Exception\ErrorException;
@@ -22,9 +24,20 @@ class Model
 {
 
     /**
+     * @var string
+     */
+    private $modelName;
+
+    /**
+     * @var string
+     */
+    private $calledMethod;
+
+
+    /**
      * @var array Method properties.
      */
-    private $methodProperties;
+    private $methodProperties = [];
 
 
     /**
@@ -39,11 +52,55 @@ class Model
 
 
     /**
+     * Get model name.
+     *
+     * @return string
+     */
+    public function getModelName(): string
+    {
+        return $this->modelName;
+    }
+
+
+    /**
+     * Set model name.
+     *
+     * @param string $modelName
+     */
+    public function setModelName(string $modelName)
+    {
+        $this->modelName = $modelName;
+    }
+
+
+    /**
+     * Get called method.
+     *
+     * @return string
+     */
+    public function getCalledMethod(): string
+    {
+        return $this->calledMethod;
+    }
+
+
+    /**
+     * Set called method.
+     *
+     * @param string $calledMethod
+     */
+    public function setCalledMethod(string $calledMethod)
+    {
+        $this->calledMethod = $calledMethod;
+    }
+
+
+    /**
      * Get method properties.
      *
      * @return array
      */
-    public function getMethodProperties()
+    public function getMethodProperties(): array
     {
         return $this->methodProperties;
     }
@@ -53,9 +110,10 @@ class Model
      * Set method properties.
      *
      * @param array $data
+     *
      * @return self
      */
-    public function setMethodProperties(array $data)
+    public function setMethodProperties(array $data): self
     {
         $this->methodProperties = $data;
 
@@ -64,13 +122,14 @@ class Model
 
 
     /**
-     * Set method properties.
+     * Set method property.
      *
      * @param string $name
      * @param string $value
+     *
      * @return self
      */
-    public function setMethodProperty($name, $value)
+    public function setMethodProperty(string $name, string $value): self
     {
         $this->methodProperties[$name] = $value;
 

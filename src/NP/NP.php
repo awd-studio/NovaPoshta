@@ -9,6 +9,8 @@
  * @link    https://github.com/awd-studio/novaposhta
  */
 
+declare(strict_types=1); // strict mode
+
 namespace NP;
 
 use NP\Exception\Error;
@@ -31,11 +33,6 @@ final class NP
 {
 
     use Util\Singleton;
-
-    /**
-     * API endpoint.
-     */
-    const NP_API_HOST_JSON = 'https://api.novaposhta.ua/v2.0/json/';
 
     /**
      * @var string API key.
@@ -76,7 +73,7 @@ final class NP
      *
      * @return NP
      */
-    public static function init($key, DriverInterface $driver = null)
+    public static function init(string $key, DriverInterface $driver = null): NP
     {
         self::$key = $key;
         self::$driver = $driver ?: self::getDefaultDriver();
@@ -90,7 +87,7 @@ final class NP
      *
      * @return DriverInterface
      */
-    private static function getDefaultDriver()
+    private static function getDefaultDriver(): DriverInterface
     {
         try {
             $driver = new GuzzleDriver;
@@ -112,7 +109,7 @@ final class NP
      *
      * @return string
      */
-    public static function getKey()
+    public static function getKey(): string
     {
         return self::$key;
     }
@@ -123,7 +120,7 @@ final class NP
      *
      * @return DriverInterface
      */
-    public static function getDriver()
+    public static function getDriver(): DriverInterface
     {
         return self::$driver;
     }
@@ -132,7 +129,7 @@ final class NP
     /**
      * Get model.
      *
-     * @return Model
+     * @return Model|null
      */
     public function getModel()
     {
@@ -143,7 +140,7 @@ final class NP
     /**
      * Get HTTP request.
      *
-     * @return Request
+     * @return Request|null
      */
     public function getRequest()
     {
@@ -154,7 +151,7 @@ final class NP
     /**
      * Get server response.
      *
-     * @return Response
+     * @return Response|null
      */
     public function getResponse()
     {
@@ -171,7 +168,7 @@ final class NP
      *
      * @return self
      */
-    public function with($modelName, $calledMethod, array $data = [])
+    public function with(string $modelName, string $calledMethod, array $data = []): self
     {
         $model = __NAMESPACE__ . "\\Model\\$modelName";
 
@@ -180,14 +177,20 @@ final class NP
         // Catching Reflection exception if model or method is unavailable.
         try {
             $reflectionMethod = new \ReflectionMethod($model, "{$calledMethod}Action");
+
+            // Make model
             $this->model = $reflectionMethod->invoke(new $model($data));
-            $this->request = new Request($this, $modelName, $calledMethod);
+            $this->model->setModelName($modelName);
+            $this->model->setCalledMethod($calledMethod);
+
+            // Create request
+            $this->request = new Request($this);
         } catch (\ReflectionException $exception) {
             $message = "Undefined model or method \"$model::$calledMethod\"!";
             $message .= ' Error: ';
             $message .= $exception->getMessage();
 
-            self::$error = new Error($message, 2);
+            self::$error = new Error($message, 3);
         } finally {
             return $this;
         }
@@ -199,7 +202,7 @@ final class NP
      *
      * @return Response
      */
-    public function send()
+    public function send(): Response
     {
         if (self::$error) {
             return $this->response = self::$error->getResponse();
@@ -218,7 +221,7 @@ final class NP
      *
      * @return Response
      */
-    public function sendWith($modelName, $calledMethod, array $data = [])
+    public function sendWith(string $modelName, string $calledMethod, array $data = []): Response
     {
         $this->with($modelName, $calledMethod, $data);
 

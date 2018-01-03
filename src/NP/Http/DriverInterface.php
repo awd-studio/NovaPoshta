@@ -9,6 +9,8 @@
  * @link    https://github.com/awd-studio/novaposhta
  */
 
+declare(strict_types=1); // strict mode
+
 namespace NP\Http;
 
 
@@ -23,7 +25,8 @@ interface DriverInterface
      * Send HTTP request.
      *
      * @param Request $request
+     *
      * @return Response
      */
-    public function send(Request $request);
+    public function send(Request $request): Response;
 }

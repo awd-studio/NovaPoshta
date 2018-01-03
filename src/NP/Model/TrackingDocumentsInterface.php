@@ -9,6 +9,8 @@
  * @link    https://github.com/awd-studio/novaposhta
  */
 
+declare(strict_types=1); // strict mode
+
 namespace NP\Model;
 
 
@@ -33,5 +35,5 @@ interface TrackingDocumentsInterface
      * @return \NP\Model\Model
      * @throws \NP\Exception\ErrorException
      */
-    public function getStatusDocumentsAction();
+    public function getStatusDocumentsAction(): Model;
 }
