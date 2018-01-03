@@ -25,7 +25,8 @@ interface DriverInterface
      * Send HTTP request.
      *
      * @param Request $request
+     *
      * @return Response
      */
-    public function send(Request $request);
+    public function send(Request $request): Response;
 }

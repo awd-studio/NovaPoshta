@@ -13,6 +13,9 @@ declare(strict_types=1); // strict mode
 
 namespace NP\Http;
 
+use NP\Exception\Error;
+use NP\Exception\ErrorException;
+
 
 /**
  * Class CurlDriver
@@ -25,10 +28,35 @@ class CurlDriver implements DriverInterface
      * Send HTTP request.
      *
      * @param Request $request
+     *
      * @return Response
+     * @throws \NP\Exception\ErrorException
      */
-    public function send(Request $request)
+    public function send(Request $request): Response
     {
-        // TODO: Implement send() method.
+        try {
+            $curl = curl_init();
+
+            curl_setopt_array($curl, [
+                CURLOPT_URL            => $request->getUri(),
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST  => "POST",
+                CURLOPT_POSTFIELDS     => $request->getBodyJson(),
+                CURLOPT_HTTPHEADER     => ["content-type: application/json"],
+            ]);
+
+            $response = curl_exec($curl);
+
+            curl_close($curl);
+
+            if ($err = curl_error($curl)) {
+                throw new ErrorException("cURL Error #:" . $err);
+            }
+        } catch (\ErrorException $exception) {
+            $response = (new Error($exception->getMessage(), 4))->toJson();
+        } finally {
+            return new Response($response);
+        }
     }
 }

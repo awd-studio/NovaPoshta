@@ -55,7 +55,7 @@ class TrackingDocument extends Model implements TrackingDocumentsInterface
      *
      * @return TrackList
      */
-    public function getTrackList()
+    public function getTrackList(): TrackList
     {
         return $this->trackList;
     }
@@ -72,7 +72,7 @@ class TrackingDocument extends Model implements TrackingDocumentsInterface
      * @return \NP\Model\Model
      * @throws \NP\Exception\ErrorException
      */
-    public function getStatusDocumentsAction()
+    public function getStatusDocumentsAction(): Model
     {
         $this->setMethodProperties([
             'Documents' => (new TrackList($this->getMethodProperties()))->getAllTracks(),

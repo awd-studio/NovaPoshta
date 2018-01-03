@@ -22,26 +22,27 @@ use NP\NP;
  */
 class Request
 {
+    /**
+     * API endpoint.
+     */
+    const NP_API_HOST_JSON = 'https://api.novaposhta.ua/v2.0/json/';
 
     /**
-     * @var string - API URI.
+     * @var object
      */
-    private $uri;
+    private $body;
 
 
     /**
      * Request constructor.
      *
-     * @param NP     $np NovaPoshta instance.
-     * @param string $modelName
-     * @param string $calledMethod
+     * @param NP $np NovaPoshta instance.
      *
      * @return self
      */
-    public function __construct(NP $np, $modelName, $calledMethod)
+    public function __construct(NP $np)
     {
-        $this->uri = $np::NP_API_HOST_JSON;
-        $this->body = $this->buildData($np, $modelName, $calledMethod);
+        $this->body = $this->buildData($np);
 
         return $this;
     }
@@ -50,17 +51,15 @@ class Request
     /**
      * Data builder.
      *
-     * @param NP     $np NovaPoshta instance.
-     * @param string $modelName
-     * @param string $calledMethod
+     * @param NP $np NovaPoshta instance.
      *
      * @return object
      */
-    private function buildData($np, $modelName, $calledMethod)
+    private function buildData(NP $np)
     {
         $data['apiKey'] = $np::getKey();
-        $data['modelName'] = $modelName;
-        $data['calledMethod'] = $calledMethod;
+        $data['modelName'] = $np->getModel()->getModelName();
+        $data['calledMethod'] = $np->getModel()->getCalledMethod();
         $data['methodProperties'] = (object) $np->getModel()->getMethodProperties();
 
         return (object) $data;
@@ -71,6 +70,7 @@ class Request
      * Get data to send.
      *
      * @param bool $json JSON-encoded.
+     *
      * @return object
      */
     public function getBody($json = false)
@@ -93,11 +93,13 @@ class Request
     /**
      * Get API URI.
      *
+     * @param bool $json
+     *
      * @return string
      */
-    public function getUri()
+    public function getUri(bool $json = true): string
     {
-        return $this->uri;
+        return self::NP_API_HOST_JSON;
     }
 
 
@@ -107,7 +109,7 @@ class Request
      *
      * @return Response
      */
-    public function execute(DriverInterface $driver)
+    public function execute(DriverInterface $driver): Response
     {
         return $driver->send($this);
     }

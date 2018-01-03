@@ -35,5 +35,5 @@ interface TrackingDocumentsInterface
      * @return \NP\Model\Model
      * @throws \NP\Exception\ErrorException
      */
-    public function getStatusDocumentsAction();
+    public function getStatusDocumentsAction(): Model;
 }

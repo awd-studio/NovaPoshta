@@ -1,23 +1,8 @@
-<center>
-# Powerful & Simple PHP SDK for NovaPoshta API (alpha)
-</center>
-## Integrate your PHP apps with [NovaPoshta](https://novaposhta.ua) post company API
 
-This open-source library allows you to integrate Nova Poshta API into your apps.
-Fast and easy, you can do everything you want from [official API](https://devcenter.novaposhta.ua/docs/services/).
+<h6 align="right">(alpha version)</h6>
+<h1 align="center">Powerful & Simple NovaPoshta API SDK for PHP</h1>
 
-### Very simple usage (see more examples below):
-```php
-<?php
-
-use NP\NP;
-
-$response = NP::init($key)->sendWith('Address', 'searchSettlements', [
-    'StreetName'    => 'Шев',
-    'SettlementRef' => 'e715719e-4b33-11e4-ab6d-005056801329',
-    'Limit'         => 10,
-]);
-```
+<p align="center">Fast and easy, integrate your PHP apps with <a href="https://devcenter.novaposhta.ua/docs/services/">official API</a>.</p>
 
 
 ### About Nova Poshta company:
@@ -42,15 +27,29 @@ Nova Poshta puts into your service:
 *[More information](https://novaposhta.ua/en/o_kompanii/nova_poshta_sogodni).*
 
 
-## Requirements
-- PHP v5.5 or higher *(PHP 7+ is recommended)*
-- [Composer](https://getcomposer.org) package manager
-- An [API token](https://devcenter.novaposhta.ua/blog/%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD%D0%B8%D0%B5-api-%D0%BA%D0%BB%D1%8E%D1%87%D0%B0)
-- [Guzzle](https://github.com/guzzle/guzzle) or [PHP_CURL](http://php.net/manual/book.curl.php) libraries for sending HTTP-requests *(optional - you can define yourself HTTP-driver)*
+### Very simple usage (see more examples below):
+```php
+<?php
 
-## Install
+use NP\NP;
+
+$response = NP::init($key)->sendWith('Address', 'searchSettlements', [
+    'StreetName'    => 'Шев',
+    'SettlementRef' => 'e715719e-4b33-11e4-ab6d-005056801329',
+    'Limit'         => 10,
+]);
+```
+
+## Requirements
+- PHP 7+
+- [Composer](https://getcomposer.org) package manager
+- [API token](https://devcenter.novaposhta.ua/blog/%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD%D0%B8%D0%B5-api-%D0%BA%D0%BB%D1%8E%D1%87%D0%B0)
+- [Guzzle](https://github.com/guzzle/guzzle) or [PHP_CURL](http://php.net/manual/book.curl.php) libraries for sending HTTP-requests *(optional - you can define custom HTTP-driver)*
+
+
+## Install with Composer
 ```bash
-composer require awd-studio/nova-poshta
+composer require awd-studio/NovaPoshta
 ```
 
 
