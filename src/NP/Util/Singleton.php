@@ -9,6 +9,8 @@
  * @link    https://github.com/awd-studio/novaposhta
  */
 
+declare(strict_types=1); // strict mode
+
 namespace NP\Util;
 
 
@@ -55,7 +57,9 @@ trait Singleton
     public final static function getInstance()
     {
         if (!self::$instance) {
+            // @codeCoverageIgnoreStart
             self::$instance = new self;
+            // @codeCoverageIgnoreEnd
         }
 
         return self::$instance;

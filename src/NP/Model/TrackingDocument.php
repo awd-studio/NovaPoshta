@@ -9,6 +9,8 @@
  * @link   https://github.com/awd-studio/novaposhta
  */
 
+declare(strict_types=1); // strict mode
+
 namespace NP\Model;
 
 use NP\Entity\TrackList;

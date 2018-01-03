@@ -17,6 +17,10 @@ use NP\Http\DriverInterface;
 use NP\Http\CurlDriver;
 
 
+/**
+ * Class NPTest
+ * @package NP\Test\Np
+ */
 class NPTest extends \PHPUnit_Framework_TestCase
 {
 
@@ -56,6 +60,7 @@ class NPTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers \NP\NP::getInstance
+     * @covers \NP\Util\Singleton::getInstance
      */
     public function testNPInstance()
     {

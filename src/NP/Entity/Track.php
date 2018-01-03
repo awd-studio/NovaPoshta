@@ -9,6 +9,8 @@
  * @link    https://github.com/awd-studio/novaposhta
  */
 
+declare(strict_types=1); // strict mode
+
 namespace NP\Entity;
 
 
@@ -104,8 +106,8 @@ class Track
     public function build()
     {
         return [
-          'DocumentNumber' => $this->documentNumber,
-          'Phone'          => $this->phone,
+            'DocumentNumber' => $this->documentNumber,
+            'Phone'          => $this->phone,
         ];
     }
 
