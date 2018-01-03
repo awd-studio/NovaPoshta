@@ -4,9 +4,9 @@
  * @file
  * This file is part of NovaPoshta PHP library.
  *
- * @author   Anton Karpov <awd.com.ua@gmail.com>
- * @license  http://www.opensource.org/licenses/mit-license.php MIT
- * @link     https://github.com/awd-studio/novaposhta
+ * @author  Anton Karpov <awd.com.ua@gmail.com>
+ * @license http://www.opensource.org/licenses/mit-license.php MIT
+ * @link    https://github.com/awd-studio/novaposhta
  */
 
 namespace NP\Http;
@@ -38,7 +38,7 @@ class Request
      */
     public function __construct(NP $np, $modelName, $calledMethod)
     {
-        $this->uri = $np::NP_API_HOST;
+        $this->uri = $np::NP_API_HOST_JSON;
         $this->body = $this->buildData($np, $modelName, $calledMethod);
 
         return $this;

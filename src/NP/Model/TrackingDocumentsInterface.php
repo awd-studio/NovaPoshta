@@ -4,16 +4,16 @@
  * @file
  * This file is part of NovaPoshta PHP library.
  *
- * @author   Anton Karpov <awd.com.ua@gmail.com>
- * @license  http://www.opensource.org/licenses/mit-license.php MIT
- * @link     https://github.com/awd-studio/novaposhta
+ * @author  Anton Karpov <awd.com.ua@gmail.com>
+ * @license http://www.opensource.org/licenses/mit-license.php MIT
+ * @link    https://github.com/awd-studio/novaposhta
  */
 
 namespace NP\Model;
 
 
 /**
- * Interface TrackingDocuments for Model.
+ * Interface for TrackingDocuments Model.
  *
  * @package NP\Model
  *
@@ -23,14 +23,15 @@ interface TrackingDocumentsInterface
 {
 
     /**
-     * Track documents status.
+     * Method "getStatusDocuments" - Tracking documents status.
      *
-     * Documents mixed Available track-list.
+     * Options: Documents mixed Available track-list.
      *
      * @see  \NP\TrackList::__construct
      * @link https://devcenter.novaposhta.ua/docs/services/556eef34a0fe4f02049c664e/operations/55702cbba0fe4f0cf4fc53ee
      *
      * @return \NP\Model\Model
+     * @throws \NP\Exception\ErrorException
      */
-    public function getStatusDocuments();
+    public function getStatusDocumentsAction();
 }

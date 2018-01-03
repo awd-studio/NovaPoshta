@@ -3,3 +3,6 @@
 
 # Ignore composer.lock file
 /composer.lock
+
+# Ignore build
+/build

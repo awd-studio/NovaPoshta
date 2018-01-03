@@ -4,9 +4,9 @@
  * @file
  * This file is part of NovaPoshta PHP library.
  *
- * @author   Anton Karpov <awd.com.ua@gmail.com>
- * @license  http://www.opensource.org/licenses/mit-license.php MIT
- * @link     https://github.com/awd-studio/novaposhta
+ * @author  Anton Karpov <awd.com.ua@gmail.com>
+ * @license http://www.opensource.org/licenses/mit-license.php MIT
+ * @link    https://github.com/awd-studio/novaposhta
  */
 
 namespace NP;
@@ -35,7 +35,7 @@ final class NP
     /**
      * API endpoint.
      */
-    const NP_API_HOST = 'https://api.novaposhta.ua/v2.0/json/';
+    const NP_API_HOST_JSON = 'https://api.novaposhta.ua/v2.0/json/';
 
     /**
      * @var string API key.
@@ -175,8 +175,11 @@ final class NP
     {
         $model = __NAMESPACE__ . "\\Model\\$modelName";
 
+        // Getting reflection of model with called method.
+        // Replacing called method name with [*Action] suffix.
+        // Catching Reflection exception if model or method is unavailable.
         try {
-            $reflectionMethod = new \ReflectionMethod($model, $calledMethod);
+            $reflectionMethod = new \ReflectionMethod($model, "{$calledMethod}Action");
             $this->model = $reflectionMethod->invoke(new $model($data));
             $this->request = new Request($this, $modelName, $calledMethod);
         } catch (\ReflectionException $exception) {
@@ -204,4 +207,22 @@ final class NP
 
         return $this->response = $this->request->execute(self::$driver);
     }
+
+
+    /**
+     * Send data with model and method.
+     *
+     * @param string $modelName    API model name.
+     * @param string $calledMethod Model method.
+     * @param array  $data         Data to send.
+     *
+     * @return Response
+     */
+    public function sendWith($modelName, $calledMethod, array $data = [])
+    {
+        $this->with($modelName, $calledMethod, $data);
+
+        return $this->send();
+    }
+
 }
