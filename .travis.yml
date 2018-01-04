@@ -5,8 +5,6 @@ php:
   - 7.1
   - 7.2
   - nightly
-  - hhvm
-  - hhvm-nightly
 
 sudo: false
 
@@ -22,12 +20,7 @@ script:
 matrix:
   allow_failures:
     - rust: nightly
-    - rust: hhvm
-    - rust: hhvm-nightly
   fast_finish: true
-  include:
-    - php: hhvm
-      env: PHP_VERSION=7.0.1
 
 script: PHP_VERSION=7.0.1 vendor/bin/phpunit
 
