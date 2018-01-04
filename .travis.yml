@@ -3,6 +3,7 @@ language: php
 php:
   - 7.0
   - 7.1
+  - 7.2
   - nightly
   - hhvm
   - hhvm-nightly
@@ -12,7 +13,7 @@ sudo: false
 before_script:
   - curl --version
   - composer self-update
-  - composer install --ignore-platform-reqs --no-interaction --prefer-source
+  - composer install --no-interaction --prefer-source
 
 script:
   - mkdir -p build/logs
@@ -24,6 +25,11 @@ matrix:
     - rust: hhvm
     - rust: hhvm-nightly
   fast_finish: true
+  include:
+    - php: hhvm
+      env: PHP_VERSION=7.0.1
+
+script: PHP_VERSION=7.0.1 vendor/bin/phpunit
 
 notifications:
     on_success: never
