@@ -1,18 +1,22 @@
 <?php
+
 /**
- * Created by PhpStorm.
- * User: awd
- * Date: 03.01.18
- * Time: 23:55
+ * @file
+ * This file is part of NovaPoshta PHP library.
+ *
+ * @author  Anton Karpov <awd.com.ua@gmail.com>
+ * @license http://www.opensource.org/licenses/mit-license.php MIT
+ * @link    https://github.com/awd-studio/novaposhta
  */
 
 namespace NP\Test\Exception;
 
+use PHPUnit\Framework\TestCase;
 use JsonSerializable;
 use NP\Exception\Error;
 use NP\Http\Response;
 
-class ErrorTest extends \PHPUnit_Framework_TestCase
+class ErrorTest extends TestCase
 {
 
     /**

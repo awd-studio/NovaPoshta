@@ -1,5 +1,5 @@
 {
-    "name": "awd-studio/novaposhta",
+    "name": "awd-studio/NovaPoshta",
     "description": "PHP SDK for Nova Poshta API",
     "keywords": [
         "delivery",
@@ -14,14 +14,14 @@
         "ukraine",
         "wrapper-api"
     ],
-    "homepage": "https://github.com/awd-studio/novaposhta",
+    "homepage": "https://github.com/awd-studio/NovaPoshta",
     "type": "library",
     "require": {
         "php": "^7.0",
         "ext-json": "*"
     },
     "require-dev": {
-        "phpunit/phpunit": "~5.7",
+        "phpunit/phpunit": "^6",
         "php-coveralls/php-coveralls": "^2.0@dev"
     },
     "license": "MIT",
@@ -33,18 +33,18 @@
         }
     ],
     "support": {
-        "issues": "https://github.com/awd-studio/novaposhta/issues",
-        "source": "https://github.com/awd-studio/novaposhta"
+        "issues": "https://github.com/awd-studio/NovaPoshta/issues",
+        "source": "https://github.com/awd-studio/NovaPoshta"
     },
     "minimum-stability": "dev",
     "autoload": {
         "psr-4": {
-            "NP\\": "src/"
+            "NP\\": "src/NP"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "NP\\Test\\": "tests/"
+            "NP\\Test\\": "tests/NP"
         }
     },
     "scripts": {

@@ -11,13 +11,14 @@
 
 namespace NP\Test\Http;
 
+use PHPUnit\Framework\TestCase;
 use NP\Http\Response;
 
 /**
  * Class ResponseTest
  * @package NP\Test\Http
  */
-class ResponseTest extends \PHPUnit_Framework_TestCase
+class ResponseTest extends TestCase
 {
 
     /**

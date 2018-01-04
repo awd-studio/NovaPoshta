@@ -11,16 +11,17 @@
 
 namespace NP\Test\Model;
 
-/**
- *
- */
-use NP\Entity\TrackList;
+use PHPUnit\Framework\TestCase;
 use NP\Exception\ErrorException;
 use NP\Model\Model;
 use NP\Model\TrackingDocument;
 use NP\Model\TrackingDocumentsInterface;
 
-class TrackingDocumentTest extends \PHPUnit_Framework_TestCase
+/**
+ * Class TrackingDocumentTest
+ * @package NP\Test\Model
+ */
+class TrackingDocumentTest extends TestCase
 {
 
     /**

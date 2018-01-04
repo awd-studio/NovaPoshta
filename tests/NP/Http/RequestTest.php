@@ -11,6 +11,7 @@
 
 namespace NP\Test\Http;
 
+use PHPUnit\Framework\TestCase;
 use NP\Http\Request;
 use NP\NP;
 use NP\Http\CurlDriver;
@@ -21,7 +22,7 @@ use NP\Http\DriverInterface;
  * Class RequestTest
  * @package NP\Test\Http
  */
-class RequestTest extends \PHPUnit_Framework_TestCase
+class RequestTest extends TestCase
 {
 
     /**

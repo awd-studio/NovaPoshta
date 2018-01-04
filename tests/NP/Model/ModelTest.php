@@ -11,6 +11,7 @@
 
 namespace NP\Test\Model;
 
+use PHPUnit\Framework\TestCase;
 use NP\Exception\ErrorException;
 use NP\Model\Model;
 
@@ -18,7 +19,7 @@ use NP\Model\Model;
  * Class ModelTest
  * @package NP\Test\Model
  */
-class ModelTest extends \PHPUnit_Framework_TestCase
+class ModelTest extends TestCase
 {
 
     /**
