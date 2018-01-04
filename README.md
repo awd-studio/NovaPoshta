@@ -5,7 +5,7 @@
 <p align="center">Fast and easy, integrate your PHP apps with <a href="https://devcenter.novaposhta.ua/docs/services/">official API</a>.</p>
 
 
-[![Build Status](https://travis-ci.org/NovaPoshta.svg?branch=master)](https://travis-ci.org/awd-studio/NovaPoshta)
+[![Build Status](https://travis-ci.org/awd-studio/NovaPoshta.svg?branch=master)](https://travis-ci.org/awd-studio/NovaPoshta)
 [![Coverage Status](https://coveralls.io/repos/github/awd-studio/NovaPoshta/badge.svg)](https://coveralls.io/github/awd-studio/NovaPoshta)
 [![Latest Stable Version](https://poser.pugx.org/awd-studio/NovaPoshta/v/stable)](https://packagist.org/packages/awd-studio/NovaPoshta)
 [![Total Downloads](https://poser.pugx.org/awd-studio/NovaPoshta/downloads)](https://packagist.org/packages/awd-studio/NovaPoshta)
