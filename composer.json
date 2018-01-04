@@ -17,7 +17,7 @@
     "homepage": "https://github.com/awd-studio/novaposhta",
     "type": "library",
     "require": {
-        "php": 7,
+        "php": "7",
         "ext-json": "*"
     },
     "require-dev": {
