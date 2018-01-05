@@ -101,12 +101,10 @@ class TrackingDocumentTest extends TestCase
         $this->assertJson($r->getRaw());
 
         $r = $this->np->sendWith('TrackingDocument', 'getStatusDocuments', $this->trackList);
-
         $this->assertJson($r->getRaw());
 
         $this->instance->setMethodProperties($this->trackList);
         $getStatusDocuments = $this->instance->getStatusDocumentsAction();
-
         $this->assertInstanceOf(Model::class, $getStatusDocuments);
         $this->assertInstanceOf(TrackingDocumentsInterface::class, $getStatusDocuments);
     }

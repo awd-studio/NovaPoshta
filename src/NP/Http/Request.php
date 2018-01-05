@@ -55,7 +55,7 @@ class Request
      *
      * @return \stdClass
      */
-    private function buildData(NP $np): \stdClass
+    private function buildData(NP $np)
     {
         $data = new \stdClass();
 
