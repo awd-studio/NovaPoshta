@@ -13,7 +13,7 @@ declare(strict_types=1); // strict mode
 
 namespace NP;
 
-use NP\Exception\Error;
+use NP\Exception\Errors;
 use NP\Http\CurlDriver;
 use NP\Http\DriverInterface;
 use NP\Http\GuzzleDriver;
@@ -60,9 +60,9 @@ final class NP
     private $response;
 
     /**
-     * @var Error
+     * @var Errors
      */
-    private static $error;
+    private static $errors;
 
 
     /**
@@ -75,6 +75,7 @@ final class NP
      */
     public static function init(string $key, DriverInterface $driver = null): NP
     {
+        self::$errors = new Errors();
         self::$key = $key;
         self::$driver = $driver ?: self::getDefaultDriver();
 
@@ -96,7 +97,7 @@ final class NP
                 $driver = new CurlDriver;
             } catch (\Exception $exception) {
                 $driver = null;
-                self::$error = new Error('', 2);
+                self::$errors->addError('', 2);
             }
         }
 
@@ -160,6 +161,25 @@ final class NP
 
 
     /**
+     * Checking errors.
+     *
+     * @return bool
+     */
+    public function getErrors()
+    {
+        if (!isset($this->model)) {
+            self::$errors->addError('', 5);
+        }
+
+        if (!isset($this->request)) {
+            self::$errors->addError('', 6);
+        }
+
+        return self::$errors->getStatus();
+    }
+
+
+    /**
      * Model switcher.
      *
      * @param string $modelName    API model name.
@@ -190,7 +210,7 @@ final class NP
             $message .= ' Error: ';
             $message .= $exception->getMessage();
 
-            self::$error = new Error($message, 3);
+            self::$errors->addError($message, 3);
         } finally {
             return $this;
         }
@@ -204,11 +224,9 @@ final class NP
      */
     public function send(): Response
     {
-        if (self::$error) {
-            return $this->response = self::$error->getResponse();
-        }
+        $this->response = $this->getErrors() ? self::$errors->getResponse() : $this->request->execute(self::$driver);
 
-        return $this->response = $this->request->execute(self::$driver);
+        return $this->response;
     }
 
 
@@ -228,4 +246,22 @@ final class NP
         return $this->send();
     }
 
+
+    /**
+     * Reset NovaPoshta instance.
+     *
+     * Unset Model, Request and Response on instance.
+     * Clear Errors.
+     *
+     * @return self
+     */
+    public function reset()
+    {
+        $this->model = null;
+        $this->request = null;
+        $this->response = null;
+        self::$errors = new Errors();
+
+        return $this;
+    }
 }

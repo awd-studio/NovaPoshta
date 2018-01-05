@@ -21,7 +21,7 @@ use NP\Http\Response;
  * Class Error
  * @package NP\Exception
  */
-class Error implements JsonSerializable
+class Errors implements JsonSerializable
 {
 
     /**
@@ -32,50 +32,78 @@ class Error implements JsonSerializable
         2 => 'No installed "Guzzle" library or "php_curl" extension!',
         3 => 'Undefined API model or method.',
         4 => 'HTTP Driver Error.',
+        5 => 'Model not defined.',
+        6 => 'Request not defined.',
     ];
 
     /**
      * @var string Error message.
      */
-    private $success;
+    private $success = true;
 
     /**
-     * @var string Error message.
-     */
-    private $error;
-
-    /**
-     * @var int Error code.
-     */
-    private $code;
-
-    /**
-     * @var array current error.
+     * @var array Current error.
      */
     private $errors = [];
 
+    /**
+     * @var array Error codes
+     */
+    private $errorCodes = [];
+
 
     /**
-     * Error constructor.
+     * Add error.
      *
      * @param string $message Error message.
      * @param int    $code    Error code.
+     *
+     * @return int Added error key.
      */
-    public function __construct($message = '', $code = 1)
+    public function addError($message = '', $code = 1): int
     {
-        $this->error = !empty($message) ? $message : $this->getError();
-        $this->code = $code;
-        $this->errors[] = $this->getError();
+        $count = count($this->errors);
         $this->success = false;
+        $this->errors[] = !empty($message) ? $message : $this->getErrorDescription($code);
+        $this->errorCodes[] = $code;
+
+        return $count;
+    }
+
+
+    /**
+     * Get error from container by key.
+     *
+     * @param $key
+     *
+     * @return string
+     */
+    public function getError($key): string
+    {
+        return $this->errors[$key] ?: '';
     }
 
 
     /**
      * Get current Error description.
+     * @param int $code
+     *
+     * @return string
      */
-    public function getError()
+    public function getErrorDescription($code): string
     {
-        return self::ERRORS[$this->code];
+        return self::ERRORS[$code] ?? self::ERRORS[1];
+    }
+
+
+    /**
+     * Get error status.
+     *
+     * @return bool
+     */
+    public function getStatus(): bool
+    {
+        return !$this->success;
     }
 
 
@@ -108,13 +136,20 @@ class Error implements JsonSerializable
      */
     public function __toString()
     {
-        return "Error: {$this->error} With code: {$this->code}";
+        $errors = [];
+        for ($i = 0, $l = count($this->errors); $i < $l; $i++) {
+            $errors[] = "Error {$this->errors[$i]}, with code #{$this->errorCodes[$i]}";
+        }
+
+        $messages = implode('; ', $errors);
+
+        return "Errors: {$messages}";
     }
 
 
     /**
      * Specify data which should be serialized to JSON
-     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @link  http://php.net/manual/en/jsonserializable.jsonserialize.php
      * @return mixed data which can be serialized by <b>json_encode</b>,
      * which is a value of any type other than a resource.
      * @since 5.4.0

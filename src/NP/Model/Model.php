@@ -142,10 +142,9 @@ class Model
      *
      * @param array $properties
      *
-     * @return void
      * @throws \NP\Exception\ErrorException
      */
-    public function getRequiredProperties(array $properties): void
+    public function getRequiredProperties(array $properties)
     {
         $errors = [];
         $methodProperties = $this->getMethodProperties();

@@ -128,4 +128,16 @@ class NPTest extends TestCase
         $this->assertInstanceOf(Response::class, $this->instance->getResponse());
     }
 
+
+    /**
+     * @covers \NP\NP::getErrors
+     * @covers \NP\NP::reset
+     */
+    public function testGetErrors()
+    {
+        $this->assertFalse($this->instance->getErrors());
+
+        $this->instance->reset();
+        $this->assertTrue($this->instance->getErrors());
+    }
 }

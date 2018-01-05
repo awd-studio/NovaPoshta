@@ -1,12 +1,8 @@
 {
     "success": true,
-    "data": [
-        {}
-    ],
+    "data": [],
     "errors": [],
-    "warnings": [
-        {}
-    ],
+    "warnings": [],
     "info": [],
     "messageCodes": [],
     "errorCodes": [],

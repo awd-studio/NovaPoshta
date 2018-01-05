@@ -23,6 +23,7 @@ namespace NP\Http;
  */
 class Response
 {
+
     /**
      * @var string - Raw server data.
      */

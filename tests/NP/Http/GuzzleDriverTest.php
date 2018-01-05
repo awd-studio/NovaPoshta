@@ -60,6 +60,6 @@ class GuzzleDriverTest extends TestCase
     {
         $r = $this->instance->send($this->request);
 
-        $this->assertFalse($r->getData()->success);
+        $this->assertTrue($r->getData()->success);
     }
 }
