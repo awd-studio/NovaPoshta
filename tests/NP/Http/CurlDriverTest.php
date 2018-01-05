@@ -13,10 +13,11 @@ declare(strict_types=1); // strict mode
 
 namespace NP\Test\Http;
 
+use NP\Exception\ErrorException;
 use NP\Http\CurlDriver;
 use NP\Http\Request;
 use NP\NP;
-use NP\Test\Mock\Http\MockRequest;
+use NP\Mock\Http\MockRequest;
 use PHPUnit\Framework\TestCase;
 
 /**

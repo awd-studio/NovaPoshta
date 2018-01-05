@@ -14,7 +14,7 @@ declare(strict_types=1); // strict mode
 namespace NP\Test\Http;
 
 use NP\Http\Response;
-use NP\Test\Mock\Http\MockDriver;
+use NP\Mock\Http\MockDriver;
 use PHPUnit\Framework\TestCase;
 use NP\Http\Request;
 use NP\NP;

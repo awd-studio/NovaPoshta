@@ -11,7 +11,7 @@
 
 declare(strict_types=1); // strict mode
 
-namespace NP\Test\Mock\Http;
+namespace NP\Mock\Http;
 
 use NP\Http\DriverInterface;
 use NP\Http\Request;
@@ -21,7 +21,7 @@ use NP\Exception\ErrorException;
 
 /**
  * MockDriver - testing HTTP driver.
- * @package NP\Test\Mock\Http
+ * @package NP\Mock\Http
  */
 class MockDriver implements DriverInterface
 {
@@ -42,7 +42,7 @@ class MockDriver implements DriverInterface
      */
     public function __construct(string $response = 'success')
     {
-        $file = realpath(dirname(__FILE__) . "/../../../assets/json/response/{$response}.json");
+        $file = realpath(dirname(__FILE__) . "/../../assets/json/response/{$response}.json");
 
         if (is_readable($file)) {
             $this->response = file_get_contents($file);

@@ -19,7 +19,7 @@ use NP\Model\Model;
 use PHPUnit\Framework\TestCase;
 use NP\NP;
 use NP\Http\DriverInterface;
-use NP\Test\Mock\Http\MockDriver;
+use NP\Mock\Http\MockDriver;
 
 
 /**

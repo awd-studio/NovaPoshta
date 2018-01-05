@@ -11,7 +11,7 @@
 
 declare(strict_types=1); // strict mode
 
-namespace NP\Test\Mock\Http;
+namespace NP\Mock\Http;
 
 use NP\Http\Request;
 use NP\NP;
@@ -19,7 +19,7 @@ use NP\NP;
 
 /**
  * Class MockRequest
- * @package NP\Test\Mock\Http
+ * @package NP\Mock\Http
  */
 class MockRequest extends Request
 {

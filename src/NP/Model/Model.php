@@ -142,16 +142,23 @@ class Model
      *
      * @param array $properties
      *
+     * @return void
      * @throws \NP\Exception\ErrorException
      */
-    public function getRequiredProperties(array $properties)
+    public function getRequiredProperties(array $properties): void
     {
+        $errors = [];
         $methodProperties = $this->getMethodProperties();
 
         foreach ($properties as $value) {
             if (empty($methodProperties[$value])) {
-                throw new ErrorException("Property \"$value\" is required!");
+                $errors[$value] = "\"$value\"";
             }
+        }
+
+        if ($errors) {
+            $values = implode(', ', $errors);
+            throw new ErrorException("Required properties: {$values} - not allowed!");
         }
     }
 }

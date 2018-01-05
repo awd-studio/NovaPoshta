@@ -118,6 +118,6 @@ class ModelTest extends TestCase
     public function testGetRequiredProperties()
     {
         $this->expectException(ErrorException::class);
-        $this->instance->getRequiredProperties(['noneExixtsProperty']);
+        $this->instance->getRequiredProperties(['nonExistsProperty']);
     }
 }

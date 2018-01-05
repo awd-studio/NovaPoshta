@@ -16,7 +16,7 @@ namespace NP\Test\Http;
 use NP\Http\GuzzleDriver;
 use NP\Http\Request;
 use NP\NP;
-use NP\Test\Mock\Http\MockRequest;
+use NP\Mock\Http\MockRequest;
 use PHPUnit\Framework\TestCase;
 
 /**

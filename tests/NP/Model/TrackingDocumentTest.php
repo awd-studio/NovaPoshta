@@ -14,7 +14,7 @@ declare(strict_types=1); // strict mode
 namespace NP\Test\Model;
 
 use NP\NP;
-use NP\Test\Mock\Http\MockDriver;
+use NP\Mock\Http\MockDriver;
 use PHPUnit\Framework\TestCase;
 use NP\Exception\ErrorException;
 use NP\Model\Model;
@@ -88,26 +88,8 @@ class TrackingDocumentTest extends TestCase
     /**
      * @covers \NP\NP::with
      * @covers \NP\NP::send
-     * @covers \NP\Model\TrackingDocument::getStatusDocumentsAction
-     * @throws \NP\Exception\ErrorException
-     */
-    public function testGetStatusDocumentsActionFailed()
-    {
-        $failedNp = NP::init('key', new MockDriver('failed'));
-        $failedNp->with('TrackingDocuments', 'getStatusDocuments', $this->trackList);
-        $r = $failedNp->send();
-
-        $this->assertJson($r->getRaw());
-
-        $this->expectException(ErrorException::class);
-        $this->instance->getStatusDocumentsAction();
-    }
-
-
-    /**
-     * @covers \NP\NP::with
-     * @covers \NP\NP::send
      * @covers \NP\NP::sendWith
+     * @covers \NP\Model\Model::getRequiredProperties
      * @covers \NP\Http\Request::buildData
      * @covers \NP\Model\TrackingDocument::getStatusDocumentsAction
      * @throws \NP\Exception\ErrorException
@@ -127,5 +109,24 @@ class TrackingDocumentTest extends TestCase
 
         $this->assertInstanceOf(Model::class, $getStatusDocuments);
         $this->assertInstanceOf(TrackingDocumentsInterface::class, $getStatusDocuments);
+    }
+
+
+    /**
+     * @covers \NP\NP::with
+     * @covers \NP\NP::send
+     * @covers \NP\Model\TrackingDocument::getStatusDocumentsAction
+     * @throws \NP\Exception\ErrorException
+     */
+    public function testGetStatusDocumentsActionFailed()
+    {
+        $failedNp = NP::init('key', new MockDriver('failed'));
+        $failedNp->with('TrackingDocuments', 'getStatusDocuments', $this->trackList);
+        $r = $failedNp->send();
+
+        $this->assertJson($r->getRaw());
+
+        $this->expectException(ErrorException::class);
+        $this->instance->getStatusDocumentsAction();
     }
 }
