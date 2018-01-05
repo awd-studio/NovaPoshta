@@ -75,7 +75,7 @@ class Request
      *
      * @param bool $json JSON-encoded.
      *
-     * @return \stdClass
+     * @return \stdClass|string
      */
     public function getBody($json = false)
     {
@@ -88,7 +88,7 @@ class Request
      *
      * @return object
      */
-    public function getBodyJson()
+    public function getBodyJson(): string
     {
         return json_encode($this->body);
     }

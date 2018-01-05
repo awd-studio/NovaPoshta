@@ -1,0 +1,8 @@
+{
+    "success": false,
+    "error": "Error description",
+    "code": 3,
+    "errors": [
+        "Error message."
+    ]
+}

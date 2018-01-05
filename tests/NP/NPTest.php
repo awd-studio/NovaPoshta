@@ -9,12 +9,17 @@
  * @link    https://github.com/awd-studio/novaposhta
  */
 
+declare(strict_types=1); // strict mode
+
 namespace NP\Test\Np;
 
+use NP\Http\Request;
+use NP\Http\Response;
+use NP\Model\Model;
 use PHPUnit\Framework\TestCase;
 use NP\NP;
 use NP\Http\DriverInterface;
-use NP\Http\CurlDriver;
+use NP\Test\Mock\Http\MockDriver;
 
 
 /**
@@ -53,7 +58,7 @@ class NPTest extends TestCase
     {
         parent::setUp();
 
-        $this->driver = new CurlDriver();
+        $this->driver = new MockDriver('success');
         $this->instance = NP::init($this->key, $this->driver);
     }
 
@@ -75,6 +80,7 @@ class NPTest extends TestCase
     public function testInit()
     {
         $this->assertInstanceOf(NP::class, NP::init($this->key, $this->driver));
+        $this->assertInstanceOf(NP::class, NP::init($this->key));
     }
 
 
@@ -101,7 +107,7 @@ class NPTest extends TestCase
      */
     public function testGetModel()
     {
-        $this->assertEquals(null, $this->instance->getModel());
+        $this->assertInstanceOf(Model::class, $this->instance->getModel());
     }
 
 
@@ -110,7 +116,7 @@ class NPTest extends TestCase
      */
     public function testGetRequest()
     {
-        $this->assertEquals(null, $this->instance->getRequest());
+        $this->assertInstanceOf(Request::class, $this->instance->getRequest());
     }
 
 
@@ -119,7 +125,7 @@ class NPTest extends TestCase
      */
     public function testGetResponse()
     {
-        $this->assertEquals(null, $this->instance->getResponse());
+        $this->assertInstanceOf(Response::class, $this->instance->getResponse());
     }
 
 }

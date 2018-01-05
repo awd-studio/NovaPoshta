@@ -9,12 +9,15 @@
  * @link    https://github.com/awd-studio/novaposhta
  */
 
+declare(strict_types=1); // strict mode
+
 namespace NP\Test\Http;
 
+use NP\Http\Response;
+use NP\Test\Mock\Http\MockDriver;
 use PHPUnit\Framework\TestCase;
 use NP\Http\Request;
 use NP\NP;
-use NP\Http\CurlDriver;
 use NP\Http\DriverInterface;
 
 
@@ -61,7 +64,7 @@ class RequestTest extends TestCase
     {
         parent::setUp();
 
-        $this->driver = new CurlDriver();
+        $this->driver = new MockDriver();
         $this->np = NP::init($this->key, $this->driver);
         $this->instance = new Request($this->np);
     }
@@ -99,10 +102,14 @@ class RequestTest extends TestCase
 
 
     /**
-     * ToDo: Implement test;
+     * @covers \NP\Http\Request::execute
+     * @covers \NP\Http\Response::getRaw
      */
-    // public function testExecute()
-    // {
-    //
-    // }
+    public function testExecute()
+    {
+        $r = $this->instance->execute(new MockDriver());
+
+        $this->assertInstanceOf(Response::class, $r);
+        $this->assertJson($r->getRaw());
+    }
 }

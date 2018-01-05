@@ -84,7 +84,7 @@ class TrackList implements Iterator, Countable
     /**
      * Get all tracks in list container.
      *
-     * @return object
+     * @return array
      */
     public function getAllTracks()
     {
@@ -103,7 +103,7 @@ class TrackList implements Iterator, Countable
     {
         return isset($this->container[$trackId])
             ?
-            Track::create($this->container[$trackId])
+            Track::create((array) $this->container[$trackId])
             :
             null;
     }
@@ -121,10 +121,13 @@ class TrackList implements Iterator, Countable
     }
 
 
+    // @codeCoverageIgnoreStart
+
+
     /**
      * Move forward to next element
      *
-     * @link http://php.net/manual/en/iterator.next.php
+     * @link  http://php.net/manual/en/iterator.next.php
      * @return void Any returned value is ignored.
      * @since 5.0.0
      */
@@ -137,7 +140,7 @@ class TrackList implements Iterator, Countable
     /**
      * Return the key of the current element
      *
-     * @link http://php.net/manual/en/iterator.key.php
+     * @link  http://php.net/manual/en/iterator.key.php
      * @return mixed scalar on success, or null on failure.
      * @since 5.0.0
      */
@@ -150,7 +153,7 @@ class TrackList implements Iterator, Countable
     /**
      * Checks if current position is valid
      *
-     * @link http://php.net/manual/en/iterator.valid.php
+     * @link  http://php.net/manual/en/iterator.valid.php
      * @return boolean The return value will be casted to boolean and then
      *                 evaluated. Returns true on success or false on failure.
      * @since 5.0.0
@@ -166,7 +169,7 @@ class TrackList implements Iterator, Countable
     /**
      * Rewind the Iterator to the first element
      *
-     * @link http://php.net/manual/en/iterator.rewind.php
+     * @link  http://php.net/manual/en/iterator.rewind.php
      * @return void Any returned value is ignored.
      * @since 5.0.0
      */
@@ -179,7 +182,7 @@ class TrackList implements Iterator, Countable
     /**
      * Return the current element
      *
-     * @link http://php.net/manual/en/iterator.current.php
+     * @link  http://php.net/manual/en/iterator.current.php
      * @return mixed Can return any type.
      * @since 5.0.0
      */
@@ -192,7 +195,7 @@ class TrackList implements Iterator, Countable
     /**
      * Count elements of an object
      *
-     * @link http://php.net/manual/en/countable.count.php
+     * @link  http://php.net/manual/en/countable.count.php
      * @return int The custom count as an integer.
      *
      * The return value is cast to an integer.
@@ -202,4 +205,5 @@ class TrackList implements Iterator, Countable
     {
         return count($this->container);
     }
+    // @codeCoverageIgnoreEnd
 }
