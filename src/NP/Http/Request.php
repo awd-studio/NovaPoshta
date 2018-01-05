@@ -88,7 +88,7 @@ class Request
      *
      * @return object
      */
-    public function getBodyJson(): string
+    public function getBodyJson()
     {
         return json_encode($this->body);
     }
@@ -101,7 +101,7 @@ class Request
      *
      * @return string
      */
-    public function getUri(bool $json = true): string
+    public function getUri(bool $json = true)
     {
         return self::NP_API_HOST_JSON;
     }
