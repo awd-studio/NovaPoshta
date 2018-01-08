@@ -4,12 +4,13 @@
 
 <p align="center">Fast and easy, integrate your PHP apps with <a href="https://devcenter.novaposhta.ua/docs/services/">official API</a>.</p>
 
-
-[![Build Status](https://travis-ci.org/awd-studio/NovaPoshta.svg?branch=master)](https://travis-ci.org/awd-studio/NovaPoshta)
-[![Coverage Status](https://coveralls.io/repos/github/awd-studio/NovaPoshta/badge.svg)](https://coveralls.io/github/awd-studio/NovaPoshta)
-[![Latest Stable Version](https://poser.pugx.org/awd-studio/NovaPoshta/v/stable)](https://packagist.org/packages/awd-studio/NovaPoshta)
-[![Total Downloads](https://poser.pugx.org/awd-studio/NovaPoshta/downloads)](https://packagist.org/packages/awd-studio/NovaPoshta)
-[![License](https://poser.pugx.org/awd-studio/NovaPoshta/license)](https://github.com/awd-studio/NovaPoshta/blob/master/LICENSE)
+<p align="center">
+<a href="https://travis-ci.org/awd-studio/NovaPoshta" title="Build Status"><img src="https://travis-ci.org/awd-studio/NovaPoshta.svg?branch=master" alt="Build Status" /></a>
+<a href="https://coveralls.io/github/awd-studio/NovaPoshta" title="Coverage Status"><img src="https://coveralls.io/repos/github/awd-studio/NovaPoshta/badge.svg" alt="Coverage Status" /></a>
+<a href="https://packagist.org/packages/awd-studio/NovaPoshta" title="Latest Stable Version"><img src="https://poser.pugx.org/awd-studio/NovaPoshta/v/stable" alt="Latest Stable Version" /></a>
+<a href="https://packagist.org/packages/awd-studio/NovaPoshta" title="Total Downloads"><img src="https://poser.pugx.org/awd-studio/NovaPoshta/downloads" alt="Total Downloads" /></a>
+<a href="https://github.com/awd-studio/NovaPoshta/blob/master/LICENSE" title="License"><img src="https://poser.pugx.org/awd-studio/NovaPoshta/license" alt="License" /></a>
+</p>
 
 
 ### About Nova Poshta company:
@@ -56,7 +57,7 @@ $response = NP::init($key)->sendWith('Address', 'searchSettlements', [
 
 ## Install with Composer
 ```bash
-composer require awd-studio/NovaPoshta
+composer require awd-studio/novaposhta
 ```
 
 

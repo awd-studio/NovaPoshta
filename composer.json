@@ -1,12 +1,23 @@
 {
-    "name": "awd-studio/NovaPoshta",
-    "description": "PHP SDK for Nova Poshta API",
+    "name": "awd-studio/novaposhta",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Anton Karpov",
+            "email": "awd.com.ua@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "description": "Powerful & Simple NovaPoshta API SDK for PHP",
     "keywords": [
+        "branch-offices",
         "delivery",
         "delivery-api",
         "nova",
+        "nova-poshta-api",
         "novaposhta",
         "novaposhta-api",
+        "php-sdk",
         "poshta",
         "post",
         "postservices",
@@ -15,6 +26,11 @@
         "wrapper-api"
     ],
     "homepage": "https://github.com/awd-studio/NovaPoshta",
+    "support": {
+        "issues": "https://github.com/awd-studio/NovaPoshta/issues",
+        "source": "https://github.com/awd-studio/NovaPoshta"
+    },
+    "minimum-stability": "dev",
     "type": "library",
     "require": {
         "php": "^7.0",
@@ -24,19 +40,6 @@
         "phpunit/phpunit": "^6",
         "php-coveralls/php-coveralls": "^2.0@dev"
     },
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Anton Karpov",
-            "email": "awd.com.ua@gmail.com",
-            "role": "Developer"
-        }
-    ],
-    "support": {
-        "issues": "https://github.com/awd-studio/NovaPoshta/issues",
-        "source": "https://github.com/awd-studio/NovaPoshta"
-    },
-    "minimum-stability": "dev",
     "autoload": {
         "psr-4": {
             "NP\\": "src/NP"
