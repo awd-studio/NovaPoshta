@@ -49,7 +49,7 @@ class GuzzleDriverTest extends TestCase
         parent::setUp();
 
         $this->instance = new GuzzleDriver();
-        $this->request = new MockRequest(NP::init('', $this->instance));
+        $this->request = new MockRequest(NP::init(''));
     }
 
 
@@ -59,7 +59,6 @@ class GuzzleDriverTest extends TestCase
     public function testSend()
     {
         $r = $this->instance->send($this->request);
-
-        $this->assertTrue($r->getData()->success);
+        $this->assertFalse($r->getData()->success);
     }
 }

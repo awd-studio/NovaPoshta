@@ -56,11 +56,11 @@ trait Singleton
      */
     public final static function getInstance()
     {
+        // @codeCoverageIgnoreStart
         if (!self::$instance) {
-            // @codeCoverageIgnoreStart
             self::$instance = new self;
-            // @codeCoverageIgnoreEnd
         }
+        // @codeCoverageIgnoreEnd
 
         return self::$instance;
     }

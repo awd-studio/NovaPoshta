@@ -13,6 +13,8 @@ declare(strict_types=1); // strict mode
 
 namespace NP\Test\Np;
 
+use NP\Entity\Config;
+use NP\Exception\Errors;
 use NP\Http\Request;
 use NP\Http\Response;
 use NP\Model\Model;
@@ -59,7 +61,7 @@ class NPTest extends TestCase
         parent::setUp();
 
         $this->driver = new MockDriver('success');
-        $this->instance = NP::init($this->key, $this->driver);
+        $this->instance = NP::init(['key' => $this->key, 'driver' => $this->driver]);
     }
 
 
@@ -75,30 +77,30 @@ class NPTest extends TestCase
 
     /**
      * @covers \NP\NP::init
-     * @covers \NP\NP::getDefaultDriver
+     * @covers \NP\Entity\Config::getDefaultDriver
      */
     public function testInit()
     {
-        $this->assertInstanceOf(NP::class, NP::init($this->key, $this->driver));
+        $this->assertInstanceOf(NP::class, NP::init(['key' => $this->key, 'driver' => $this->driver]));
         $this->assertInstanceOf(NP::class, NP::init($this->key));
     }
 
 
     /**
-     * @covers \NP\NP::getKey
+     * @covers \NP\Entity\Config::getKey
      */
     public function testGetKey()
     {
-        $this->assertEquals($this->key, $this->instance::getKey());
+        $this->assertEquals($this->key, $this->instance::config()->getKey());
     }
 
 
     /**
-     * @covers \NP\NP::getDriver
+     * @covers \NP\Entity\Config::getDriver
      */
     public function testGetDriver()
     {
-        $this->assertEquals($this->driver, $this->instance::getDriver());
+        $this->assertEquals($this->driver, $this->instance::config()->getDriver());
     }
 
 
@@ -130,14 +132,32 @@ class NPTest extends TestCase
 
 
     /**
-     * @covers \NP\NP::getErrors
+     * @covers \NP\NP::checkErrors
      * @covers \NP\NP::reset
+     */
+    public function testCheckErrors()
+    {
+        $this->assertFalse($this->instance->checkErrors());
+
+        $this->instance->reset();
+        $this->assertTrue($this->instance->checkErrors());
+    }
+
+
+    /**
+     * @covers \NP\NP::config
+     */
+    public function testConfig()
+    {
+        $this->assertInstanceOf(Config::class, $this->instance::config());
+    }
+
+
+    /**
+     * @covers \NP\NP::getErrors
      */
     public function testGetErrors()
     {
-        $this->assertFalse($this->instance->getErrors());
-
-        $this->instance->reset();
-        $this->assertTrue($this->instance->getErrors());
+        $this->assertInstanceOf(Errors::class, $this->instance->getErrors());
     }
 }

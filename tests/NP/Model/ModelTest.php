@@ -13,8 +13,8 @@ declare(strict_types=1); // strict mode
 
 namespace NP\Test\Model;
 
+use NP\Exception\Errors;
 use PHPUnit\Framework\TestCase;
-use NP\Exception\ErrorException;
 use NP\Model\Model;
 
 /**
@@ -46,6 +46,11 @@ class ModelTest extends TestCase
      */
     private $data = [];
 
+    /**
+     * @var Errors
+     */
+    private $errors;
+
 
     /**
      * Settings up.
@@ -54,13 +59,23 @@ class ModelTest extends TestCase
     {
         parent::setUp();
 
-        $this->instance = new Model($this->data);
+        $this->errors = new Errors();
+
+        $this->instance = new Model($this->data, [
+            'modelName'    => $this->modelName,
+            'calledMethod' => $this->calledMethod,
+        ], [
+            'testParam' => [],
+        ], $this->errors);
     }
 
 
     /**
      * @covers \NP\Model\Model::__construct
+     * @covers \NP\Model\Model::setActionProperties
      * @covers \NP\Model\Model::setMethodProperties
+     * @covers \NP\Model\Model::setMethodParams
+     * @covers \NP\Model\Model::invokeMethod
      */
     public function testModel()
     {
@@ -112,12 +127,21 @@ class ModelTest extends TestCase
 
 
     /**
-     * @covers \NP\Model\Model::getRequiredProperties
-     * @throws \NP\Exception\ErrorException
+     * @covers \NP\Model\Model::checkRequiredProperties
+     * @covers \NP\Model\Model::getError
      */
     public function testGetRequiredProperties()
     {
-        $this->expectException(ErrorException::class);
-        $this->instance->getRequiredProperties(['nonExistsProperty']);
+        $newInstance = new Model($this->data, [
+            'modelName'    => $this->modelName,
+            'calledMethod' => $this->calledMethod,
+        ], [
+            'testParam' => [
+                'required' => true,
+            ],
+        ], $this->errors);
+
+        $this->assertTrue($newInstance->getError()->getStatus());
+        $this->assertInstanceOf(Errors::class, $newInstance->getError());
     }
 }

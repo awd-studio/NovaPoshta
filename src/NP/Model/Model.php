@@ -13,7 +13,8 @@ declare(strict_types=1); // strict mode
 
 namespace NP\Model;
 
-use NP\Exception\ErrorException;
+use NP\Exception\Errors;
+use NP\Util\Helper;
 
 
 /**
@@ -22,6 +23,8 @@ use NP\Exception\ErrorException;
  */
 class Model
 {
+
+    use Helper;
 
     /**
      * @var string
@@ -41,13 +44,95 @@ class Model
 
 
     /**
+     * @var array Method parameters.
+     */
+    private $methodParams = [];
+
+
+    /**
+     * @var Errors NP Errors.
+     */
+    public static $errors;
+
+
+    /**
      * Model constructor.
      *
-     * @param array $data Data for send.
+     * @param array  $data   Data for send.
+     * @param array  $action API Action properties.
+     * @param array  $params API available properties.
+     * @param Errors $errors NP Errors.
      */
-    final public function __construct(array $data = [])
+    final public function __construct(array $data = [], array $action, array $params = [], Errors &$errors)
     {
+        self::$errors = &$errors;
+        $this->methodParams = $params;
+
+        $this->setActionProperties($action);
         $this->setMethodProperties($data);
+        $this->setMethodParams();
+        $this->invokeMethod();
+        $this->checkRequiredProperties();
+    }
+
+
+    /**
+     * Set method parameters.
+     */
+    protected function setMethodParams()
+    {
+        $defaults = [
+            'name'           => '',
+            'required'       => false,
+            'callbackClass'  => $this->getModelName() ?: __CLASS__,
+            'callbackMethod' => 'setMethodProperties',
+        ];
+
+        foreach ($this->methodParams as $name => $prop) {
+            $this->methodParams[$name] = array_merge($defaults, $prop);
+        }
+    }
+
+
+    /**
+     * Fill method parameters with defined methods.
+     */
+    protected function invokeMethod()
+    {
+        foreach ($this->methodParams as $name => $prop) {
+            $class = __NAMESPACE__ . "\\" . $prop['callbackClass'];
+            $method = $prop['callbackMethod'];
+
+            try {
+                $reflectionMethod = new \ReflectionMethod($class, $method);
+                $reflectionMethod->invoke($this);
+            } catch (\ReflectionException $exception) {
+                $message = "Undefined callbackClass or callbackMethod \"$class::$method\"!";
+                $message .= ' Error: ';
+                $message .= $exception->getMessage();
+
+                self::$errors->addError($message, 3);
+            }
+        }
+    }
+
+
+    /**
+     * Set API action properties.
+     *
+     * @param array $action
+     */
+    protected function setActionProperties($action)
+    {
+        if (count($action) == 1 && isset($action[0])) {
+            $action = reset($action);
+        }
+
+        foreach ($action as $itemName => $itemValue) {
+            if (isset($this->{$itemName}) || $this->{$itemName} === null) {
+                $this->{$itemName} = $itemValue;
+            }
+        }
     }
 
 
@@ -126,38 +211,51 @@ class Model
      *
      * @param string $name
      * @param string $value
-     *
-     * @return self
      */
-    public function setMethodProperty(string $name, string $value): self
+    public function setMethodProperty(string $name, string $value)
     {
         $this->methodProperties[$name] = $value;
-
-        return $this;
     }
 
 
     /**
      * Check required method properties.
-     *
-     * @param array $properties
-     *
-     * @throws \NP\Exception\ErrorException
      */
-    public function getRequiredProperties(array $properties)
+    public function checkRequiredProperties()
     {
         $errors = [];
-        $methodProperties = $this->getMethodProperties();
+        if ($this->methodParams) {
+            $required = array_filter($this->methodParams, function ($v) {
+                return (bool) $v['required'];
+            });
 
-        foreach ($properties as $value) {
-            if (empty($methodProperties[$value])) {
-                $errors[$value] = "\"$value\"";
+            if ($required) {
+                $params = array_map(function ($i) {
+                    return $this->toActionCase($i);
+                }, array_keys($this->methodParams));
+
+                foreach ($params as $property) {
+                    if (empty($this->methodParams[$property])) {
+                        $errors[] = $property;
+                    }
+                }
             }
         }
 
         if ($errors) {
             $values = implode(', ', $errors);
-            throw new ErrorException("Required properties: {$values} - not allowed!");
+            self::$errors->addError("Required properties: {$values} - not allowed!");
         }
+    }
+
+
+    /**
+     * Get errors.
+     *
+     * @return Errors
+     */
+    public function getError(): Errors
+    {
+        return self::$errors;
     }
 }

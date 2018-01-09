@@ -68,7 +68,7 @@ composer require awd-studio/novaposhta
 
 use NP\NP;
 
-$np = NP::init('key', $driver);
+$np = NP::init(['key' => 'yourApiKey', 'driver' => $yourDriver]);
 
 // Simple usage methods:
 $np->with('modelName', 'methodName', $data);
@@ -79,7 +79,7 @@ $response = $np->sendWith('modelName', 'methodName', $data);
 
 
 // Some frequently used methods has more simple usage:
-$response = NPStat::track('key', $data, $driver);
+$response = NPStat::track('key', ['01234567890123', '01234567890124']);
 ```
 
 [See details.](https://devcenter.novaposhta.ua/docs/services/55702570a0fe4f0cf4fc53ed) All methods implements.

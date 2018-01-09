@@ -13,13 +13,13 @@ declare(strict_types=1); // strict mode
 
 namespace NP;
 
+use NP\Entity\Config;
 use NP\Exception\Errors;
-use NP\Http\CurlDriver;
-use NP\Http\DriverInterface;
-use NP\Http\GuzzleDriver;
 use NP\Http\Request;
 use NP\Http\Response;
 use NP\Model\Model;
+use NP\Util\ActionDoc;
+use NP\Util\Singleton;
 
 
 /**
@@ -31,18 +31,17 @@ use NP\Model\Model;
  */
 final class NP
 {
-
-    use Util\Singleton;
-
-    /**
-     * @var string API key.
-     */
-    private static $key;
+    use Singleton;
 
     /**
-     * @var DriverInterface HTTP driver.
+     * @var Config NP instance config.
      */
-    private static $driver;
+    private static $config;
+
+    /**
+     * @var Errors
+     */
+    public static $errors;
 
     /**
      * @var Model Current model.
@@ -59,71 +58,31 @@ final class NP
      */
     private $response;
 
-    /**
-     * @var Errors
-     */
-    private static $errors;
-
 
     /**
      * Initialize NovaPoshta instance.
      *
-     * @param string          $key    API key.
-     * @param DriverInterface $driver HTTP driver.
+     * @param mixed $config
      *
      * @return NP
      */
-    public static function init(string $key, DriverInterface $driver = null): NP
+    public static function init($config): NP
     {
         self::$errors = new Errors();
-        self::$key = $key;
-        self::$driver = $driver ?: self::getDefaultDriver();
+        self::$config = Config::setUp($config, self::$errors);
 
         return self::getInstance();
     }
 
 
     /**
-     * Get default HTTP driver.
+     * Get Config.
      *
-     * @return DriverInterface
+     * @return Config
      */
-    private static function getDefaultDriver(): DriverInterface
+    public static function config(): Config
     {
-        try {
-            $driver = new GuzzleDriver;
-        } catch (\Exception $exception) {
-            try {
-                $driver = new CurlDriver;
-            } catch (\Exception $exception) {
-                $driver = null;
-                self::$errors->addError('', 2);
-            }
-        }
-
-        return $driver;
-    }
-
-
-    /**
-     * Get API key.
-     *
-     * @return string
-     */
-    public static function getKey(): string
-    {
-        return self::$key;
-    }
-
-
-    /**
-     * Get HTTP driver.
-     *
-     * @return DriverInterface
-     */
-    public static function getDriver(): DriverInterface
-    {
-        return self::$driver;
+        return self::$config;
     }
 
 
@@ -161,11 +120,22 @@ final class NP
 
 
     /**
+     * Get errors.
+     *
+     * @return Errors
+     */
+    public function getErrors(): Errors
+    {
+        return self::$errors;
+    }
+
+
+    /**
      * Checking errors.
      *
      * @return bool
      */
-    public function getErrors()
+    public function checkErrors()
     {
         if (!isset($this->model)) {
             self::$errors->addError('', 5);
@@ -198,10 +168,11 @@ final class NP
         try {
             $reflectionMethod = new \ReflectionMethod($model, "{$calledMethod}Action");
 
-            // Make model
-            $this->model = $reflectionMethod->invoke(new $model($data));
-            $this->model->setModelName($modelName);
-            $this->model->setCalledMethod($calledMethod);
+            $action = (new ActionDoc($reflectionMethod))->getAnnotation('Action');
+            $params = (new ActionDoc($reflectionMethod))->getAnnotation('ActionParam');
+
+            // Create model
+            $this->model = $reflectionMethod->invoke(new $model($data, $action, $params, self::$errors));
 
             // Create request
             $this->request = new Request($this);
@@ -224,7 +195,11 @@ final class NP
      */
     public function send(): Response
     {
-        $this->response = $this->getErrors() ? self::$errors->getResponse() : $this->request->execute(self::$driver);
+        if ($this->checkErrors()) {
+            $this->response = self::$errors->getResponse();
+        } else {
+            $this->response = $this->request->execute();
+        }
 
         return $this->response;
     }

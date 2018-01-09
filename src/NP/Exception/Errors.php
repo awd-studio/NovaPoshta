@@ -34,6 +34,7 @@ class Errors implements JsonSerializable
         4 => 'HTTP Driver Error.',
         5 => 'Model not defined.',
         6 => 'Request not defined.',
+        7 => 'Required value not allowed.',
     ];
 
     /**

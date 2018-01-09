@@ -13,7 +13,6 @@ declare(strict_types=1); // strict mode
 
 namespace NP\Http;
 
-use NP\Exception\Errors;
 use NP\Exception\ErrorException;
 
 
@@ -54,7 +53,8 @@ class CurlDriver implements DriverInterface
                 throw new ErrorException("cURL Error #:" . $err);
             }
         } catch (\ErrorException $exception) {
-            $response = (new Errors($exception->getMessage(), 4))->toJson();
+            $request::errors()->addError($exception->getMessage(), 4);
+            $response = $request::errors()->toJson();
         } finally {
             return new Response($response);
         }

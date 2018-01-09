@@ -13,10 +13,10 @@ declare(strict_types=1); // strict mode
 
 namespace NP\Test\Model;
 
+use NP\Exception\Errors;
 use NP\NP;
 use NP\Mock\Http\MockDriver;
 use PHPUnit\Framework\TestCase;
-use NP\Exception\ErrorException;
 use NP\Model\Model;
 use NP\Model\TrackingDocument;
 use NP\Model\TrackingDocumentsInterface;
@@ -60,6 +60,11 @@ class TrackingDocumentTest extends TestCase
      */
     private $np;
 
+    /**
+     * @var Errors
+     */
+    private $errors;
+
 
     /**
      * Settings up.
@@ -68,10 +73,14 @@ class TrackingDocumentTest extends TestCase
     {
         parent::setUp();
 
-        $this->instance = new TrackingDocument($this->data);
+        $this->errors = new Errors();
+        $this->instance = new TrackingDocument($this->data, [
+            'modelName'    => $this->modelName,
+            'calledMethod' => $this->calledMethod,
+        ], [], $this->errors);
         $this->instance->setModelName($this->modelName);
         $this->instance->setCalledMethod($this->calledMethod);
-        $this->np = NP::init('key', new MockDriver());
+        $this->np = NP::init(['key' => 'newKey', 'driver' => new MockDriver()]);
     }
 
 
@@ -89,10 +98,16 @@ class TrackingDocumentTest extends TestCase
      * @covers \NP\NP::with
      * @covers \NP\NP::send
      * @covers \NP\NP::sendWith
-     * @covers \NP\Model\Model::getRequiredProperties
+     * @covers \NP\Model\Model::checkRequiredProperties
      * @covers \NP\Http\Request::buildData
      * @covers \NP\Model\TrackingDocument::getStatusDocumentsAction
-     * @throws \NP\Exception\ErrorException
+     * @covers \NP\Model\TrackingDocument::setDocumentsToMethodProperties
+     * @covers \NP\Model\Model::invokeMethod
+     * @covers \NP\Model\Model::setActionProperties
+     * @covers \NP\Util\ActionDoc::__construct
+     * @covers \NP\Util\ActionDoc::getDocblock
+     * @covers \NP\Util\ActionDoc::getAnnotation
+     * @covers \NP\Util\ActionDoc::parseAction
      */
     public function testGetStatusDocumentsActionSuccess()
     {
@@ -114,17 +129,17 @@ class TrackingDocumentTest extends TestCase
      * @covers \NP\NP::with
      * @covers \NP\NP::send
      * @covers \NP\Model\TrackingDocument::getStatusDocumentsAction
-     * @throws \NP\Exception\ErrorException
+     * @covers \NP\Util\ActionDoc::__construct
+     * @covers \NP\Util\ActionDoc::getDocblock
+     * @covers \NP\Util\ActionDoc::getAnnotation
+     * @covers \NP\Util\ActionDoc::parseAction
      */
     public function testGetStatusDocumentsActionFailed()
     {
-        $failedNp = NP::init('key', new MockDriver('failed'));
+        $failedNp = NP::init(['key' => 'newKey', 'driver' => new MockDriver('failed')]);
         $failedNp->with('TrackingDocuments', 'getStatusDocuments', $this->trackList);
         $r = $failedNp->send();
 
         $this->assertJson($r->getRaw());
-
-        $this->expectException(ErrorException::class);
-        $this->instance->getStatusDocumentsAction();
     }
 }

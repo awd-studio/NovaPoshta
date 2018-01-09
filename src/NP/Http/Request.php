@@ -13,6 +13,8 @@ declare(strict_types=1); // strict mode
 
 namespace NP\Http;
 
+use NP\Entity\Config;
+use NP\Exception\Errors;
 use NP\NP;
 
 
@@ -32,19 +34,27 @@ class Request
      */
     private $body;
 
+    /**
+     * @var Errors NP Errors
+     */
+    private static $errors;
+
+    /**
+     * @var Config NP config.
+     */
+    private static $config;
+
 
     /**
      * Request constructor.
      *
      * @param NP $np NovaPoshta instance.
-     *
-     * @return self
      */
     public function __construct(NP $np)
     {
+        self::$config = $np::config();
+        self::$errors = &$np::$errors;
         $this->body = $this->buildData($np);
-
-        return $this;
     }
 
 
@@ -60,13 +70,24 @@ class Request
         $data = new \stdClass();
 
         if ($np->getModel()) {
-            $data->apiKey = $np::getKey();
+            $data->apiKey = $np::config()->getKey();
             $data->modelName = $np->getModel()->getModelName();
             $data->calledMethod = $np->getModel()->getCalledMethod();
             $data->methodProperties = (object) $np->getModel()->getMethodProperties();
         }
 
         return $data;
+    }
+
+
+    /**
+     * Get NP Errors.
+     *
+     * @return Errors
+     */
+    public static function errors()
+    {
+        return self::$errors;
     }
 
 
@@ -109,12 +130,11 @@ class Request
 
     /**
      * Execute HTTP request.
-     * @param DriverInterface $driver Current HTTP driver.
      *
      * @return Response
      */
-    public function execute(DriverInterface $driver): Response
+    public function execute(): Response
     {
-        return $driver->send($this);
+        return self::$config->getDriver()->send($this);
     }
 }

@@ -28,25 +28,44 @@ class TrackingDocument extends Model implements TrackingDocumentsInterface
 {
 
     /**
-     * Method "getStatusDocuments" - Tracking documents status.
-     *
-     * Options: Documents mixed Available track-list.
-     *
-     * @see  \NP\TrackList::__construct
-     * @link https://devcenter.novaposhta.ua/docs/services/556eef34a0fe4f02049c664e/operations/55702cbba0fe4f0cf4fc53ee
-     *
-     * @return \NP\Model\Model
-     * @throws \NP\Exception\ErrorException
+     * Set Documents to method properties.
      */
-    public function getStatusDocumentsAction(): Model
+    public function setDocumentsToMethodProperties()
     {
         $this->setMethodProperties([
             'Documents' => (new TrackList($this->getMethodProperties()))->getAllTracks(),
         ]);
+    }
 
-        $this->getRequiredProperties([
+
+    /**
+     * Method "getStatusDocuments" - Tracking documents status.
+     *
+     * Options: Documents mixed Available track-list.
+     *
+     * @Method getStatusDocuments
+     *
+     * @Action(
+     *     modelName = "TrackingDocument",
+     *     calledMethod = "getStatusDocuments"
+     * )
+     *
+     * @ActionParam(
+     *     name = "Documents",
+     *     required = true,
+     *     callbackMethod = setDocumentsToMethodProperties
+     * )
+     *
+     * @see    \NP\TrackList::__construct
+     * @link   https://devcenter.novaposhta.ua/docs/services/556eef34a0fe4f02049c664e/operations/55702cbba0fe4f0cf4fc53ee
+     *
+     * @return \NP\Model\Model
+     */
+    public function getStatusDocumentsAction(): Model
+    {
+        /*$this->getRequiredProperties([
             'Documents',
-        ]);
+        ]);*/
 
         return $this;
     }
