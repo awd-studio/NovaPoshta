@@ -13,6 +13,7 @@ declare(strict_types=1); // strict mode
 
 namespace NP\Test\Http;
 
+use NP\Exception\Errors;
 use NP\Http\Response;
 use NP\Mock\Http\MockDriver;
 use PHPUnit\Framework\TestCase;
@@ -65,7 +66,7 @@ class RequestTest extends TestCase
         parent::setUp();
 
         $this->driver = new MockDriver();
-        $this->np = NP::init($this->key, $this->driver);
+        $this->np = NP::init(['key' => $this->key, 'driver' => $this->driver]);
         $this->instance = new Request($this->np);
     }
 
@@ -107,9 +108,18 @@ class RequestTest extends TestCase
      */
     public function testExecute()
     {
-        $r = $this->instance->execute(new MockDriver());
+        $r = $this->instance->execute();
 
         $this->assertInstanceOf(Response::class, $r);
         $this->assertJson($r->getRaw());
+    }
+
+
+    /**
+     * @covers \NP\Http\Request::errors
+     */
+    public function testErrors()
+    {
+        $this->assertInstanceOf(Errors::class, $this->instance::errors());
     }
 }

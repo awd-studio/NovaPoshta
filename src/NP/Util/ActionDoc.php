@@ -37,7 +37,7 @@ class ActionDoc
      *
      * @var string
      */
-    private $docblock;
+    private $docBlock;
 
 
     /**
@@ -48,7 +48,7 @@ class ActionDoc
     public function __construct(ReflectionMethod $model)
     {
         $this->model = $model;
-        $this->docblock = $this->getDocblock();
+        $this->docBlock = $this->getDocBlock();
     }
 
 
@@ -57,7 +57,7 @@ class ActionDoc
      *
      * @return string
      */
-    public function getDocblock(): string
+    public function getDocBlock(): string
     {
         return $this->model->getDocComment();
     }
@@ -85,13 +85,14 @@ class ActionDoc
      *
      * @return array
      */
-    protected function parseAction(string $tag, bool $entity): array
+    protected function parseAction(string $tag, bool $entity = true): array
     {
         $output = [];
-        $pattern = $entity ? "\(([\s\w\d=\"\',*]+)\)" : "([\s\w\d]+(?:\r?\n))";
-        preg_match_all("/(?:@{$tag}{$pattern})/u", $this->docblock, $matches);
+        $pattern = $entity ? "\(([\S\s\w\d]+)\)" : "([\s\w\d]+(?:\r?\n))";
+        preg_match_all("/(?:@{$tag}{$pattern})/u", $this->docBlock, $matches);
 
         if ($matches[1]) {
+
             foreach ($matches[1] as $k => $match) {
                 $item = [];
                 $name = $k;
@@ -107,6 +108,7 @@ class ActionDoc
                 $output[$name] = $item;
             }
         }
+
 
         return $output;
     }

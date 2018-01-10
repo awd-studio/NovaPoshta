@@ -62,24 +62,42 @@ class ModelTest extends TestCase
         $this->errors = new Errors();
 
         $this->instance = new Model($this->data, [
-            'modelName'    => $this->modelName,
-            'calledMethod' => $this->calledMethod,
-        ], [
             'testParam' => [],
         ], $this->errors);
+
+        $this->instance->setModelName($this->modelName);
+        $this->instance->setCalledMethod($this->calledMethod);
     }
 
 
     /**
      * @covers \NP\Model\Model::__construct
-     * @covers \NP\Model\Model::setActionProperties
      * @covers \NP\Model\Model::setMethodProperties
      * @covers \NP\Model\Model::setMethodParams
      * @covers \NP\Model\Model::invokeMethod
+     * @covers \NP\Model\Model::processModel
+     * @covers \NP\Util\NPReflectionMethod::build
      */
     public function testModel()
     {
         $this->assertInstanceOf(Model::class, $this->instance);
+    }
+
+
+    /**
+     * @covers \NP\Model\Model::invokeMethod
+     */
+    public function testInvokeMethod()
+    {
+        $errors = new Errors();
+
+        new Model($this->data, [
+            'testParam' => [
+                'callbackClass' => 'NonExistsClass',
+            ],
+        ], $errors);
+
+        $this->assertTrue($errors->getStatus());
     }
 
 
@@ -133,9 +151,6 @@ class ModelTest extends TestCase
     public function testGetRequiredProperties()
     {
         $newInstance = new Model($this->data, [
-            'modelName'    => $this->modelName,
-            'calledMethod' => $this->calledMethod,
-        ], [
             'testParam' => [
                 'required' => true,
             ],

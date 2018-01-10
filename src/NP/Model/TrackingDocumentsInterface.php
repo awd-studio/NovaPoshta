@@ -27,13 +27,17 @@ interface TrackingDocumentsInterface
     /**
      * Method "getStatusDocuments" - Tracking documents status.
      *
-     * Options: Documents mixed Available track-list.
+     * @ActionParam(
+     *     name = "Documents",
+     *     required = true,
+     *     callbackMethod = setDocumentsToMethodProperties,
+     *     description = "Documents mixed Available track-list"
+     * )
      *
-     * @see  \NP\TrackList::__construct
-     * @link https://devcenter.novaposhta.ua/docs/services/556eef34a0fe4f02049c664e/operations/55702cbba0fe4f0cf4fc53ee
+     * @see   \NP\TrackList::__construct
+     * @link  https://devcenter.novaposhta.ua/docs/services/556eef34a0fe4f02049c664e/operations/55702cbba0fe4f0cf4fc53ee
      *
-     * @return \NP\Model\Model
-     * @throws \NP\Exception\ErrorException
+     * @return Model
      */
     public function getStatusDocumentsAction(): Model;
 }

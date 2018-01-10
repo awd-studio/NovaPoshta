@@ -55,9 +55,19 @@ $response = NP::init($key)->sendWith('Address', 'searchSettlements', [
 - [Guzzle](https://github.com/guzzle/guzzle) or [PHP_CURL](http://php.net/manual/book.curl.php) libraries for sending HTTP-requests *(optional - you can define custom HTTP-driver)*
 
 
-## Install with Composer
+## Install
+Via [Composer](https://getcomposer.org/)
 ```bash
 composer require awd-studio/novaposhta
+```
+
+Or add a dependency on **awd-studio/novaposhta** to your project’s composer.json file:
+```json
+{
+    "require": {
+        "awd-studio/novaposhta": "*"
+    }
+}
 ```
 
 

@@ -15,6 +15,8 @@ namespace NP\Model;
 
 use NP\Exception\Errors;
 use NP\Util\Helper;
+use NP\Util\NPReflectionMethod;
+use ReflectionException;
 
 
 /**
@@ -59,20 +61,32 @@ class Model
      * Model constructor.
      *
      * @param array  $data   Data for send.
-     * @param array  $action API Action properties.
      * @param array  $params API available properties.
      * @param Errors $errors NP Errors.
      */
-    final public function __construct(array $data = [], array $action, array $params = [], Errors &$errors)
+    final public function __construct(array $data = [], array $params = [], Errors &$errors)
     {
         self::$errors = &$errors;
         $this->methodParams = $params;
 
-        $this->setActionProperties($action);
+        // Set up model data
         $this->setMethodProperties($data);
         $this->setMethodParams();
-        $this->invokeMethod();
-        $this->checkRequiredProperties();
+
+        // Process model
+        $this->processModel();
+    }
+
+
+    /**
+     * Processing model by method date.
+     */
+    private function processModel()
+    {
+        if (!self::$errors->getStatus()) {
+            $this->invokeMethod();
+            $this->checkRequiredProperties();
+        }
     }
 
 
@@ -84,8 +98,9 @@ class Model
         $defaults = [
             'name'           => '',
             'required'       => false,
-            'callbackClass'  => $this->getModelName() ?: __CLASS__,
+            'callbackClass'  => $this,
             'callbackMethod' => 'setMethodProperties',
+            'callbackData'   => 'getMethodProperties',
         ];
 
         foreach ($this->methodParams as $name => $prop) {
@@ -100,13 +115,25 @@ class Model
     protected function invokeMethod()
     {
         foreach ($this->methodParams as $name => $prop) {
-            $class = __NAMESPACE__ . "\\" . $prop['callbackClass'];
+            $class = $prop['callbackClass'];
             $method = $prop['callbackMethod'];
+            $dataCallback = $prop['callbackData'];
 
             try {
-                $reflectionMethod = new \ReflectionMethod($class, $method);
-                $reflectionMethod->invoke($this);
-            } catch (\ReflectionException $exception) {
+                $data = null;
+                try {
+                    $data = NPReflectionMethod::build($class, $dataCallback, [$class]);
+                } catch (ReflectionException $exception) {
+                    $className = is_string($class) ? $class : get_class($class);
+                    $message = "Data callback \"$className::$dataCallback\" - undefined!";
+                    $message .= ' Error: ';
+                    $message .= $exception->getMessage();
+
+                    self::$errors->addError($message, 3);
+                }
+
+                NPReflectionMethod::build($class, $method, [$class, $data]);
+            } catch (ReflectionException $exception) {
                 $message = "Undefined callbackClass or callbackMethod \"$class::$method\"!";
                 $message .= ' Error: ';
                 $message .= $exception->getMessage();
@@ -114,36 +141,6 @@ class Model
                 self::$errors->addError($message, 3);
             }
         }
-    }
-
-
-    /**
-     * Set API action properties.
-     *
-     * @param array $action
-     */
-    protected function setActionProperties($action)
-    {
-        if (count($action) == 1 && isset($action[0])) {
-            $action = reset($action);
-        }
-
-        foreach ($action as $itemName => $itemValue) {
-            if (isset($this->{$itemName}) || $this->{$itemName} === null) {
-                $this->{$itemName} = $itemValue;
-            }
-        }
-    }
-
-
-    /**
-     * Get model name.
-     *
-     * @return string
-     */
-    public function getModelName(): string
-    {
-        return $this->modelName;
     }
 
 
@@ -159,13 +156,13 @@ class Model
 
 
     /**
-     * Get called method.
+     * Get model name.
      *
      * @return string
      */
-    public function getCalledMethod(): string
+    public function getModelName(): string
     {
-        return $this->calledMethod;
+        return $this->modelName;
     }
 
 
@@ -181,28 +178,13 @@ class Model
 
 
     /**
-     * Get method properties.
+     * Get called method.
      *
-     * @return array
+     * @return string
      */
-    public function getMethodProperties(): array
+    public function getCalledMethod(): string
     {
-        return $this->methodProperties;
-    }
-
-
-    /**
-     * Set method properties.
-     *
-     * @param array $data
-     *
-     * @return self
-     */
-    public function setMethodProperties(array $data): self
-    {
-        $this->methodProperties = $data;
-
-        return $this;
+        return $this->calledMethod;
     }
 
 
@@ -215,6 +197,28 @@ class Model
     public function setMethodProperty(string $name, string $value)
     {
         $this->methodProperties[$name] = $value;
+    }
+
+
+    /**
+     * Set method properties.
+     *
+     * @param array $data
+     */
+    public function setMethodProperties(array $data)
+    {
+        $this->methodProperties = $data;
+    }
+
+
+    /**
+     * Get method properties.
+     *
+     * @return array
+     */
+    public function getMethodProperties(): array
+    {
+        return $this->methodProperties;
     }
 
 

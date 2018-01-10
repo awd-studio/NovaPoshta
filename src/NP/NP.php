@@ -19,7 +19,9 @@ use NP\Http\Request;
 use NP\Http\Response;
 use NP\Model\Model;
 use NP\Util\ActionDoc;
+use NP\Util\NPReflectionMethod;
 use NP\Util\Singleton;
+use ReflectionException;
 
 
 /**
@@ -155,35 +157,33 @@ final class NP
      * @param string $modelName    API model name.
      * @param string $calledMethod Model method.
      * @param array  $data         Data to send.
-     *
-     * @return self
      */
-    public function with(string $modelName, string $calledMethod, array $data = []): self
+    public function with(string $modelName, string $calledMethod, array $data = [])
     {
-        $model = __NAMESPACE__ . "\\Model\\$modelName";
+        $model = __NAMESPACE__ . "\\Model\\$modelName"; // Build full model name
 
-        // Getting reflection of model with called method.
-        // Replacing called method name with [*Action] suffix.
-        // Catching Reflection exception if model or method is unavailable.
+        // Try to model reflection with called method.
+        // Catch Reflection exception if model or method is unavailable.
         try {
-            $reflectionMethod = new \ReflectionMethod($model, "{$calledMethod}Action");
+            // Replacing called method name with [*Action] suffix.
+            $reflectionMethod = new NPReflectionMethod($model, "{$calledMethod}Action");
 
-            $action = (new ActionDoc($reflectionMethod))->getAnnotation('Action');
+            // Get method parameters from annotation
             $params = (new ActionDoc($reflectionMethod))->getAnnotation('ActionParam');
 
             // Create model
-            $this->model = $reflectionMethod->invoke(new $model($data, $action, $params, self::$errors));
+            $this->model = $reflectionMethod->invoke(new $model($data, $params, self::$errors));
+            $this->model->setModelName($modelName);
+            $this->model->setCalledMethod($calledMethod);
 
             // Create request
             $this->request = new Request($this);
-        } catch (\ReflectionException $exception) {
+        } catch (ReflectionException $exception) {
             $message = "Undefined model or method \"$model::$calledMethod\"!";
             $message .= ' Error: ';
             $message .= $exception->getMessage();
 
             self::$errors->addError($message, 3);
-        } finally {
-            return $this;
         }
     }
 
