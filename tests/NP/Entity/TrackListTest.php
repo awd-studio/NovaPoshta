@@ -16,7 +16,6 @@ namespace NP\Test\Entity;
 use Countable;
 use Iterator;
 use NP\Entity\Track;
-use NP\Exception\ErrorException;
 use PHPUnit\Framework\TestCase;
 use NP\Entity\TrackList;
 
@@ -73,6 +72,12 @@ class TrackListTest extends TestCase
         $this->assertInstanceOf(TrackList::class, $this->instance);
         $this->assertInstanceOf(Iterator::class, $this->instance);
         $this->assertInstanceOf(Countable::class, $this->instance);
+
+        new TrackList($this->documentNumber);
+        new TrackList([$this->documentNumber]);
+        new TrackList(new Track($this->documentNumber));
+
+        new TrackList(new \stdClass());
     }
 
 
