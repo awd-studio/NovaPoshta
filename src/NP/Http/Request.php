@@ -13,9 +13,8 @@ declare(strict_types=1); // strict mode
 
 namespace NP\Http;
 
-use NP\Entity\Config;
-use NP\Exception\Errors;
-use NP\NP;
+use NP\Common\Config;
+use NP\Model\Model;
 
 
 /**
@@ -34,60 +33,21 @@ class Request
      */
     private $body;
 
-    /**
-     * @var Errors NP Errors
-     */
-    private static $errors;
-
-    /**
-     * @var Config NP config.
-     */
-    private static $config;
-
 
     /**
      * Request constructor.
      *
-     * @param NP $np NovaPoshta instance.
+     * @param Model $model Model instance.
      */
-    public function __construct(NP $np)
-    {
-        self::$config = $np::config();
-        self::$errors = &$np::$errors;
-        $this->body = $this->buildData($np);
-    }
-
-
-    /**
-     * Data builder.
-     *
-     * @param NP $np NovaPoshta instance.
-     *
-     * @return \stdClass
-     */
-    private function buildData(NP $np)
+    public function __construct(Model $model)
     {
         $data = new \stdClass();
+        $data->apiKey = Config::getInstance()->getKey();
+        $data->modelName = $model->getModelName();
+        $data->calledMethod = $model->getCalledMethod();
+        $data->methodProperties = (object) $model->getMethodProperties();
 
-        if ($np->getModel()) {
-            $data->apiKey = $np::config()->getKey();
-            $data->modelName = $np->getModel()->getModelName();
-            $data->calledMethod = $np->getModel()->getCalledMethod();
-            $data->methodProperties = (object) $np->getModel()->getMethodProperties();
-        }
-
-        return $data;
-    }
-
-
-    /**
-     * Get NP Errors.
-     *
-     * @return Errors
-     */
-    public static function errors()
-    {
-        return self::$errors;
+        $this->body = $data;
     }
 
 
@@ -135,6 +95,6 @@ class Request
      */
     public function execute(): Response
     {
-        return self::$config->getDriver()->send($this);
+        return Config::getInstance()->getDriver()->send($this);
     }
 }

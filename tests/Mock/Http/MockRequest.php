@@ -14,7 +14,7 @@ declare(strict_types=1); // strict mode
 namespace NP\Mock\Http;
 
 use NP\Http\Request;
-use NP\NP;
+use NP\Model\Model;
 
 
 /**
@@ -32,18 +32,16 @@ class MockRequest extends Request
 
     /**
      * Request constructor.
-     *
-     * @param NP $np NovaPoshta instance.
-     *
-     * @return self
      */
-    public function __construct(NP $np)
+    public function __construct()
     {
-        parent::__construct($np);
+        $model = new Model();
+        $model->setModelName('testModelName');
+        $model->setCalledMethod('testCalledMethod');
+
+        parent::__construct($model);
 
         $this->body = new \stdClass();
-
-        return $this;
     }
 
 

@@ -11,9 +11,10 @@
 
 declare(strict_types=1); // strict mode
 
-namespace NP\Test\Entity;
+namespace NP\Test\Common\Util;
 
-use NP\Entity\Config;
+use NP\Common\Config;
+use NP\Exception\ErrorException;
 use NP\Exception\Errors;
 use NP\Http\DriverInterface;
 use NP\Mock\Http\MockDriver;
@@ -44,49 +45,44 @@ class ConfigTest extends TestCase
      */
     private $driver;
 
-    /**
-     * @var Errors
-     */
-    private $errors;
-
 
     /**
      * Settings up.
+     * @throws ErrorException
      */
     public function setUp()
     {
         parent::setUp();
 
-        $this->errors = new Errors();
         $this->driver = new MockDriver();
         $this->instance = Config::setUp([
             'key' => $this->key,
-        ], $this->errors);
+        ]);
     }
 
 
     /**
-     * @covers \NP\Entity\Config::setUp
-     * @covers \NP\Entity\Config::setProperty
-     * @covers \NP\Entity\Config::setProperty
-     * @covers \NP\Entity\Config::setDefaults
-     * @covers \NP\Entity\Config::getDefaultDriver
+     * @covers \NP\Common\Config::setUp
+     * @covers \NP\Common\Config::setProperty
+     * @covers \NP\Common\Config::setProperty
+     * @covers \NP\Common\Config::setDefaults
+     * @covers \NP\Common\Config::getDefaultDriver
      */
     public function testSetUp()
     {
         $this->assertInstanceOf(Config::class, $this->instance);
 
-        $newConfig = Config::setUp($this->key, $this->errors);
+        $newConfig = Config::setUp($this->key);
         $this->assertInstanceOf(DriverInterface::class, $newConfig->getDriver());
 
-        $superNewConfig = Config::setUp(new \stdClass(), $this->errors);
+        $superNewConfig = Config::setUp(new \stdClass());
         $this->assertInstanceOf(DriverInterface::class, $superNewConfig->getDriver());
 
     }
 
 
     /**
-     * @covers \NP\Entity\Config::getDriver
+     * @covers \NP\Common\Config::getDriver
      */
     public function testGetDriver()
     {
@@ -95,13 +91,13 @@ class ConfigTest extends TestCase
         $newConfig = Config::setUp([
             'key'    => $this->key,
             'driver' => $this->driver,
-        ], $this->errors);
+        ]);
         $this->assertInstanceOf(DriverInterface::class, $newConfig->getDriver());
     }
 
 
     /**
-     * @covers \NP\Entity\Config::getLanguage
+     * @covers \NP\Common\Config::getLanguage
      */
     public function testGetLanguage()
     {

@@ -18,4 +18,6 @@ namespace NP\Exception;
  * Class ErrorException
  * @package NP\Exception
  */
-class ErrorException extends \Exception implements NPException {}
+class ErrorException extends \Exception implements NPException
+{
+}

@@ -13,9 +13,9 @@ declare(strict_types=1); // strict mode
 
 namespace NP\Test\Http;
 
-use NP\Exception\Errors;
 use NP\Http\Response;
 use NP\Mock\Http\MockDriver;
+use NP\Model\Model;
 use PHPUnit\Framework\TestCase;
 use NP\Http\Request;
 use NP\NP;
@@ -39,9 +39,9 @@ class RequestTest extends TestCase
     /**
      * NP instance.
      *
-     * @var NP
+     * @var Model
      */
-    private $np;
+    private $model;
 
     /**
      * API key.
@@ -60,20 +60,22 @@ class RequestTest extends TestCase
 
     /**
      * Settings up.
+     * @throws \NP\Exception\ErrorException
      */
     public function setUp()
     {
         parent::setUp();
 
         $this->driver = new MockDriver();
-        $this->np = NP::init(['key' => $this->key, 'driver' => $this->driver]);
-        $this->instance = new Request($this->np);
+        $this->model = new Model();
+        $this->model->setModelName('testModel');
+        $this->model->setCalledMethod('testCalledMethod');
+        $this->instance = new Request($this->model);
     }
 
 
     /**
      * @covers \NP\Http\Request::__construct
-     * @covers \NP\Http\Request::buildData
      */
     public function testRequest()
     {
@@ -87,8 +89,14 @@ class RequestTest extends TestCase
      */
     public function testGetBody()
     {
-        $this->assertEquals(new \stdClass(), $this->instance->getBody());
-        $this->assertEquals(json_encode(new \stdClass()), $this->instance->getBody(true));
+        $data = new \stdClass();
+        $data->apiKey = 'TestModel';
+        $data->modelName = 'testModel';
+        $data->calledMethod = 'testCalledMethod';
+        $data->methodProperties = new \stdClass();
+
+        $this->assertEquals($data, $this->instance->getBody());
+        $this->assertEquals(json_encode($data), $this->instance->getBody(true));
     }
 
 
@@ -112,14 +120,5 @@ class RequestTest extends TestCase
 
         $this->assertInstanceOf(Response::class, $r);
         $this->assertJson($r->getRaw());
-    }
-
-
-    /**
-     * @covers \NP\Http\Request::errors
-     */
-    public function testErrors()
-    {
-        $this->assertInstanceOf(Errors::class, $this->instance::errors());
     }
 }

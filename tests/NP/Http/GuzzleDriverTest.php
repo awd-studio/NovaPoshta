@@ -15,8 +15,8 @@ namespace NP\Test\Http;
 
 use NP\Http\GuzzleDriver;
 use NP\Http\Request;
-use NP\NP;
 use NP\Mock\Http\MockRequest;
+use NP\Model\Model;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -49,7 +49,11 @@ class GuzzleDriverTest extends TestCase
         parent::setUp();
 
         $this->instance = new GuzzleDriver();
-        $this->request = new MockRequest(NP::init(''));
+
+        $model = new Model();
+        $model->setModelName('testModel');
+        $model->setCalledMethod('testCalledMethod');
+        $this->request = new MockRequest($model);
     }
 
 

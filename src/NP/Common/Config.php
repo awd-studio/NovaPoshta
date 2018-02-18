@@ -12,13 +12,13 @@
 declare(strict_types=1); // strict mode
 
 
-namespace NP\Entity;
+namespace NP\Common;
 
 use NP\Exception\Errors;
 use NP\Http\DriverInterface;
 use NP\Http\CurlDriver;
 use NP\Http\GuzzleDriver;
-use NP\Util\Singleton;
+use NP\Common\Util\Singleton;
 
 
 /**
@@ -50,24 +50,16 @@ class Config
      */
     private static $language;
 
-    /**
-     * @var Errors NP errors.
-     */
-    private static $errors;
-
 
     /**
      * Set up.
      *
-     * @param mixed  $config Config data. May use array to set configs
-     * @param Errors $errors NP Errors
+     * @param mixed $config Config data. May use array to set configs
      *
      * @return Config
      */
-    public static function setUp($config, Errors &$errors): self
+    public static function setUp($config): self
     {
-        self::$errors = &$errors;
-
         if (is_string($config)) {
             self::$key = $config;
         } elseif (is_array($config) && isset($config['key'])) {
@@ -75,7 +67,7 @@ class Config
                 self::setProperty($k, $value);
             }
         } else {
-            self::$errors->addError('API key is not allowed.', 7);
+            Errors::getInstance()->addError('API key is not allowed.');
         }
 
         self::setDefaults();
@@ -127,7 +119,7 @@ class Config
                 $driver = new CurlDriver;
             } catch (\Exception $exception) {
                 $driver = null;
-                self::$errors->addError('', 2);
+                Errors::getInstance()->addError('There are no installed "Guzzle" library or "php_curl" extension!');
             }
         }
 

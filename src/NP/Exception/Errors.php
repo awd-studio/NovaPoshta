@@ -14,6 +14,7 @@ declare(strict_types=1); // strict mode
 namespace NP\Exception;
 
 use JsonSerializable;
+use NP\Common\Util\Singleton;
 use NP\Http\Response;
 
 
@@ -24,18 +25,7 @@ use NP\Http\Response;
 class Errors implements JsonSerializable
 {
 
-    /**
-     * Current error codes with description.
-     */
-    const ERRORS = [
-        1 => 'Unknown error. Please, contact your system administrator.',
-        2 => 'No installed "Guzzle" library or "php_curl" extension!',
-        3 => 'Undefined API model or method.',
-        4 => 'HTTP Driver Error.',
-        5 => 'Model not defined.',
-        6 => 'Request not defined.',
-        7 => 'Required value not allowed.',
-    ];
+    use Singleton;
 
     /**
      * @var string Error message.
@@ -47,28 +37,20 @@ class Errors implements JsonSerializable
      */
     private $errors = [];
 
-    /**
-     * @var array Error codes
-     */
-    private $errorCodes = [];
-
 
     /**
      * Add error.
      *
      * @param string $message Error message.
-     * @param int    $code    Error code.
      *
-     * @return int Added error key.
+     * @return self.
      */
-    public function addError($message = '', $code = 1): int
+    public function addError(string $message): self
     {
-        $count = count($this->errors);
         $this->success = false;
-        $this->errors[] = !empty($message) ? $message : $this->getErrorDescription($code);
-        $this->errorCodes[] = $code;
+        $this->errors[] = $message;
 
-        return $count;
+        return $this;
     }
 
 
@@ -81,19 +63,18 @@ class Errors implements JsonSerializable
      */
     public function getError($key): string
     {
-        return $this->errors[$key] ?: '';
+        return $this->errors[$key] ?? '';
     }
 
 
     /**
-     * Get current Error description.
-     * @param int $code
+     * Get all errors.
      *
-     * @return string
+     * @return array
      */
-    public function getErrorDescription($code): string
+    public function getErrors(): array
     {
-        return self::ERRORS[$code] ?? self::ERRORS[1];
+        return $this->errors;
     }
 
 
@@ -137,12 +118,9 @@ class Errors implements JsonSerializable
      */
     public function __toString()
     {
-        $errors = [];
-        for ($i = 0, $l = count($this->errors); $i < $l; $i++) {
-            $errors[] = "Error {$this->errors[$i]}, with code #{$this->errorCodes[$i]}";
-        }
-
-        $messages = implode('; ', $errors);
+        $messages = implode('; ', array_map(function ($error) {
+            return "Error: {$error}";
+        }, $this->errors));
 
         return "Errors: {$messages}";
     }

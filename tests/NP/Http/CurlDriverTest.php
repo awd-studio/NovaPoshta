@@ -13,10 +13,9 @@ declare(strict_types=1); // strict mode
 
 namespace NP\Test\Http;
 
-use NP\Exception\ErrorException;
 use NP\Http\CurlDriver;
 use NP\Http\Request;
-use NP\NP;
+use NP\Model\Model;
 use NP\Mock\Http\MockRequest;
 use PHPUnit\Framework\TestCase;
 
@@ -49,14 +48,18 @@ class CurlDriverTest extends TestCase
     {
         parent::setUp();
 
+        $model = new Model();
+        $model->setModelName('testModel');
+        $model->setCalledMethod('testCalledMethod');
+
         $this->instance = new CurlDriver();
-        $this->request = new MockRequest(NP::init('', $this->instance));
+        $this->request = new MockRequest($model);
     }
 
 
     /**
      * @covers \NP\Http\CurlDriver::send
-     * @throws \NP\Exception\ErrorException
+     * @covers \NP\Common\Config::getKey
      */
     public function testSend()
     {

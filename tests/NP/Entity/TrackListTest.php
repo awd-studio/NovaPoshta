@@ -73,13 +73,6 @@ class TrackListTest extends TestCase
         $this->assertInstanceOf(TrackList::class, $this->instance);
         $this->assertInstanceOf(Iterator::class, $this->instance);
         $this->assertInstanceOf(Countable::class, $this->instance);
-
-        new TrackList($this->documentNumber);
-        new TrackList([$this->documentNumber]);
-        new TrackList(new Track($this->documentNumber));
-
-        $this->expectException(ErrorException::class);
-        new TrackList(new \stdClass());
     }
 
 
@@ -103,64 +96,4 @@ class TrackListTest extends TestCase
 
         $this->assertEquals(new Track($track, $this->phone), $this->instance->getTrack($track));
     }
-
-
-    /**
-     * @covers \NP\Entity\TrackList::next
-     * ToDo: Implements test;
-     */
-    // public function testNext()
-    // {
-    //
-    // }
-
-
-    /**
-     * @covers \NP\Entity\TrackList::key
-     * ToDo: Implements test;
-     */
-    // public function testKey()
-    // {
-    //
-    // }
-
-
-    /**
-     * @covers \NP\Entity\TrackList::valid
-     * ToDo: Implements test;
-     */
-    // public function testValid()
-    // {
-    //
-    // }
-
-
-    /**
-     * @covers \NP\Entity\TrackList::rewind
-     * ToDo: Implements test;
-     */
-    // public function testRewind()
-    // {
-    //
-    // }
-
-
-    /**
-     * @covers \NP\Entity\TrackList::current
-     * ToDo: Implements test;
-     */
-    // public function testCurrent()
-    // {
-    //
-    // }
-
-
-    /**
-     * @covers \NP\Entity\TrackList::count
-     * ToDo: Implements test;
-     */
-    // public function testCount()
-    // {
-    //
-    // }
 }
