@@ -18,7 +18,7 @@ use NP\Exception\Errors;
 use NP\Http\DriverInterface;
 use NP\Http\CurlDriver;
 use NP\Http\GuzzleDriver;
-use NP\Util\Singleton;
+use NP\Common\Util\Singleton;
 
 
 /**

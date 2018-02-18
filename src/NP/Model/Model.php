@@ -14,8 +14,8 @@ declare(strict_types=1); // strict mode
 namespace NP\Model;
 
 use NP\Exception\Errors;
-use NP\Util\Helper;
-use NP\Util\NPReflectionMethod;
+use NP\Common\Util\Helper;
+use NP\Common\Util\NPReflectionMethod;
 use ReflectionException;
 
 

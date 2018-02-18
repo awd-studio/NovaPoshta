@@ -100,11 +100,11 @@ class TrackingDocumentTest extends TestCase
      * @covers \NP\Model\TrackingDocument::getStatusDocumentsAction
      * @covers \NP\Model\TrackingDocument::setDocumentsToMethodProperties
      * @covers \NP\Model\Model::invokeMethod
-     * @covers \NP\Util\ActionDoc::__construct
-     * @covers \NP\Util\ActionDoc::getDocBlock
-     * @covers \NP\Util\ActionDoc::getAnnotation
-     * @covers \NP\Util\ActionDoc::parseAction
-     * @covers \NP\Util\NPReflectionMethod::build
+     * @covers \NP\Common\Util\ActionDoc::__construct
+     * @covers \NP\Common\Util\ActionDoc::getDocBlock
+     * @covers \NP\Common\Util\ActionDoc::getAnnotation
+     * @covers \NP\Common\Util\ActionDoc::parseAction
+     * @covers \NP\Common\Util\NPReflectionMethod::build
      */
     public function testGetStatusDocumentsActionSuccess()
     {
@@ -126,10 +126,10 @@ class TrackingDocumentTest extends TestCase
      * @covers \NP\NP::with
      * @covers \NP\NP::send
      * @covers \NP\Model\TrackingDocument::getStatusDocumentsAction
-     * @covers \NP\Util\ActionDoc::__construct
-     * @covers \NP\Util\ActionDoc::getDocBlock
-     * @covers \NP\Util\ActionDoc::getAnnotation
-     * @covers \NP\Util\ActionDoc::parseAction
+     * @covers \NP\Common\Util\ActionDoc::__construct
+     * @covers \NP\Common\Util\ActionDoc::getDocBlock
+     * @covers \NP\Common\Util\ActionDoc::getAnnotation
+     * @covers \NP\Common\Util\ActionDoc::parseAction
      */
     public function testGetStatusDocumentsActionFailed()
     {

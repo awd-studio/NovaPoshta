@@ -8,17 +8,18 @@
  * @license http://www.opensource.org/licenses/mit-license.php MIT
  * @link    https://github.com/awd-studio/novaposhta
  */
+
 declare(strict_types=1); // strict mode
 
 
-namespace NP\Util;
+namespace NP\Common\Util;
 
 use ReflectionMethod;
 
 
 /**
  * Class NPReflectionMethod
- * @package NP\Util
+ * @package NP\Common\Util
  */
 class NPReflectionMethod extends ReflectionMethod
 {
@@ -31,6 +32,7 @@ class NPReflectionMethod extends ReflectionMethod
      *                      It accepts a variable number of parameters which are passed to the method.
      *
      * @return mixed the method result.
+     * @throws \ReflectionException
      */
     public static function build($class, string $name, array $data = [])
     {

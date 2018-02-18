@@ -13,12 +13,12 @@ declare(strict_types=1); // strict mode
 
 namespace NP\Test\Util;
 
-use NP\Util\Helper;
+use NP\Common\Util\Helper;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Class TestHelper
- * @package NP\Util
+ * @package NP\Common\Util
  */
 class HelperTest extends TestCase
 {
@@ -26,7 +26,7 @@ class HelperTest extends TestCase
 
 
     /**
-     * @covers \NP\Util\Helper::toActionCase
+     * @covers \NP\Common\Util\Helper::toActionCase
      */
     public function testToActionCase()
     {

@@ -67,7 +67,7 @@ class NPTest extends TestCase
 
     /**
      * @covers \NP\NP::getInstance
-     * @covers \NP\Util\Singleton::getInstance
+     * @covers \NP\Common\Util\Singleton::getInstance
      */
     public function testNP()
     {

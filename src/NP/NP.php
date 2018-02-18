@@ -18,9 +18,9 @@ use NP\Exception\Errors;
 use NP\Http\Request;
 use NP\Http\Response;
 use NP\Model\Model;
-use NP\Util\ActionDoc;
-use NP\Util\NPReflectionMethod;
-use NP\Util\Singleton;
+use NP\Common\Util\ActionDoc;
+use NP\Common\Util\NPReflectionMethod;
+use NP\Common\Util\Singleton;
 use ReflectionException;
 
 

@@ -76,7 +76,7 @@ class ModelTest extends TestCase
      * @covers \NP\Model\Model::setMethodParams
      * @covers \NP\Model\Model::invokeMethod
      * @covers \NP\Model\Model::processModel
-     * @covers \NP\Util\NPReflectionMethod::build
+     * @covers \NP\Common\Util\NPReflectionMethod::build
      */
     public function testModel()
     {
