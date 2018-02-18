@@ -16,13 +16,15 @@ namespace NP\Entity;
 
 use Countable;
 use Iterator;
-use NP\Exception\ErrorException;
+use NP\Exception\Errors;
 
 
 /**
  * Class TrackList
- *
  * @package NP\Entity
+ *
+ * ToDo: Replace with Collection;
+ * ToDo: Refactor;
  */
 class TrackList implements Iterator, Countable
 {
@@ -55,8 +57,6 @@ class TrackList implements Iterator, Countable
      * ];
      *
      * @param mixed $tracks
-     *
-     * @throws \NP\Exception\NPException
      */
     public function __construct($tracks)
     {
@@ -76,7 +76,7 @@ class TrackList implements Iterator, Countable
                 $this->container[$track->getId()] = (object) $track->build();
             }
         } else {
-            throw new ErrorException('Invalid track numbers!');
+            Errors::getInstance()->addError('Invalid track numbers!');
         }
     }
 
@@ -110,6 +110,8 @@ class TrackList implements Iterator, Countable
 
 
     /**
+     * Add Track to list.
+     *
      * @param mixed  $documentNumber
      * @param string $phone
      */

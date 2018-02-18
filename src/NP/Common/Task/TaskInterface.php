@@ -26,14 +26,6 @@ interface TaskInterface
 {
 
     /**
-     * Get task ID.
-     *
-     * @return int
-     */
-    public function getId(): int;
-
-
-    /**
      * Get task request.
      *
      * @return Request

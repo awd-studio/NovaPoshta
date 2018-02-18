@@ -46,11 +46,6 @@ class ModelTest extends TestCase
      */
     private $data = [];
 
-    /**
-     * @var Errors
-     */
-    private $errors;
-
 
     /**
      * Settings up.
@@ -59,11 +54,9 @@ class ModelTest extends TestCase
     {
         parent::setUp();
 
-        $this->errors = new Errors();
-
         $this->instance = new Model($this->data, [
             'testParam' => [],
-        ], $this->errors);
+        ]);
 
         $this->instance->setModelName($this->modelName);
         $this->instance->setCalledMethod($this->calledMethod);
@@ -89,15 +82,13 @@ class ModelTest extends TestCase
      */
     public function testInvokeMethod()
     {
-        $errors = new Errors();
-
         new Model($this->data, [
             'testParam' => [
                 'callbackClass' => 'NonExistsClass',
             ],
-        ], $errors);
+        ]);
 
-        $this->assertTrue($errors->getStatus());
+        $this->assertTrue(Errors::getInstance()->getStatus());
     }
 
 
@@ -146,17 +137,15 @@ class ModelTest extends TestCase
 
     /**
      * @covers \NP\Model\Model::checkRequiredProperties
-     * @covers \NP\Model\Model::getError
      */
     public function testGetRequiredProperties()
     {
-        $newInstance = new Model($this->data, [
+        new Model($this->data, [
             'testParam' => [
                 'required' => true,
             ],
-        ], $this->errors);
+        ]);
 
-        $this->assertTrue($newInstance->getError()->getStatus());
-        $this->assertInstanceOf(Errors::class, $newInstance->getError());
+        $this->assertTrue(Errors::getInstance()->getStatus());
     }
 }

@@ -18,4 +18,6 @@ namespace NP\Exception;
  * NovaPoshta Exception Interface
  * @package NP\Exception
  */
-interface NPException {}
+interface NPException
+{
+}

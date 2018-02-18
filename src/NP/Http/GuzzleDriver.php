@@ -13,7 +13,9 @@ declare(strict_types=1); // strict mode
 
 namespace NP\Http;
 
+use Exception;
 use GuzzleHttp\Client;
+use NP\Exception\Errors;
 
 
 /**
@@ -38,9 +40,9 @@ class GuzzleDriver implements DriverInterface
             ]);
 
             $response = (string) $serverResponse->getBody();
-        } catch (\Exception $exception) {
-            $request::errors()->addError($exception->getMessage(), 4);
-            $response = $request::errors()->toJson();
+        } catch (Exception $exception) {
+            $errors = Errors::getInstance();
+            $response = $errors->addError($exception->getMessage())->toJson();
         } finally {
             return new Response($response);
         }

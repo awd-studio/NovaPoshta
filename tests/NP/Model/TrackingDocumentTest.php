@@ -60,21 +60,16 @@ class TrackingDocumentTest extends TestCase
      */
     private $np;
 
-    /**
-     * @var Errors
-     */
-    private $errors;
-
 
     /**
      * Settings up.
+     * @throws \NP\Exception\ErrorException
      */
     public function setUp()
     {
         parent::setUp();
 
-        $this->errors = new Errors();
-        $this->instance = new TrackingDocument($this->data, [], $this->errors);
+        $this->instance = new TrackingDocument($this->data, []);
         $this->instance->setModelName($this->modelName);
         $this->instance->setCalledMethod($this->calledMethod);
         $this->np = NP::init(['key' => 'newKey', 'driver' => new MockDriver()]);
@@ -95,8 +90,8 @@ class TrackingDocumentTest extends TestCase
      * @covers \NP\NP::with
      * @covers \NP\NP::send
      * @covers \NP\NP::sendWith
+     * @covers \NP\Common\Task\TaskManager::getResponse
      * @covers \NP\Model\Model::checkRequiredProperties
-     * @covers \NP\Http\Request::buildData
      * @covers \NP\Model\TrackingDocument::getStatusDocumentsAction
      * @covers \NP\Model\TrackingDocument::setDocumentsToMethodProperties
      * @covers \NP\Model\Model::invokeMethod
@@ -125,11 +120,14 @@ class TrackingDocumentTest extends TestCase
     /**
      * @covers \NP\NP::with
      * @covers \NP\NP::send
+     * @covers \NP\Common\Task\TaskManager::getResponse
      * @covers \NP\Model\TrackingDocument::getStatusDocumentsAction
      * @covers \NP\Common\Util\ActionDoc::__construct
      * @covers \NP\Common\Util\ActionDoc::getDocBlock
      * @covers \NP\Common\Util\ActionDoc::getAnnotation
      * @covers \NP\Common\Util\ActionDoc::parseAction
+     *
+     * @throws \NP\Exception\ErrorException
      */
     public function testGetStatusDocumentsActionFailed()
     {

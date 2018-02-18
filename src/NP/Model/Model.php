@@ -52,21 +52,13 @@ class Model
 
 
     /**
-     * @var Errors NP Errors.
-     */
-    public static $errors;
-
-
-    /**
      * Model constructor.
      *
-     * @param array  $data   Data for send.
-     * @param array  $params API available properties.
-     * @param Errors $errors NP Errors.
+     * @param array $data   Data for send.
+     * @param array $params API available properties.
      */
-    final public function __construct(array $data = [], array $params = [], Errors &$errors)
+    final public function __construct(array $data = [], array $params = [])
     {
-        self::$errors = &$errors;
         $this->methodParams = $params;
 
         // Set up model data
@@ -83,10 +75,11 @@ class Model
      */
     private function processModel()
     {
-        if (!self::$errors->getStatus()) {
-            $this->invokeMethod();
-            $this->checkRequiredProperties();
-        }
+        // ToDo: Realize checking;
+        // if (!Errors::getInstance()->getStatus()) {
+        $this->invokeMethod();
+        $this->checkRequiredProperties();
+        // }
     }
 
 
@@ -129,7 +122,7 @@ class Model
                     $message .= ' Error: ';
                     $message .= $exception->getMessage();
 
-                    self::$errors->addError($message, 3);
+                    Errors::getInstance()->addError($message);
                 }
 
                 NPReflectionMethod::build($class, $method, [$class, $data]);
@@ -138,7 +131,7 @@ class Model
                 $message .= ' Error: ';
                 $message .= $exception->getMessage();
 
-                self::$errors->addError($message, 3);
+                Errors::getInstance()->addError($message);
             }
         }
     }
@@ -224,6 +217,7 @@ class Model
 
     /**
      * Check required method properties.
+     * ToDo: Refactor;
      */
     public function checkRequiredProperties()
     {
@@ -248,18 +242,7 @@ class Model
 
         if ($errors) {
             $values = implode(', ', $errors);
-            self::$errors->addError("Required properties: {$values} - not allowed!");
+            Errors::getInstance()->addError("Required properties: {$values} - not allowed!");
         }
-    }
-
-
-    /**
-     * Get errors.
-     *
-     * @return Errors
-     */
-    public function getError(): Errors
-    {
-        return self::$errors;
     }
 }

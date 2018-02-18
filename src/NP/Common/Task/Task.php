@@ -26,11 +26,6 @@ class Task implements TaskInterface
 {
 
     /**
-     * @var int Task ID.
-     */
-    private $id;
-
-    /**
      * @var Request Task request.
      */
     private $request;
@@ -44,24 +39,11 @@ class Task implements TaskInterface
     /**
      * Task constructor.
      *
-     * @param int     $id      Task ID.
      * @param Request $request Task request.
      */
-    public function __construct(int $id, Request $request)
+    public function __construct(Request $request)
     {
-        $this->id = $id;
         $this->request = $request;
-    }
-
-
-    /**
-     * Get task ID.
-     *
-     * @return int
-     */
-    public function getId(): int
-    {
-        return $this->id;
     }
 
 
@@ -73,6 +55,15 @@ class Task implements TaskInterface
     public function getRequest(): Request
     {
         return $this->request;
+    }
+
+
+    /**
+     * @param Response $response
+     */
+    public function setResponse(Response $response)
+    {
+        $this->response = $response;
     }
 
 
@@ -94,7 +85,7 @@ class Task implements TaskInterface
      */
     public function execute(): Response
     {
-        $this->request->execute();
+        $this->response = $this->request->execute();
 
         return $this->response;
     }

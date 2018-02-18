@@ -46,7 +46,7 @@ class ErrorsTest extends TestCase
 
         $this->error = 'Test message';
         $this->code = 1;
-        $this->instance = new Errors();
+        $this->instance = Errors::getInstance();
     }
 
 
@@ -55,7 +55,7 @@ class ErrorsTest extends TestCase
      */
     public function testError()
     {
-        $this->instance->addError($this->error, $this->code);
+        $this->instance->addError($this->error);
         $this->assertInstanceOf(Errors::class, $this->instance);
         $this->assertInstanceOf(JsonSerializable::class, $this->instance);
     }
@@ -68,21 +68,11 @@ class ErrorsTest extends TestCase
     public function testAddGetError()
     {
         $error = 'My test message';
-        $key = $this->instance->addError($error, 999);
+        $this->instance->addError($error);
 
-        $this->assertEquals($error, $this->instance->getError($key));
-    }
-
-
-    /**
-     * @covers \NP\Exception\Errors::getErrorDescription
-     */
-    public function testGetErrorDescription()
-    {
-        $error = 'Unknown error. Please, contact your system administrator.';
-
-        $this->assertEquals($error, $this->instance->getErrorDescription(1));
-        $this->assertEquals($error, $this->instance->getErrorDescription(10000));
+        $this->assertEquals($error, $this->instance->getError(
+            (count($this->instance->getErrors()) - 1)
+        ));
     }
 
 
@@ -91,7 +81,7 @@ class ErrorsTest extends TestCase
      */
     public function testGetStatus()
     {
-        $this->assertFalse($this->instance->getStatus());
+        $this->assertTrue($this->instance->getStatus());
 
         $this->instance->addError('New error');
         $this->assertTrue($this->instance->getStatus());
@@ -117,14 +107,17 @@ class ErrorsTest extends TestCase
 
 
     /**
+     * @covers \NP\Exception\Errors::getErrors
      * @covers \NP\Exception\Errors::__toString
      */
     public function test__toString()
     {
-        $error = 'Errors: Error Test, with code #1';
         $this->instance->addError('Test');
 
-        $this->assertEquals($error, $this->instance->__toString());
+        $this->assertEquals('Errors: ' . implode(
+                '; ', array_map(function ($error) {
+                return "Error: {$error}";
+            }, $this->instance->getErrors())), $this->instance->__toString());
     }
 
 
@@ -134,9 +127,8 @@ class ErrorsTest extends TestCase
     public function testJsonSerialize()
     {
         $expected = [
-            'success'    => true,
-            'errors'     => [],
-            'errorCodes' => [],
+            'success'    => false,
+            'errors'     => $this->instance->getErrors(),
         ];
 
         $this->assertEquals($expected, $this->instance->jsonSerialize());
