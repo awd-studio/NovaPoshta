@@ -15,10 +15,6 @@ namespace NP\Test\Np;
 
 use NP\Common\Task\TaskManager;
 use NP\Exception\ErrorException;
-use NP\Exception\Errors;
-use NP\Http\Request;
-use NP\Http\Response;
-use NP\Model\Model;
 use PHPUnit\Framework\TestCase;
 use NP\NP;
 use NP\Http\DriverInterface;
@@ -79,6 +75,7 @@ class NPTest extends TestCase
 
     /**
      * @covers \NP\NP::execute
+     * @covers \NP\Common\Task\TaskManager::init
      * @covers \NP\Common\Task\TaskManager::execute
      */
     public function testExecute()
