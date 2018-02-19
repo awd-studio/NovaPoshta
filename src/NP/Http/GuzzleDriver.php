@@ -40,6 +40,7 @@ class GuzzleDriver implements DriverInterface
             ]);
 
             $response = (string) $serverResponse->getBody();
+            return new Response($response);
         } catch (Exception $exception) {
             $errors = Errors::getInstance();
             $response = $errors->addError($exception->getMessage())->toJson();

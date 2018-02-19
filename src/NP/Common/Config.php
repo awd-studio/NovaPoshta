@@ -18,7 +18,6 @@ use NP\Exception\Errors;
 use NP\Http\DriverInterface;
 use NP\Http\CurlDriver;
 use NP\Http\GuzzleDriver;
-use NP\Common\Util\Singleton;
 
 
 /**
@@ -27,7 +26,6 @@ use NP\Common\Util\Singleton;
  */
 class Config
 {
-    use Singleton;
 
     /**
      * Languages.
@@ -58,13 +56,15 @@ class Config
      *
      * @return Config
      */
-    public static function setUp($config): self
+    public static function setUp($config): Config
     {
+        $self = new static();
+
         if (is_string($config)) {
-            self::$key = $config;
+            $self::$key = $config;
         } elseif (is_array($config) && isset($config['key'])) {
             foreach ($config as $k => $value) {
-                self::setProperty($k, $value);
+                $self::setProperty($k, $value);
             }
         } else {
             Errors::getInstance()->addError('API key is not allowed.');
@@ -72,7 +72,7 @@ class Config
 
         self::setDefaults();
 
-        return self::getInstance();
+        return $self;
     }
 
 

@@ -11,6 +11,7 @@
 
 namespace NP\Test\Model;
 
+use NP\Common\Config;
 use NP\Model\Model;
 use NP\Model\ModelBuilder;
 use PHPUnit\Framework\TestCase;
@@ -27,7 +28,7 @@ class ModelBuilderTest extends TestCase
      */
     public function testBuild()
     {
-        $this->assertNull(ModelBuilder::build('', ''));
-        $this->assertInstanceOf(Model::class, ModelBuilder::build('TrackingDocument', 'getStatusDocuments'));
+        $this->assertNull(ModelBuilder::build(new Config(), '', ''));
+        $this->assertInstanceOf(Model::class, ModelBuilder::build(new Config(),'TrackingDocument', 'getStatusDocuments'));
     }
 }

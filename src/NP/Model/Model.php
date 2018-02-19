@@ -29,21 +29,9 @@ class Model
     use Helper;
 
     /**
-     * @var string
-     */
-    private $modelName;
-
-    /**
-     * @var string
-     */
-    private $calledMethod;
-
-
-    /**
      * @var array Method properties.
      */
     private $methodProperties = [];
-
 
     /**
      * @var array Method parameters.
@@ -134,50 +122,6 @@ class Model
                 Errors::getInstance()->addError($message);
             }
         }
-    }
-
-
-    /**
-     * Set model name.
-     *
-     * @param string $modelName
-     */
-    public function setModelName(string $modelName)
-    {
-        $this->modelName = $modelName;
-    }
-
-
-    /**
-     * Get model name.
-     *
-     * @return string
-     */
-    public function getModelName(): string
-    {
-        return $this->modelName;
-    }
-
-
-    /**
-     * Set called method.
-     *
-     * @param string $calledMethod
-     */
-    public function setCalledMethod(string $calledMethod)
-    {
-        $this->calledMethod = $calledMethod;
-    }
-
-
-    /**
-     * Get called method.
-     *
-     * @return string
-     */
-    public function getCalledMethod(): string
-    {
-        return $this->calledMethod;
     }
 
 

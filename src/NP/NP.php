@@ -13,10 +13,10 @@ declare(strict_types=1); // strict mode
 
 namespace NP;
 
+use NP\Common\Config;
 use NP\Common\Task\TaskManager;
 use NP\Http\Request;
 use NP\Http\Response;
-use NP\Common\Util\Singleton;
 use NP\Model\ModelBuilder;
 
 
@@ -30,12 +30,27 @@ use NP\Model\ModelBuilder;
 final class NP
 {
 
-    use Singleton;
+    /**
+     * @var Config NP instance config.
+     */
+    private $config;
 
     /**
      * @var TaskManager
      */
-    public static $taskManager;
+    public $taskManager;
+
+
+    /**
+     * NP constructor.
+     *
+     * @param mixed $config
+     */
+    private function __construct($config)
+    {
+        $this->config = Config::setUp($config);
+        $this->taskManager = TaskManager::init();
+    }
 
 
     /**
@@ -47,10 +62,7 @@ final class NP
      */
     public static function init($config): NP
     {
-        self::$taskManager = TaskManager::getInstance();
-        self::$taskManager::init($config);
-
-        return self::getInstance();
+        return new static($config);
     }
 
 
@@ -64,8 +76,8 @@ final class NP
      */
     public function with(string $modelName, string $calledMethod, array $data = [], $key = null)
     {
-        if ($model = ModelBuilder::build($modelName, $calledMethod, $data)) {
-            self::$taskManager->new(new Request($model), $key);
+        if ($modelBuilder = ModelBuilder::build($this->config, $modelName, $calledMethod, $data)) {
+            $this->taskManager->new(new Request($modelBuilder, $this->config), $key);
         }
     }
 
@@ -79,7 +91,7 @@ final class NP
      */
     public function execute($id = null): TaskManager
     {
-        return self::$taskManager->execute($id);
+        return $this->taskManager->execute($id);
     }
 
 
@@ -92,7 +104,7 @@ final class NP
      */
     public function send($id = null): Response
     {
-        return self::$taskManager->execute($id)->getResponse($id);
+        return $this->taskManager->execute($id)->getResponse($id);
     }
 
 

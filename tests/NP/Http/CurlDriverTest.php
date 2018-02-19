@@ -49,8 +49,6 @@ class CurlDriverTest extends TestCase
         parent::setUp();
 
         $model = new Model();
-        $model->setModelName('testModel');
-        $model->setCalledMethod('testCalledMethod');
 
         $this->instance = new CurlDriver();
         $this->request = new MockRequest($model);

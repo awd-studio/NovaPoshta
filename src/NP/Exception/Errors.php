@@ -25,6 +25,7 @@ use NP\Http\Response;
 class Errors implements JsonSerializable
 {
 
+    // ToDo: Remove singleton;
     use Singleton;
 
     /**

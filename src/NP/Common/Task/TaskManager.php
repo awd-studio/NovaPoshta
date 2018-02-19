@@ -14,9 +14,7 @@ declare(strict_types=1); // strict mode
 
 namespace NP\Common\Task;
 
-use NP\Common\Config;
 use NP\Common\Util\Collection;
-use NP\Common\Util\Singleton;
 use NP\Exception\Errors;
 use NP\Http\Request;
 use NP\Http\Response;
@@ -29,23 +27,14 @@ use NP\Http\Response;
 class TaskManager extends Collection
 {
 
-    // ToDo: Remove singleton pattern;
-    use Singleton;
-
-    /**
-     * @var Config NP instance config.
-     */
-    private static $config;
-
-
     /**
      * Initialize TaskManager.
      *
-     * @param Config $config
+     * @return TaskManager
      */
-    public static function init($config)
+    public static function init(): TaskManager
     {
-        self::$config = Config::getInstance()::setUp($config);
+        return new static();
     }
 
 
