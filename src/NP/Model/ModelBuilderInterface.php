@@ -17,10 +17,24 @@ namespace NP\Model;
 
 /**
  * ModelBuilder Interface
+ *
+ * @property string apiKey
+ * @property string modelName
+ * @property string calledMethod
+ * @property array  methodProperties
+ * @property string error
+ *
  * @package NP\Model
  */
 interface ModelBuilderInterface
 {
+
+    /**
+     * Has error.
+     *
+     * @return bool
+     */
+    public function hasError(): bool;
 
     /**
      * Get serialized object.

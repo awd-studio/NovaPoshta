@@ -14,10 +14,12 @@ declare(strict_types=1); // strict mode
 
 namespace NP\Common\Task;
 
+use NP\Common\Config;
 use NP\Common\Util\Collection;
-use NP\Exception\Errors;
+use NP\Exception\Error;
 use NP\Http\Request;
 use NP\Http\Response;
+use NP\Model\ModelBuilderInterface;
 
 
 /**
@@ -28,25 +30,23 @@ class TaskManager extends Collection
 {
 
     /**
-     * Initialize TaskManager.
-     *
-     * @return TaskManager
-     */
-    public static function init(): TaskManager
-    {
-        return new static();
-    }
-
-
-    /**
      * Add new item to collection.
      *
-     * @param Request $request
-     * @param null    $key
+     * @param ModelBuilderInterface $modelBuilder
+     * @param Config                $config
+     * @param mixed                 $key
      */
-    public function new(Request $request, $key = null)
+    public function add(ModelBuilderInterface $modelBuilder, Config $config, $key = null)
     {
-        $this->add(new Task($request), $key ?? count($this->collection));
+        $task = new Task($config);
+        if ($modelBuilder->hasError()) {
+            $error = new Error($modelBuilder->error);
+            $task->setResponse(new Response($error->toJson()));
+        } else {
+            $task->setRequest(new Request($modelBuilder));
+        }
+
+        $this->addItem($task, $key ?? count($this->collection));
     }
 
 
@@ -74,14 +74,16 @@ class TaskManager extends Collection
     public function execute($id = null): TaskManager
     {
         if ($id) {
-            if ($task = $this->getItem($id)) {
-                $task->execute();
-            } else {
-                Errors::getInstance()->addError("There is no task with UD \"{$id}\"");
+            if (!$task = $this->getItem($id)) {
+                $task = new Task();
+                $error = new Error("There is no task with ID \"{$id}\"");
+                $task->setResponse(new Response($error->toJson()));
+                $this->addItem($task);
             }
+            $task->getResponse();
         } else {
             array_map(function (Task $task) {
-                $task->execute();
+                $task->getResponse();
             }, $this->collection);
         }
 

@@ -13,7 +13,7 @@ declare(strict_types=1); // strict mode
 
 namespace NP\Model;
 
-use NP\Exception\Errors;
+use NP\Exception\ErrorException;
 use NP\Common\Util\Helper;
 use NP\Common\Util\NPReflectionMethod;
 use ReflectionException;
@@ -44,6 +44,8 @@ class Model
      *
      * @param array $data   Data for send.
      * @param array $params API available properties.
+     *
+     * @throws ErrorException
      */
     final public function __construct(array $data = [], array $params = [])
     {
@@ -60,14 +62,13 @@ class Model
 
     /**
      * Processing model by method date.
+     *
+     * @throws ErrorException
      */
     private function processModel()
     {
-        // ToDo: Realize checking;
-        // if (!Errors::getInstance()->getStatus()) {
         $this->invokeMethod();
         $this->checkRequiredProperties();
-        // }
     }
 
 
@@ -92,6 +93,8 @@ class Model
 
     /**
      * Fill method parameters with defined methods.
+     *
+     * @throws ErrorException
      */
     protected function invokeMethod()
     {
@@ -110,7 +113,7 @@ class Model
                     $message .= ' Error: ';
                     $message .= $exception->getMessage();
 
-                    Errors::getInstance()->addError($message);
+                    throw new ErrorException($message);
                 }
 
                 NPReflectionMethod::build($class, $method, [$class, $data]);
@@ -119,7 +122,7 @@ class Model
                 $message .= ' Error: ';
                 $message .= $exception->getMessage();
 
-                Errors::getInstance()->addError($message);
+                throw new ErrorException($message);
             }
         }
     }
@@ -161,6 +164,9 @@ class Model
 
     /**
      * Check required method properties.
+     *
+     * @throws ErrorException
+     *
      * ToDo: Refactor;
      */
     public function checkRequiredProperties()
@@ -186,7 +192,7 @@ class Model
 
         if ($errors) {
             $values = implode(', ', $errors);
-            Errors::getInstance()->addError("Required properties: {$values} - not allowed!");
+            throw new ErrorException("Required properties: {$values} - not allowed!");
         }
     }
 }

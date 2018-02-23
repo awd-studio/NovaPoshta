@@ -49,7 +49,7 @@ class Collection implements IteratorAggregate
      *
      * @return mixed Added key.
      */
-    public function add($item, $name = null)
+    public function addItem($item, $name = null)
     {
         if ($name) {
             $this->collection[$name] = $item;

@@ -17,97 +17,22 @@ namespace NP\Model;
 use NP\Common\Config;
 use NP\Common\Util\ActionDoc;
 use NP\Common\Util\NPReflectionMethod;
-use NP\Exception\Errors;
 use ReflectionException;
 
 
 /**
  * Class ModelBuilder
+ *
+ * @property string apiKey
+ * @property string modelName
+ * @property string calledMethod
+ * @property array  methodProperties
+ * @property string error
+ *
  * @package NP\Model
  */
 class ModelBuilder implements ModelBuilderInterface
 {
-
-    /**
-     * @var string API key.
-     */
-    private $apiKey;
-
-    /**
-     * @var string Model name.
-     */
-    private $modelName;
-
-    /**
-     * @var string Model called method.
-     */
-    private $calledMethod;
-
-    /**
-     * @var object Method properties.
-     */
-    private $methodProperties;
-
-
-    /**
-     * Set apiKey parameter.
-     *
-     * @param string $apiKey
-     *
-     * @return ModelBuilder
-     */
-    public function setApiKey(string $apiKey): ModelBuilder
-    {
-        $this->apiKey = $apiKey;
-
-        return $this;
-    }
-
-
-    /**
-     * Set modelName parameter.
-     *
-     * @param string $modelName
-     *
-     * @return ModelBuilder
-     */
-    public function setModelName(string $modelName): ModelBuilder
-    {
-        $this->modelName = $modelName;
-
-        return $this;
-    }
-
-
-    /**
-     * Set calledMethod parameter.
-     *
-     * @param string $calledMethod
-     *
-     * @return ModelBuilder
-     */
-    public function setCalledMethod(string $calledMethod): ModelBuilder
-    {
-        $this->calledMethod = $calledMethod;
-
-        return $this;
-    }
-
-
-    /**
-     * Set methodProperties parameter.
-     *
-     * @param mixed $methodProperties
-     *
-     * @return ModelBuilder
-     */
-    public function setMethodProperties($methodProperties): ModelBuilder
-    {
-        $this->methodProperties = (object) $methodProperties;
-
-        return $this;
-    }
-
 
     /**
      * Build model object.
@@ -118,6 +43,8 @@ class ModelBuilder implements ModelBuilderInterface
      * @param array  $data         Data to send.
      *
      * @return ModelBuilderInterface
+     *
+     * ToDo: Refactor;
      */
     public static function build(
         Config $config,
@@ -126,34 +53,51 @@ class ModelBuilder implements ModelBuilderInterface
         array $data = []
     ): ModelBuilderInterface {
         $modelBuilder = new static();
-        $modelBuilder->setApiKey($config->getKey())
-            ->setModelName($modelName)
-            ->setCalledMethod($calledMethod);
 
-        $modelClass = __NAMESPACE__ . '\\' . $modelName; // Build full model name
+        if ($errors = $config->getErrors()) {
+            $modelBuilder->error = implode('; ', $errors);
+        } else {
+            $modelClass = __NAMESPACE__ . '\\' . $modelName; // Build full model name
 
-        // Try to fetch model reflection with called method.
-        // Catch Reflection exception if model or method is unavailable.
-        try {
-            // Replacing called method name with [*Action] suffix.
-            $reflectionMethod = new NPReflectionMethod($modelClass, "{$calledMethod}Action");
+            // Try to fetch model reflection with called method.
+            // Catch Reflection exception if model or method is unavailable.
+            try {
+                // Replacing called method name with [*Action] suffix.
+                $reflectionMethod = new NPReflectionMethod($modelClass, "{$calledMethod}Action");
 
-            // Get method parameters from annotation
-            $params = (new ActionDoc($reflectionMethod))->getAnnotation('ActionParam');
+                // Get method parameters from annotation
+                $params = (new ActionDoc($reflectionMethod))->getAnnotation('ActionParam');
 
-            // Create model
-            /** @var Model $model */
-            $model = $reflectionMethod->invoke(new $modelClass($data, $params));
-            $modelBuilder->setMethodProperties($model->getMethodProperties());
-        } catch (ReflectionException $exception) {
-            $message = "Undefined model or method \"$modelClass::$calledMethod\"!";
-            $message .= ' Error: ';
-            $message .= $exception->getMessage();
+                // Create model
+                /* @var Model $model */
+                $model = $reflectionMethod->invoke(new $modelClass($data, $params));
 
-            Errors::getInstance()->addError($message);
+                // Set properties
+                $modelBuilder->apiKey = $config->getKey();
+                $modelBuilder->modelName = $modelName;
+                $modelBuilder->calledMethod = $calledMethod;
+                $modelBuilder->methodProperties = $model->getMethodProperties();
+            } catch (ReflectionException $exception) {
+                $modelBuilder->error = "Undefined model or method \"$modelClass::$calledMethod\"!";
+                $modelBuilder->error .= ' Error: ';
+                $modelBuilder->error .= $exception->getMessage();
+            } catch (\Exception $exception) {
+                $modelBuilder->error = $exception->getMessage();
+            }
         }
 
         return $modelBuilder;
+    }
+
+
+    /**
+     * Has error.
+     *
+     * @return bool
+     */
+    public function hasError(): bool
+    {
+        return isset($this->error);
     }
 
 

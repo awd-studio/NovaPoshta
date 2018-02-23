@@ -15,7 +15,6 @@ namespace NP;
 
 use NP\Common\Config;
 use NP\Common\Task\TaskManager;
-use NP\Http\Request;
 use NP\Http\Response;
 use NP\Model\ModelBuilder;
 
@@ -42,18 +41,6 @@ final class NP
 
 
     /**
-     * NP constructor.
-     *
-     * @param mixed $config
-     */
-    private function __construct($config)
-    {
-        $this->config = Config::setUp($config);
-        $this->taskManager = TaskManager::init();
-    }
-
-
-    /**
      * Initialize NovaPoshta instance.
      *
      * @param mixed $config
@@ -62,7 +49,11 @@ final class NP
      */
     public static function init($config): NP
     {
-        return new static($config);
+        $np = new static();
+        $np->config = Config::setUp($config);
+        $np->taskManager = new TaskManager();
+
+        return $np;
     }
 
 
@@ -76,9 +67,8 @@ final class NP
      */
     public function with(string $modelName, string $calledMethod, array $data = [], $key = null)
     {
-        if ($modelBuilder = ModelBuilder::build($this->config, $modelName, $calledMethod, $data)) {
-            $this->taskManager->new(new Request($modelBuilder, $this->config), $key);
-        }
+        $modelBuilder = ModelBuilder::build($this->config, $modelName, $calledMethod, $data);
+        $this->taskManager->add($modelBuilder, $this->config, $key);
     }
 
 
@@ -104,7 +94,7 @@ final class NP
      */
     public function send($id = null): Response
     {
-        return $this->taskManager->execute($id)->getResponse($id);
+        return $this->execute($id)->getResponse($id);
     }
 
 

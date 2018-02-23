@@ -59,17 +59,17 @@ class CollectionTest extends TestCase
 
 
     /**
-     * @covers \NP\Common\Util\Collection::add
+     * @covers \NP\Common\Util\Collection::addItem
      * @covers \NP\Common\Util\Collection::getItem
      */
     public function testAdd()
     {
-        $this->instance->add($this->array, 'name');
+        $this->instance->addItem($this->array, 'name');
         $this->assertEquals($this->array, $this->instance->getItem());
 
         $newArray = ['new' => 'array'];
 
-        $this->instance->add($newArray);
+        $this->instance->addItem($newArray);
         $this->assertEquals($newArray, $this->instance->getItem());
     }
 

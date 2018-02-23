@@ -14,68 +14,62 @@ declare(strict_types=1); // strict mode
 namespace NP\Exception;
 
 use JsonSerializable;
-use NP\Common\Util\Singleton;
-use NP\Http\Response;
 
 
 /**
  * Class Error
  * @package NP\Exception
  */
-class Errors implements JsonSerializable
+class Error implements JsonSerializable
 {
 
-    // ToDo: Remove singleton;
-    use Singleton;
+    /**
+     * @var bool Success status.
+     */
+    private $success = false;
 
     /**
      * @var string Error message.
      */
-    private $success = true;
+    private $error;
 
     /**
-     * @var array Current error.
+     * @var int Error code.
      */
-    private $errors = [];
+    private $code;
 
 
     /**
-     * Add error.
-     *
+     * Errors constructor.
      * @param string $message Error message.
-     *
-     * @return self.
+     * @param int    $code    Error code.
      */
-    public function addError(string $message): self
+    public function __construct(string $message, int $code = 0)
     {
-        $this->success = false;
-        $this->errors[] = $message;
-
-        return $this;
+        $this->error = $message;
+        $this->code = $code;
     }
 
 
     /**
-     * Get error from container by key.
-     *
-     * @param $key
+     * Get error message.
      *
      * @return string
      */
-    public function getError($key): string
+    public function getError(): string
     {
-        return $this->errors[$key] ?? '';
+        return $this->error;
     }
 
 
     /**
-     * Get all errors.
+     * Get error code.
      *
-     * @return array
+     * @return int
      */
-    public function getErrors(): array
+    public function getCode(): int
     {
-        return $this->errors;
+        return $this->code;
     }
 
 
@@ -87,17 +81,6 @@ class Errors implements JsonSerializable
     public function getStatus(): bool
     {
         return !$this->success;
-    }
-
-
-    /**
-     * Get response with error.
-     *
-     * @return Response
-     */
-    public function getResponse()
-    {
-        return new Response($this->toJson());
     }
 
 
@@ -119,11 +102,7 @@ class Errors implements JsonSerializable
      */
     public function __toString()
     {
-        $messages = implode('; ', array_map(function ($error) {
-            return "Error: {$error}";
-        }, $this->errors));
-
-        return "Errors: {$messages}";
+        return "Error: {$this->error}";
     }
 
 

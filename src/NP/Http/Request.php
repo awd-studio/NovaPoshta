@@ -13,7 +13,6 @@ declare(strict_types=1); // strict mode
 
 namespace NP\Http;
 
-use NP\Common\Config;
 use NP\Model\ModelBuilderInterface;
 
 
@@ -33,31 +32,15 @@ class Request
      */
     private $modelBuilder;
 
-    /**
-     * @var Config
-     */
-    private $config;
-
 
     /**
      * Request constructor.
      *
      * @param ModelBuilderInterface $modelBuilder
-     * @param Config                $config
      */
-    public function __construct(ModelBuilderInterface $modelBuilder, Config $config)
+    public function __construct(ModelBuilderInterface $modelBuilder)
     {
         $this->modelBuilder = $modelBuilder;
-        $this->config = $config;
-    }
-
-
-    /**
-     * @return Config
-     */
-    public function getConfig(): Config
-    {
-        return $this->config;
     }
 
 
@@ -93,16 +76,5 @@ class Request
     public function getUri()
     {
         return self::NP_API_HOST_JSON;
-    }
-
-
-    /**
-     * Execute HTTP request.
-     *
-     * @return Response
-     */
-    public function execute(): Response
-    {
-        return $this->config->getDriver()->send($this);
     }
 }

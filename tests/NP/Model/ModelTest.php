@@ -13,7 +13,7 @@ declare(strict_types=1); // strict mode
 
 namespace NP\Test\Model;
 
-use NP\Exception\Errors;
+use NP\Exception\Error;
 use PHPUnit\Framework\TestCase;
 use NP\Model\Model;
 
@@ -88,7 +88,7 @@ class ModelTest extends TestCase
             ],
         ]);
 
-        $this->assertTrue(Errors::getInstance()->getStatus());
+        $this->assertTrue(Error::getInstance()->getStatus());
     }
 
 
@@ -146,6 +146,6 @@ class ModelTest extends TestCase
             ],
         ]);
 
-        $this->assertTrue(Errors::getInstance()->getStatus());
+        $this->assertTrue(Error::getInstance()->getStatus());
     }
 }

@@ -13,7 +13,7 @@ declare(strict_types=1); // strict mode
 
 namespace NP\Test\Model;
 
-use NP\Exception\Errors;
+use NP\Exception\Error;
 use NP\NP;
 use NP\Mock\Http\MockDriver;
 use PHPUnit\Framework\TestCase;

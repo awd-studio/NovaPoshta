@@ -51,7 +51,7 @@ class CurlDriverTest extends TestCase
         $model = new Model();
 
         $this->instance = new CurlDriver();
-        $this->request = new MockRequest($model);
+        $this->request = new MockRequest();
     }
 
 

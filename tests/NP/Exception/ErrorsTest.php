@@ -13,7 +13,7 @@ namespace NP\Test\Exception;
 
 use PHPUnit\Framework\TestCase;
 use JsonSerializable;
-use NP\Exception\Errors;
+use NP\Exception\Error;
 use NP\Http\Response;
 
 class ErrorsTest extends TestCase
@@ -22,7 +22,7 @@ class ErrorsTest extends TestCase
     /**
      * Instance.
      *
-     * @var Errors
+     * @var Error
      */
     private $instance;
 
@@ -46,7 +46,7 @@ class ErrorsTest extends TestCase
 
         $this->error = 'Test message';
         $this->code = 1;
-        $this->instance = Errors::getInstance();
+        $this->instance = Error::getInstance();
     }
 
 
@@ -56,14 +56,14 @@ class ErrorsTest extends TestCase
     public function testError()
     {
         $this->instance->addError($this->error);
-        $this->assertInstanceOf(Errors::class, $this->instance);
+        $this->assertInstanceOf(Error::class, $this->instance);
         $this->assertInstanceOf(JsonSerializable::class, $this->instance);
     }
 
 
     /**
-     * @covers \NP\Exception\Errors::addError
-     * @covers \NP\Exception\Errors::getError
+     * @covers \NP\Exception\Error::addError
+     * @covers \NP\Exception\Error::getError
      */
     public function testAddGetError()
     {
@@ -71,13 +71,13 @@ class ErrorsTest extends TestCase
         $this->instance->addError($error);
 
         $this->assertEquals($error, $this->instance->getError(
-            (count($this->instance->getErrors()) - 1)
+            (count($this->instance->getError()) - 1)
         ));
     }
 
 
     /**
-     * @covers \NP\Exception\Errors::getStatus()
+     * @covers \NP\Exception\Error::getStatus()
      */
     public function testGetStatus()
     {
@@ -89,7 +89,7 @@ class ErrorsTest extends TestCase
 
 
     /**
-     * @covers \NP\Exception\Errors::getResponse
+     * @covers \NP\Exception\Error::getResponse
      */
     public function testGetResponse()
     {
@@ -98,7 +98,7 @@ class ErrorsTest extends TestCase
 
 
     /**
-     * @covers \NP\Exception\Errors::toJson
+     * @covers \NP\Exception\Error::toJson
      */
     public function testToJson()
     {
@@ -107,8 +107,8 @@ class ErrorsTest extends TestCase
 
 
     /**
-     * @covers \NP\Exception\Errors::getErrors
-     * @covers \NP\Exception\Errors::__toString
+     * @covers \NP\Exception\Error::getError
+     * @covers \NP\Exception\Error::__toString
      */
     public function test__toString()
     {
@@ -117,18 +117,18 @@ class ErrorsTest extends TestCase
         $this->assertEquals('Errors: ' . implode(
                 '; ', array_map(function ($error) {
                 return "Error: {$error}";
-            }, $this->instance->getErrors())), $this->instance->__toString());
+            }, $this->instance->getError())), $this->instance->__toString());
     }
 
 
     /**
-     * @covers \NP\Exception\Errors::jsonSerialize
+     * @covers \NP\Exception\Error::jsonSerialize
      */
     public function testJsonSerialize()
     {
         $expected = [
             'success'    => false,
-            'errors'     => $this->instance->getErrors(),
+            'errors'     => $this->instance->getError(),
         ];
 
         $this->assertEquals($expected, $this->instance->jsonSerialize());
