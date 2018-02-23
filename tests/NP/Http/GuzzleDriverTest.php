@@ -51,8 +51,6 @@ class GuzzleDriverTest extends TestCase
         $this->instance = new GuzzleDriver();
 
         $model = new Model();
-        $model->setModelName('testModel');
-        $model->setCalledMethod('testCalledMethod');
         $this->request = new MockRequest($model);
     }
 

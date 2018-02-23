@@ -13,6 +13,8 @@ declare(strict_types=1); // strict mode
 
 namespace NP\Http;
 
+use NP\Exception\ErrorException;
+
 
 /**
  * Driver Interface.
@@ -26,7 +28,8 @@ interface DriverInterface
      *
      * @param Request $request
      *
-     * @return Response
+     * @return string
+     * @throws ErrorException
      */
-    public function send(Request $request): Response;
+    public function send(Request $request): string;
 }

@@ -15,7 +15,7 @@ namespace NP\Test\Common\Util;
 
 use NP\Common\Config;
 use NP\Exception\ErrorException;
-use NP\Exception\Errors;
+use NP\Exception\Error;
 use NP\Http\DriverInterface;
 use NP\Mock\Http\MockDriver;
 use PHPUnit\Framework\TestCase;
@@ -66,7 +66,7 @@ class ConfigTest extends TestCase
      * @covers \NP\Common\Config::setProperty
      * @covers \NP\Common\Config::setProperty
      * @covers \NP\Common\Config::setDefaults
-     * @covers \NP\Common\Config::getDefaultDriver
+     * @covers \NP\Common\Config::setDefaultDriver
      */
     public function testSetUp()
     {

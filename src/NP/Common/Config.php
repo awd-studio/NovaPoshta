@@ -14,11 +14,10 @@ declare(strict_types=1); // strict mode
 
 namespace NP\Common;
 
-use NP\Exception\Errors;
+use NP\Exception\Error;
 use NP\Http\DriverInterface;
 use NP\Http\CurlDriver;
 use NP\Http\GuzzleDriver;
-use NP\Common\Util\Singleton;
 
 
 /**
@@ -27,7 +26,6 @@ use NP\Common\Util\Singleton;
  */
 class Config
 {
-    use Singleton;
 
     /**
      * Languages.
@@ -38,17 +36,28 @@ class Config
     /**
      * @var string API key.
      */
-    private static $key;
+    protected static $key;
 
     /**
      * @var DriverInterface HTTP driver.
      */
-    private static $driver;
+    protected static $driver;
 
     /**
      * @var string Default language.
      */
-    private static $language;
+    protected static $language;
+
+    /**
+     * @var bool Soft mode.
+     * Use for enable exceptions instead error response.
+     */
+    protected static $softMode = true;
+
+    /**
+     * @var Error[]
+     */
+    protected static $errors = [];
 
 
     /**
@@ -58,21 +67,23 @@ class Config
      *
      * @return Config
      */
-    public static function setUp($config): self
+    public static function setUp($config): Config
     {
+        $self = new static();
+
         if (is_string($config)) {
-            self::$key = $config;
+            $self::$key = $config;
         } elseif (is_array($config) && isset($config['key'])) {
             foreach ($config as $k => $value) {
-                self::setProperty($k, $value);
+                $self::setProperty($k, $value);
             }
         } else {
-            Errors::getInstance()->addError('API key is not allowed.');
+            static::$errors[] = 'API key is not allowed.';
         }
 
-        self::setDefaults();
+        static::setDefaults();
 
-        return self::getInstance();
+        return $self;
     }
 
 
@@ -82,8 +93,8 @@ class Config
     private static function setDefaults()
     {
         // Set default HTTP driver
-        if (!self::$driver) {
-            self::$driver = self::getDefaultDriver();
+        if (!static::$driver) {
+            static::setDefaultDriver();
         }
 
         // Set default language
@@ -107,23 +118,29 @@ class Config
 
     /**
      * Get default HTTP driver.
-     *
-     * @return DriverInterface
      */
-    private static function getDefaultDriver(): DriverInterface
+    private static function setDefaultDriver()
     {
         try {
-            $driver = new GuzzleDriver;
+            static::$driver = new GuzzleDriver();
         } catch (\Exception $exception) {
             try {
-                $driver = new CurlDriver;
+                static::$driver = new CurlDriver();
             } catch (\Exception $exception) {
-                $driver = null;
-                Errors::getInstance()->addError('There are no installed "Guzzle" library or "php_curl" extension!');
+                self::$errors[] = 'There are no installed "Guzzle" library or "php_curl" extension!';
             }
         }
+    }
 
-        return $driver;
+
+    /**
+     * Get errors.
+     *
+     * @return Error[]
+     */
+    public function getErrors(): array
+    {
+        return self::$errors;
     }
 
 

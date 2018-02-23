@@ -14,6 +14,8 @@ declare(strict_types=1); // strict mode
 
 namespace NP\Common\Task;
 
+use NP\Common\Config;
+use NP\Exception\ErrorException;
 use NP\Http\Request;
 use NP\Http\Response;
 
@@ -35,13 +37,29 @@ class Task implements TaskInterface
      */
     private $response;
 
+    /**
+     * @var Config
+     */
+    private $config;
+
 
     /**
      * Task constructor.
      *
-     * @param Request $request Task request.
+     * @param Config $config NP config.
      */
-    public function __construct(Request $request)
+    public function __construct(Config $config = null)
+    {
+        $this->config = $config;
+    }
+
+
+    /**
+     * Set request.
+     *
+     * @param Request $request
+     */
+    public function setRequest(Request $request)
     {
         $this->request = $request;
     }
@@ -59,6 +77,8 @@ class Task implements TaskInterface
 
 
     /**
+     * Set response.
+     *
      * @param Response $response
      */
     public function setResponse(Response $response)
@@ -74,19 +94,25 @@ class Task implements TaskInterface
      */
     public function getResponse()
     {
+        if (!$this->response) {
+            $this->execute();
+        }
+
         return $this->response;
     }
 
 
     /**
      * Execute task request.
-     *
-     * @return Response
      */
-    public function execute(): Response
+    public function execute()
     {
-        $this->response = $this->request->execute();
-
-        return $this->response;
+        try {
+            $response = $this->config->getDriver()->send($this->request);
+        } catch (ErrorException $e) {
+            $response = $e->toJson();
+        } finally {
+            $this->response = new Response($response);
+        }
     }
 }

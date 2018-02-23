@@ -86,7 +86,7 @@ class NPTest extends TestCase
 
     /**
      * @covers \NP\NP::init
-     * @covers \NP\Common\Config::getDefaultDriver
+     * @covers \NP\Common\Config::setDefaultDriver
      */
     public function testInit()
     {

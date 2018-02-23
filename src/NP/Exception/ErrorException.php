@@ -13,6 +13,8 @@ declare(strict_types=1); // strict mode
 
 namespace NP\Exception;
 
+use Throwable;
+
 
 /**
  * Class ErrorException
@@ -20,4 +22,35 @@ namespace NP\Exception;
  */
 class ErrorException extends \Exception implements NPException
 {
+
+    /**
+     * @var Error
+     */
+    private $error;
+
+
+    /**
+     * ErrorException constructor.
+     *
+     * @param string          $message
+     * @param int             $code
+     * @param \Throwable|null $previous
+     */
+    public function __construct(string $message = "", int $code = 0, Throwable $previous = null)
+    {
+        $this->error = new Error($message, $code);
+
+        parent::__construct($message, $code, $previous);
+    }
+
+
+    /**
+     * Get JSON-encoded Error.
+     *
+     * @return string
+     */
+    public function toJson(): string
+    {
+        return $this->error->toJson();
+    }
 }

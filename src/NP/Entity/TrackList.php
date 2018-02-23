@@ -16,7 +16,7 @@ namespace NP\Entity;
 
 use Countable;
 use Iterator;
-use NP\Exception\Errors;
+use NP\Exception\ErrorException;
 
 
 /**
@@ -57,6 +57,8 @@ class TrackList implements Iterator, Countable
      * ];
      *
      * @param mixed $tracks
+     *
+     * @throws ErrorException
      */
     public function __construct($tracks)
     {
@@ -76,7 +78,7 @@ class TrackList implements Iterator, Countable
                 $this->container[$track->getId()] = (object) $track->build();
             }
         } else {
-            Errors::getInstance()->addError('Invalid track numbers!');
+            throw new ErrorException('Invalid track numbers!');
         }
     }
 

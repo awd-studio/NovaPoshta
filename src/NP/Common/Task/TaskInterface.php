@@ -34,17 +34,15 @@ interface TaskInterface
 
 
     /**
+     * Execute task request.
+     */
+    public function execute();
+
+
+    /**
      * Get task response.
      *
      * @return Response|null
      */
     public function getResponse();
-
-
-    /**
-     * Execute task request.
-     *
-     * @return Response
-     */
-    public function execute(): Response;
 }

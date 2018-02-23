@@ -43,14 +43,14 @@ class TaskManagerTest extends TestCase
 
 
     /**
-     * @covers \NP\Common\Task\TaskManager::new
+     * @covers \NP\Common\Task\TaskManager::add
      * @covers \NP\Common\Task\TaskManager::getItem
      */
     public function testNew()
     {
         $request = new MockRequest();
         $key = 'test';
-        $this->instance->new($request, $key);
+        $this->instance->add($request, $key);
 
         $this->assertEquals(new Task($request), $this->instance->getItem());
     }

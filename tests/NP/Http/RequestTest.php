@@ -18,7 +18,6 @@ use NP\Mock\Http\MockDriver;
 use NP\Model\Model;
 use PHPUnit\Framework\TestCase;
 use NP\Http\Request;
-use NP\NP;
 use NP\Http\DriverInterface;
 
 
@@ -68,8 +67,6 @@ class RequestTest extends TestCase
 
         $this->driver = new MockDriver();
         $this->model = new Model();
-        $this->model->setModelName('testModel');
-        $this->model->setCalledMethod('testCalledMethod');
         $this->instance = new Request($this->model);
     }
 

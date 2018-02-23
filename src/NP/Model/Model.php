@@ -13,7 +13,7 @@ declare(strict_types=1); // strict mode
 
 namespace NP\Model;
 
-use NP\Exception\Errors;
+use NP\Exception\ErrorException;
 use NP\Common\Util\Helper;
 use NP\Common\Util\NPReflectionMethod;
 use ReflectionException;
@@ -29,21 +29,9 @@ class Model
     use Helper;
 
     /**
-     * @var string
-     */
-    private $modelName;
-
-    /**
-     * @var string
-     */
-    private $calledMethod;
-
-
-    /**
      * @var array Method properties.
      */
     private $methodProperties = [];
-
 
     /**
      * @var array Method parameters.
@@ -56,6 +44,8 @@ class Model
      *
      * @param array $data   Data for send.
      * @param array $params API available properties.
+     *
+     * @throws ErrorException
      */
     final public function __construct(array $data = [], array $params = [])
     {
@@ -72,14 +62,13 @@ class Model
 
     /**
      * Processing model by method date.
+     *
+     * @throws ErrorException
      */
     private function processModel()
     {
-        // ToDo: Realize checking;
-        // if (!Errors::getInstance()->getStatus()) {
         $this->invokeMethod();
         $this->checkRequiredProperties();
-        // }
     }
 
 
@@ -104,6 +93,8 @@ class Model
 
     /**
      * Fill method parameters with defined methods.
+     *
+     * @throws ErrorException
      */
     protected function invokeMethod()
     {
@@ -122,7 +113,7 @@ class Model
                     $message .= ' Error: ';
                     $message .= $exception->getMessage();
 
-                    Errors::getInstance()->addError($message);
+                    throw new ErrorException($message);
                 }
 
                 NPReflectionMethod::build($class, $method, [$class, $data]);
@@ -131,53 +122,9 @@ class Model
                 $message .= ' Error: ';
                 $message .= $exception->getMessage();
 
-                Errors::getInstance()->addError($message);
+                throw new ErrorException($message);
             }
         }
-    }
-
-
-    /**
-     * Set model name.
-     *
-     * @param string $modelName
-     */
-    public function setModelName(string $modelName)
-    {
-        $this->modelName = $modelName;
-    }
-
-
-    /**
-     * Get model name.
-     *
-     * @return string
-     */
-    public function getModelName(): string
-    {
-        return $this->modelName;
-    }
-
-
-    /**
-     * Set called method.
-     *
-     * @param string $calledMethod
-     */
-    public function setCalledMethod(string $calledMethod)
-    {
-        $this->calledMethod = $calledMethod;
-    }
-
-
-    /**
-     * Get called method.
-     *
-     * @return string
-     */
-    public function getCalledMethod(): string
-    {
-        return $this->calledMethod;
     }
 
 
@@ -217,6 +164,9 @@ class Model
 
     /**
      * Check required method properties.
+     *
+     * @throws ErrorException
+     *
      * ToDo: Refactor;
      */
     public function checkRequiredProperties()
@@ -242,7 +192,7 @@ class Model
 
         if ($errors) {
             $values = implode(', ', $errors);
-            Errors::getInstance()->addError("Required properties: {$values} - not allowed!");
+            throw new ErrorException("Required properties: {$values} - not allowed!");
         }
     }
 }
