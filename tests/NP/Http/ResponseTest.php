@@ -9,40 +9,37 @@
  * @link    https://github.com/awd-studio/novaposhta
  */
 
-declare(strict_types=1); // strict mode
-
 namespace NP\Test\Http;
 
-use PHPUnit\Framework\TestCase;
 use NP\Http\Response;
+use NP\Mock\AssetsResponse;
+use PHPUnit\Framework\TestCase;
 
-/**
- * Class ResponseTest
- * @package NP\Test\Http
- */
 class ResponseTest extends TestCase
 {
 
     /**
      * Instance.
      *
-     * @var Response
+     * @var \NP\Http\Response
      */
     private $instance;
 
     /**
-     * @var string JSON
+     * @var string
      */
-    private $response = '{"success":false,"error":"Error","code":2,"errors":["Error"]}';
+    private $response;
 
 
     /**
      * Settings up.
+     * @throws \NP\Exception\ErrorException
      */
     public function setUp()
     {
         parent::setUp();
 
+        $this->response = AssetsResponse::json();
         $this->instance = new Response($this->response);
     }
 
@@ -50,7 +47,7 @@ class ResponseTest extends TestCase
     /**
      * @covers \NP\Http\Response::__construct
      */
-    public function testResponse()
+    public function test__construct()
     {
         $this->assertInstanceOf(Response::class, $this->instance);
     }
@@ -58,27 +55,31 @@ class ResponseTest extends TestCase
 
     /**
      * @covers \NP\Http\Response::getRaw
+     * @throws \NP\Exception\ErrorException
      */
     public function testGetRaw()
     {
-        $this->assertEquals($this->response, $this->instance->getRaw());
+        $this->assertJson($this->instance->getRaw());
+        $this->assertEquals(AssetsResponse::json(), $this->instance->getRaw());
     }
 
 
     /**
      * @covers \NP\Http\Response::getData
+     * @throws \NP\Exception\ErrorException
      */
     public function testGetData()
     {
-        $this->assertEquals(json_decode($this->response), $this->instance->getData());
+        $this->assertEquals(json_decode(AssetsResponse::json()), $this->instance->getData());
     }
 
 
     /**
      * @covers \NP\Http\Response::__toString
+     * @throws \NP\Exception\ErrorException
      */
     public function test__toString()
     {
-        $this->assertEquals($this->instance->getRaw(), $this->instance->__toString());
+        $this->assertEquals(AssetsResponse::json(), $this->instance->__toString());
     }
 }

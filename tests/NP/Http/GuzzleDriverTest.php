@@ -9,36 +9,22 @@
  * @link    https://github.com/awd-studio/novaposhta
  */
 
-declare(strict_types=1); // strict mode
-
 namespace NP\Test\Http;
 
+use NP\Exception\ErrorException;
 use NP\Http\GuzzleDriver;
-use NP\Http\Request;
 use NP\Mock\Http\MockRequest;
-use NP\Model\Model;
 use PHPUnit\Framework\TestCase;
 
-/**
- * Class GuzzleDriverTest
- * @package NP\Test\Http
- */
 class GuzzleDriverTest extends TestCase
 {
 
     /**
      * Instance.
      *
-     * @var GuzzleDriver
+     * @var \NP\Http\GuzzleDriver
      */
     private $instance;
-
-    /**
-     * Instance.
-     *
-     * @var Request
-     */
-    private $request;
 
 
     /**
@@ -49,18 +35,21 @@ class GuzzleDriverTest extends TestCase
         parent::setUp();
 
         $this->instance = new GuzzleDriver();
-
-        $model = new Model();
-        $this->request = new MockRequest($model);
     }
 
 
     /**
      * @covers \NP\Http\GuzzleDriver::send
+     *
+     * @throws \NP\Exception\ErrorException
      */
     public function testSend()
     {
-        $r = $this->instance->send($this->request);
-        $this->assertFalse($r->getData()->success);
+        $successRequest = new MockRequest();
+        $this->assertJson($this->instance->send($successRequest));
+
+        $failedRequest = new MockRequest(false);
+        $this->expectException(ErrorException::class);
+        $this->instance->send($failedRequest);
     }
 }

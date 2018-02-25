@@ -9,72 +9,39 @@
  * @link    https://github.com/awd-studio/novaposhta
  */
 
-declare(strict_types=1); // strict mode
-
 namespace NP\Test\Http;
 
-use NP\Http\Response;
-use NP\Mock\Http\MockDriver;
-use NP\Model\Model;
-use PHPUnit\Framework\TestCase;
 use NP\Http\Request;
-use NP\Http\DriverInterface;
+use NP\Mock\Model\MockModelBuilder;
+use PHPUnit\Framework\TestCase;
 
-
-/**
- * Class RequestTest
- * @package NP\Test\Http
- */
 class RequestTest extends TestCase
 {
 
     /**
      * Instance.
      *
-     * @var Request
+     * @var \NP\Http\Request
      */
     private $instance;
-
-    /**
-     * NP instance.
-     *
-     * @var Model
-     */
-    private $model;
-
-    /**
-     * API key.
-     *
-     * @var string
-     */
-    private $key = 'myAPIkey';
-
-    /**
-     * Driver.
-     *
-     * @var DriverInterface
-     */
-    private $driver;
 
 
     /**
      * Settings up.
-     * @throws \NP\Exception\ErrorException
      */
     public function setUp()
     {
         parent::setUp();
 
-        $this->driver = new MockDriver();
-        $this->model = new Model();
-        $this->instance = new Request($this->model);
+        $mb = new MockModelBuilder();
+        $this->instance = new Request($mb);
     }
 
 
     /**
      * @covers \NP\Http\Request::__construct
      */
-    public function testRequest()
+    public function test__construct()
     {
         $this->assertInstanceOf(Request::class, $this->instance);
     }
@@ -82,18 +49,20 @@ class RequestTest extends TestCase
 
     /**
      * @covers \NP\Http\Request::getBody
-     * @covers \NP\Http\Request::getBodyJson
      */
     public function testGetBody()
     {
-        $data = new \stdClass();
-        $data->apiKey = 'TestModel';
-        $data->modelName = 'testModel';
-        $data->calledMethod = 'testCalledMethod';
-        $data->methodProperties = new \stdClass();
+        $this->assertEquals((new MockModelBuilder())->getBody(), $this->instance->getBody());
+        $this->assertJson($this->instance->getBody(true));
+    }
 
-        $this->assertEquals($data, $this->instance->getBody());
-        $this->assertEquals(json_encode($data), $this->instance->getBody(true));
+
+    /**
+     * @covers \NP\Http\Request::getBodyJson
+     */
+    public function testGetBodyJson()
+    {
+        $this->assertJson($this->instance->getBodyJson());
     }
 
 
@@ -102,20 +71,6 @@ class RequestTest extends TestCase
      */
     public function testGetUri()
     {
-        $patternJson = '/(https:\/\/(?:api)?\.?novaposhta\.ua\/(?:v\d+\.\d+)\/json\/)/i';
-        $this->assertRegExp($patternJson, $this->instance->getUri());
-    }
-
-
-    /**
-     * @covers \NP\Http\Request::execute
-     * @covers \NP\Http\Response::getRaw
-     */
-    public function testExecute()
-    {
-        $r = $this->instance->execute();
-
-        $this->assertInstanceOf(Response::class, $r);
-        $this->assertJson($r->getRaw());
+        $this->assertRegExp('/https?:\/\/(?:[\w\d]){2,3}/', $this->instance->getUri());
     }
 }
