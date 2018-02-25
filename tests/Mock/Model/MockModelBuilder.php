@@ -33,13 +33,16 @@ class MockModelBuilder implements ModelBuilderInterface
     /**
      * MockModelBuilder constructor.
      */
-    public function __construct()
+    public function __construct(bool $hasError = true)
     {
-        $this->apiKey = '';
-        $this->modelName = 'mockModelName';
-        $this->calledMethod = 'mockCalledMethod';
-        $this->methodProperties = [];
-        $this->error = 'Mock Model Builder Error';
+        if ($hasError) {
+            $this->error = 'Mock Model Builder Error';
+        } else {
+            $this->apiKey = '';
+            $this->modelName = 'mockModelName';
+            $this->calledMethod = 'mockCalledMethod';
+            $this->methodProperties = [];
+        }
     }
 
 

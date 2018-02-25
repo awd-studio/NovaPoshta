@@ -78,7 +78,7 @@ class Config
                 $self::setProperty($k, $value);
             }
         } else {
-            static::$errors[] = 'API key is not allowed.';
+            static::$errors[] = new Error('API key is not allowed.');
         }
 
         static::setDefaults();
@@ -118,6 +118,9 @@ class Config
 
     /**
      * Get default HTTP driver.
+     *
+     * ToDo: Refactor;
+     * ToDo: Make test-friendly & testable at all;
      */
     private static function setDefaultDriver()
     {
@@ -127,7 +130,7 @@ class Config
             try {
                 static::$driver = new CurlDriver();
             } catch (\Exception $exception) {
-                self::$errors[] = 'There are no installed "Guzzle" library or "php_curl" extension!';
+                self::$errors[] = new Error('There are no installed "Guzzle" library or "php_curl" extension!');
             }
         }
     }

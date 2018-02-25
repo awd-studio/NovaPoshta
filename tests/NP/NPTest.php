@@ -27,17 +27,17 @@ class NPTest extends TestCase
     private $instance;
 
     /**
-     * Config
+     * @var string
      */
-    private $config;
+    private $apiKey;
 
     /**
-     * Test model name
+     * @var string Test model name
      */
     private $modelName;
 
     /**
-     * Test called method
+     * @var string Test called method
      */
     private $calledMethod;
 
@@ -51,8 +51,8 @@ class NPTest extends TestCase
 
         $this->modelName = 'testModelName';
         $this->calledMethod = 'testCalledMethod';
-        $this->config = '';
-        $this->instance = NP::init($this->config);
+        $this->apiKey = '';
+        $this->instance = NP::init($this->apiKey);
     }
 
 
@@ -61,7 +61,7 @@ class NPTest extends TestCase
      */
     public function testInit()
     {
-        $np = NP::init($this->config);
+        $np = NP::init($this->apiKey);
 
         $this->assertInstanceOf(NP::class, $np);
     }
@@ -101,5 +101,4 @@ class NPTest extends TestCase
 
         $this->assertInstanceOf(Response::class, $response);
     }
-
 }

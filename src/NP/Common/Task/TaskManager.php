@@ -35,6 +35,8 @@ class TaskManager extends Collection
      * @param ModelBuilderInterface $modelBuilder
      * @param Config                $config
      * @param mixed                 $key
+     *
+     * @return mixed
      */
     public function add(ModelBuilderInterface $modelBuilder, Config $config, $key = null)
     {
@@ -46,7 +48,7 @@ class TaskManager extends Collection
             $task->setRequest(new Request($modelBuilder));
         }
 
-        $this->addItem($task, $key ?? count($this->collection));
+        return $this->addItem($task, $key ?? count($this->collection));
     }
 
 
