@@ -9,36 +9,22 @@
  * @link    https://github.com/awd-studio/novaposhta
  */
 
-declare(strict_types=1); // strict mode
-
 namespace NP\Test\Http;
 
+use NP\Exception\ErrorException;
 use NP\Http\CurlDriver;
-use NP\Http\Request;
-use NP\Model\Model;
 use NP\Mock\Http\MockRequest;
 use PHPUnit\Framework\TestCase;
 
-/**
- * Class CurlDriverTest
- * @package NP\Test\Http
- */
 class CurlDriverTest extends TestCase
 {
 
     /**
      * Instance.
      *
-     * @var CurlDriver
+     * @var \NP\Http\CurlDriver
      */
     private $instance;
-
-    /**
-     * Instance.
-     *
-     * @var Request
-     */
-    private $request;
 
 
     /**
@@ -48,23 +34,22 @@ class CurlDriverTest extends TestCase
     {
         parent::setUp();
 
-        $model = new Model();
-        $model->setModelName('testModel');
-        $model->setCalledMethod('testCalledMethod');
-
         $this->instance = new CurlDriver();
-        $this->request = new MockRequest($model);
     }
 
 
     /**
      * @covers \NP\Http\CurlDriver::send
-     * @covers \NP\Common\Config::getKey
+     *
+     * @throws \NP\Exception\ErrorException
      */
     public function testSend()
     {
-        $r = $this->instance->send($this->request);
+        $successRequest = new MockRequest();
+        $this->assertJson($this->instance->send($successRequest));
 
-        $this->assertFalse($r->getRaw());
+        $failedRequest = new MockRequest(false);
+        $this->expectException(ErrorException::class);
+        $this->instance->send($failedRequest);
     }
 }

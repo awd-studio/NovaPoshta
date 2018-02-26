@@ -14,7 +14,7 @@ declare(strict_types=1); // strict mode
 namespace NP\Mock\Http;
 
 use NP\Http\Request;
-use NP\Model\Model;
+use NP\Mock\Model\MockModelBuilder;
 
 
 /**
@@ -25,35 +25,31 @@ class MockRequest extends Request
 {
 
     /**
-     * @var \stdClass
+     * @var bool
      */
-    private $body;
+    private $success;
 
 
     /**
      * Request constructor.
+     * @param bool $success
      */
-    public function __construct()
+    public function __construct(bool $success = true)
     {
-        $model = new Model();
-        $model->setModelName('testModelName');
-        $model->setCalledMethod('testCalledMethod');
+        $this->success = $success;
+        $mb = new MockModelBuilder();
 
-        parent::__construct($model);
-
-        $this->body = new \stdClass();
+        parent::__construct($mb);
     }
 
 
     /**
      * Get API URI.
      *
-     * @param bool $json
-     *
      * @return string
      */
-    public function getUri(bool $json = true): string
+    public function getUri()
     {
-        return '';
+        return $this->success ? parent::getUri() : 'mockFailedUri';
     }
 }

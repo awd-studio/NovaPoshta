@@ -9,132 +9,67 @@
  * @link    https://github.com/awd-studio/novaposhta
  */
 
-declare(strict_types=1); // strict mode
-
 namespace NP\Test\Model;
 
-use NP\Exception\Errors;
-use NP\NP;
-use NP\Mock\Http\MockDriver;
-use PHPUnit\Framework\TestCase;
 use NP\Model\Model;
 use NP\Model\TrackingDocument;
-use NP\Model\TrackingDocumentsInterface;
+use PHPUnit\Framework\TestCase;
 
-/**
- * Class TrackingDocumentTest
- * @package NP\Test\Model
- */
 class TrackingDocumentTest extends TestCase
 {
 
     /**
      * Instance.
      *
-     * @var TrackingDocument
+     * @var \NP\Model\TrackingDocument
      */
     private $instance;
 
     /**
      * @var string
      */
-    private $modelName = 'TrackingDocument';
+    private $track;
 
     /**
      * @var string
      */
-    private $calledMethod = 'getStatusDocuments';
-
-    /**
-     * @var array
-     */
-    private $data = [];
-
-    /**
-     * @var array
-     */
-    private $trackList = ['00000000000000', '00000000000001'];
-
-    /**
-     * @var NP
-     */
-    private $np;
+    private $phone;
 
 
     /**
      * Settings up.
+     *
      * @throws \NP\Exception\ErrorException
      */
     public function setUp()
     {
         parent::setUp();
 
-        $this->instance = new TrackingDocument($this->data, []);
-        $this->instance->setModelName($this->modelName);
-        $this->instance->setCalledMethod($this->calledMethod);
-        $this->np = NP::init(['key' => 'newKey', 'driver' => new MockDriver()]);
+        $this->track = '01234567890123';
+        $this->phone = '380112345678';
+        $this->instance = new TrackingDocument();
     }
 
 
     /**
-     * @covers \NP\Model\TrackingDocument::__construct
-     */
-    public function testTrackingDocument()
-    {
-        $this->assertInstanceOf(Model::class, $this->instance);
-        $this->assertInstanceOf(TrackingDocumentsInterface::class, $this->instance);
-    }
-
-
-    /**
-     * @covers \NP\NP::with
-     * @covers \NP\NP::send
-     * @covers \NP\NP::sendWith
-     * @covers \NP\Common\Task\TaskManager::getResponse
-     * @covers \NP\Model\Model::checkRequiredProperties
-     * @covers \NP\Model\TrackingDocument::getStatusDocumentsAction
      * @covers \NP\Model\TrackingDocument::setDocumentsToMethodProperties
-     * @covers \NP\Model\Model::invokeMethod
-     * @covers \NP\Common\Util\ActionDoc::__construct
-     * @covers \NP\Common\Util\ActionDoc::getDocBlock
-     * @covers \NP\Common\Util\ActionDoc::getAnnotation
-     * @covers \NP\Common\Util\ActionDoc::parseAction
-     * @covers \NP\Common\Util\NPReflectionMethod::build
-     */
-    public function testGetStatusDocumentsActionSuccess()
-    {
-        $this->np->with('TrackingDocument', 'getStatusDocuments', $this->trackList);
-        $r = $this->np->send();
-        $this->assertJson($r->getRaw());
-
-        $r = $this->np->sendWith('TrackingDocument', 'getStatusDocuments', $this->trackList);
-        $this->assertJson($r->getRaw());
-
-        $this->instance->setMethodProperties($this->trackList);
-        $getStatusDocuments = $this->instance->getStatusDocumentsAction();
-        $this->assertInstanceOf(Model::class, $getStatusDocuments);
-        $this->assertInstanceOf(TrackingDocumentsInterface::class, $getStatusDocuments);
-    }
-
-
-    /**
-     * @covers \NP\NP::with
-     * @covers \NP\NP::send
-     * @covers \NP\Common\Task\TaskManager::getResponse
-     * @covers \NP\Model\TrackingDocument::getStatusDocumentsAction
-     * @covers \NP\Common\Util\ActionDoc::__construct
-     * @covers \NP\Common\Util\ActionDoc::getDocBlock
-     * @covers \NP\Common\Util\ActionDoc::getAnnotation
-     * @covers \NP\Common\Util\ActionDoc::parseAction
+     * @covers \NP\Model\Model::getMethodProperties
      *
      * @throws \NP\Exception\ErrorException
      */
-    public function testGetStatusDocumentsActionFailed()
+    public function testSetDocumentsToMethodProperties()
     {
-        $failedNp = NP::init(['key' => 'newKey', 'driver' => new MockDriver('failed')]);
-        $failedNp->with('TrackingDocuments', 'getStatusDocuments', $this->trackList);
-        $r = $failedNp->send();
+        $this->instance->setDocumentsToMethodProperties([$this->track]);
 
-        $this->assertJson($r->getRaw());
+        $this->assertArrayHasKey('Documents', $this->instance->getMethodProperties());
+    }
+
+
+    /**
+     * @covers \NP\Model\TrackingDocument::getStatusDocumentsAction
+     */
+    public function testGetStatusDocumentsAction()
+    {
+        $this->assertInstanceOf(Model::class, $this->instance->getStatusDocumentsAction());
     }
 }

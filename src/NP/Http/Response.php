@@ -35,7 +35,7 @@ class Response
      *
      * @param string $response - Server JSON response.
      */
-    public function __construct($response)
+    public function __construct(string $response)
     {
         $this->response = $response;
     }

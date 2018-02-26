@@ -14,6 +14,7 @@ declare(strict_types=1); // strict mode
 namespace NP\Model;
 
 use NP\Entity\TrackList;
+use NP\Exception\ErrorException;
 
 
 /**
@@ -31,6 +32,7 @@ class TrackingDocument extends Model implements TrackingDocumentsInterface
      * Set Documents to method properties.
      *
      * @param array $data
+     * @throws ErrorException
      */
     public function setDocumentsToMethodProperties(array $data)
     {

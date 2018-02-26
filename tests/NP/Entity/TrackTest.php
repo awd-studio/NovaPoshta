@@ -9,41 +9,30 @@
  * @link    https://github.com/awd-studio/novaposhta
  */
 
-declare(strict_types=1); // strict mode
-
 namespace NP\Test\Entity;
 
-use PHPUnit\Framework\TestCase;
 use NP\Entity\Track;
+use PHPUnit\Framework\TestCase;
 
-/**
- * Class TrackTest
- * @package NP\Test\Entity
- */
 class TrackTest extends TestCase
 {
 
     /**
      * Instance.
      *
-     * @var Track
+     * @var \NP\Entity\Track
      */
     private $instance;
 
     /**
      * @var string
      */
-    private $documentNumber = '00000000000000';
+    private $track;
 
     /**
      * @var string
      */
-    private $phone = '380000000000';
-
-    /**
-     * @var array
-     */
-    private $track;
+    private $phone;
 
 
     /**
@@ -53,10 +42,8 @@ class TrackTest extends TestCase
     {
         parent::setUp();
 
-        $this->track = [
-            'DocumentNumber' => $this->documentNumber,
-            'Phone'          => $this->phone,
-        ];
+        $this->track = '01234567890123';
+        $this->phone = '380112345678';
         $this->instance = new Track($this->track);
     }
 
@@ -64,16 +51,15 @@ class TrackTest extends TestCase
     /**
      * @covers \NP\Entity\Track::__construct
      */
-    public function testTrack()
+    public function test__construct()
     {
-        $track0 = new Track($this->track);
-        $this->assertInstanceOf(Track::class, $track0);
-
-        $track1 = new Track($this->documentNumber);
-        $this->assertInstanceOf(Track::class, $track1);
-
-        $track2 = new Track([$this->documentNumber]);
-        $this->assertInstanceOf(Track::class, $track2);
+        $this->assertInstanceOf(Track::class, new Track($this->track));
+        $this->assertInstanceOf(Track::class, new Track($this->track, $this->phone));
+        $this->assertInstanceOf(Track::class, new Track([$this->track]));
+        $this->assertInstanceOf(Track::class, new Track([
+            'DocumentNumber' => $this->track,
+            'Phone' => $this->phone,
+        ]));
     }
 
 
@@ -82,13 +68,13 @@ class TrackTest extends TestCase
      */
     public function testGetId()
     {
-        $this->assertEquals($this->documentNumber, $this->instance->getId());
+        $this->assertEquals($this->track, $this->instance->getId());
     }
 
 
     /**
-     * @covers \NP\Entity\Track::setPhone()
-     * @covers \NP\Entity\Track::getPhone()
+     * @covers \NP\Entity\Track::setPhone
+     * @covers \NP\Entity\Track::getPhone
      */
     public function testSetGetPhone()
     {
@@ -98,11 +84,15 @@ class TrackTest extends TestCase
 
 
     /**
-     * @covers \NP\Entity\Track::build()
+     * @covers \NP\Entity\Track::build
      */
     public function testBuild()
     {
-        $this->assertEquals($this->track, $this->instance->build());
+        $this->instance->setPhone($this->phone);
+        $array = $this->instance->build();
+
+        $this->assertArrayHasKey('DocumentNumber', $array);
+        $this->assertArrayHasKey('Phone', $array);
     }
 
 
@@ -111,6 +101,6 @@ class TrackTest extends TestCase
      */
     public function testCreate()
     {
-        $this->assertEquals($this->instance, Track::create($this->track));
+        $this->assertInstanceOf(Track::class, Track::create($this->track));
     }
 }

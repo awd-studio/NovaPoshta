@@ -14,7 +14,6 @@ declare(strict_types=1); // strict mode
 namespace NP\Http;
 
 use NP\Exception\ErrorException;
-use NP\Exception\Errors;
 
 
 /**
@@ -29,15 +28,13 @@ class CurlDriver implements DriverInterface
      *
      * @param Request $request
      *
-     * @return Response
+     * @return string
+     * @throws ErrorException
      */
-    public function send(Request $request): Response
+    public function send(Request $request): string
     {
-        $errors = Errors::getInstance();
-
         try {
             $curl = curl_init();
-
             curl_setopt_array($curl, [
                 CURLOPT_URL            => $request->getUri(),
                 CURLOPT_RETURNTRANSFER => true,
@@ -49,15 +46,15 @@ class CurlDriver implements DriverInterface
 
             $response = curl_exec($curl);
 
+            if (curl_errno($curl)) {
+                throw new ErrorException("cURL Error #:" . curl_error($curl));
+            }
+            
             curl_close($curl);
 
-            if ($err = curl_error($curl)) {
-                throw new ErrorException("cURL Error #:" . $err);
-            }
+            return (string) $response;
         } catch (ErrorException $exception) {
-            $response = $errors->addError($exception->getMessage())->toJson();
-        } finally {
-            return new Response($response);
+            throw new ErrorException($exception->getMessage());
         }
     }
 }

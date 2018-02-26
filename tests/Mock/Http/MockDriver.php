@@ -15,8 +15,8 @@ namespace NP\Mock\Http;
 
 use NP\Http\DriverInterface;
 use NP\Http\Request;
-use NP\Http\Response;
 use NP\Exception\ErrorException;
+use NP\Mock\AssetsResponse;
 
 
 /**
@@ -31,6 +31,11 @@ class MockDriver implements DriverInterface
      */
     private $response;
 
+    /**
+     * @var bool
+     */
+    private $success;
+
 
     /**
      * MockDriver constructor.
@@ -42,13 +47,8 @@ class MockDriver implements DriverInterface
      */
     public function __construct(string $response = 'success')
     {
-        $file = realpath(dirname(__FILE__) . "/../../assets/json/response/{$response}.json");
-
-        if (is_readable($file)) {
-            $this->response = file_get_contents($file);
-        } else {
-            throw new ErrorException("File \"{$response}.json\" not exists or not readable!");
-        }
+        $this->success = $response === 'success';
+        $this->response = AssetsResponse::json();
     }
 
 
@@ -57,10 +57,15 @@ class MockDriver implements DriverInterface
      *
      * @param Request $request
      *
-     * @return Response
+     * @return string
+     * @throws ErrorException
      */
-    public function send(Request $request): Response
+    public function send(Request $request): string
     {
-        return new Response($this->response);
+        if ($this->success) {
+            return $this->response;
+        } else {
+            throw new ErrorException('MockDriver Error.');
+        }
     }
 }

@@ -14,11 +14,10 @@ declare(strict_types=1); // strict mode
 
 namespace NP\Common;
 
-use NP\Exception\Errors;
+use NP\Exception\Error;
 use NP\Http\DriverInterface;
 use NP\Http\CurlDriver;
 use NP\Http\GuzzleDriver;
-use NP\Common\Util\Singleton;
 
 
 /**
@@ -27,7 +26,6 @@ use NP\Common\Util\Singleton;
  */
 class Config
 {
-    use Singleton;
 
     /**
      * Languages.
@@ -38,17 +36,49 @@ class Config
     /**
      * @var string API key.
      */
-    private static $key;
+    protected $key;
 
     /**
      * @var DriverInterface HTTP driver.
      */
-    private static $driver;
+    protected $driver;
 
     /**
      * @var string Default language.
      */
-    private static $language;
+    protected $language;
+
+    /**
+     * @var bool Soft mode.
+     * Use for enable exceptions instead error response.
+     */
+    protected $softMode = true;
+
+    /**
+     * @var Error[]
+     */
+    protected $errors = [];
+
+
+    /**
+     * Config constructor.
+     *
+     * @param string|array $config Config data. May use array to set configs
+     */
+    protected function __construct($config)
+    {
+        if (is_string($config)) {
+            $this->key = $config;
+        } elseif (is_array($config) && isset($config['key'])) {
+            foreach ($config as $k => $value) {
+                $this->setProperty($k, $value);
+            }
+        } else {
+            $this->errors[] = new Error('API key is not allowed.');
+        }
+
+        $this->setDefaults();
+    }
 
 
     /**
@@ -58,37 +88,25 @@ class Config
      *
      * @return Config
      */
-    public static function setUp($config): self
+    public static function setUp($config): Config
     {
-        if (is_string($config)) {
-            self::$key = $config;
-        } elseif (is_array($config) && isset($config['key'])) {
-            foreach ($config as $k => $value) {
-                self::setProperty($k, $value);
-            }
-        } else {
-            Errors::getInstance()->addError('API key is not allowed.');
-        }
-
-        self::setDefaults();
-
-        return self::getInstance();
+        return new static($config);
     }
 
 
     /**
      * Set defaults.
      */
-    private static function setDefaults()
+    private function setDefaults()
     {
         // Set default HTTP driver
-        if (!self::$driver) {
-            self::$driver = self::getDefaultDriver();
+        if (!$this->driver) {
+            $this->setDefaultDriver();
         }
 
         // Set default language
-        if (!self::$language) {
-            self::$language = self::LANGUAGE_UK;
+        if (!$this->language) {
+            $this->language = self::LANGUAGE_UK;
         }
     }
 
@@ -99,31 +117,40 @@ class Config
      * @param $name
      * @param $value
      */
-    public static function setProperty($name, $value)
+    public function setProperty($name, $value)
     {
-        self::${$name} = $value;
+        $this->$name = $value;
     }
 
 
     /**
      * Get default HTTP driver.
      *
-     * @return DriverInterface
+     * ToDo: Refactor;
+     * ToDo: Make test-friendly & testable at all;
      */
-    private static function getDefaultDriver(): DriverInterface
+    private function setDefaultDriver()
     {
         try {
-            $driver = new GuzzleDriver;
+            $this->driver = new GuzzleDriver();
         } catch (\Exception $exception) {
             try {
-                $driver = new CurlDriver;
+                $this->driver = new CurlDriver();
             } catch (\Exception $exception) {
-                $driver = null;
-                Errors::getInstance()->addError('There are no installed "Guzzle" library or "php_curl" extension!');
+                $this->errors[] = new Error('There are no installed "Guzzle" library or "php_curl" extension!');
             }
         }
+    }
 
-        return $driver;
+
+    /**
+     * Get errors.
+     *
+     * @return Error[]
+     */
+    public function getErrors(): array
+    {
+        return $this->errors;
     }
 
 
@@ -134,7 +161,7 @@ class Config
      */
     public function getDriver(): DriverInterface
     {
-        return self::$driver;
+        return $this->driver;
     }
 
 
@@ -145,7 +172,7 @@ class Config
      */
     public function getKey(): string
     {
-        return self::$key;
+        return $this->key;
     }
 
 
@@ -154,8 +181,8 @@ class Config
      *
      * @return string
      */
-    public static function getLanguage(): string
+    public function getLanguage(): string
     {
-        return self::$language;
+        return $this->language;
     }
 }
