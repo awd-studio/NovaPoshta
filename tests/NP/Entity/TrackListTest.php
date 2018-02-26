@@ -9,75 +9,59 @@
  * @link    https://github.com/awd-studio/novaposhta
  */
 
-declare(strict_types=1); // strict mode
-
 namespace NP\Test\Entity;
 
-use Countable;
-use Iterator;
 use NP\Entity\Track;
-use PHPUnit\Framework\TestCase;
 use NP\Entity\TrackList;
+use NP\Exception\ErrorException;
+use PHPUnit\Framework\TestCase;
 
-/**
- * Class TrackListTest
- * @package NP\Test\Entity
- */
 class TrackListTest extends TestCase
 {
 
     /**
      * Instance.
      *
-     * @var TrackList
+     * @var \NP\Entity\TrackList
      */
     private $instance;
 
     /**
      * @var string
      */
-    private $documentNumber = '00000000000000';
-
-    /**
-     * @var string
-     */
-    private $phone = '380000000000';
-
-    /**
-     * @var array
-     */
     private $track;
 
 
     /**
      * Settings up.
+     * @throws \NP\Exception\ErrorException
      */
     public function setUp()
     {
         parent::setUp();
 
-        $this->track = [
-            'DocumentNumber' => $this->documentNumber,
-            'Phone'          => $this->phone,
-        ];
+        $this->track = '01234567890123';
         $this->instance = new TrackList($this->track);
     }
 
 
     /**
      * @covers \NP\Entity\TrackList::__construct
+     * @covers \NP\Entity\TrackList::addTrack
+     *
+     * @throws \NP\Exception\ErrorException
      */
-    public function testTrackList()
+    public function test__construct()
     {
-        $this->assertInstanceOf(TrackList::class, $this->instance);
-        $this->assertInstanceOf(Iterator::class, $this->instance);
-        $this->assertInstanceOf(Countable::class, $this->instance);
+        $track = new Track($this->track);
 
-        new TrackList($this->documentNumber);
-        new TrackList([$this->documentNumber]);
-        new TrackList(new Track($this->documentNumber));
+        $this->assertInstanceOf(TrackList::class, new TrackList($this->track));
+        $this->assertInstanceOf(TrackList::class, new TrackList([$this->track]));
+        $this->assertInstanceOf(TrackList::class, new TrackList(['DocumentNumber' => $this->track]));
+        $this->assertInstanceOf(TrackList::class, new TrackList($track));
 
-        new TrackList(new \stdClass());
+        $this->expectException(ErrorException::class);
+        new TrackList(42);
     }
 
 
@@ -96,9 +80,9 @@ class TrackListTest extends TestCase
      */
     public function testAddGetTrack()
     {
-        $track = '01234567890123';
-        $this->instance->addTrack($track, $this->phone);
+        $track = '12345678901234';
+        $this->instance->addTrack($track);
 
-        $this->assertEquals(new Track($track, $this->phone), $this->instance->getTrack($track));
+        $this->assertEquals(new Track($track), $this->instance->getTrack($track));
     }
 }

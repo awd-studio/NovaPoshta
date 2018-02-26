@@ -108,7 +108,11 @@ class Task implements TaskInterface
     public function execute()
     {
         try {
-            $response = $this->config->getDriver()->send($this->request);
+            if ($this->request) {
+                $response = $this->config->getDriver()->send($this->request);
+            } else {
+                throw new ErrorException('No Request fined.');
+            }
         } catch (ErrorException $e) {
             $response = $e->toJson();
         } finally {

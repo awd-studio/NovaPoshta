@@ -14,17 +14,13 @@ namespace NP\Test\Common\Util;
 use NP\Common\Util\Collection;
 use PHPUnit\Framework\TestCase;
 
-/**
- * Class CollectionTest
- * @package NP\Test\Common\Util
- */
 class CollectionTest extends TestCase
 {
 
     /**
      * Instance.
      *
-     * @var Collection
+     * @var \NP\Common\Util\Collection
      */
     private $instance;
 
@@ -32,6 +28,16 @@ class CollectionTest extends TestCase
      * @var array
      */
     private $array;
+
+    /**
+     * @var string
+     */
+    private $key;
+
+    /**
+     * @var string
+     */
+    private $value;
 
 
     /**
@@ -41,8 +47,10 @@ class CollectionTest extends TestCase
     {
         parent::setUp();
 
+        $this->key = 'key';
+        $this->value = 'value';
+        $this->array = [$this->key => $this->value];
         $this->instance = new Collection();
-        $this->array = ['test' => 'value'];
     }
 
 
@@ -54,7 +62,7 @@ class CollectionTest extends TestCase
     {
         $this->instance->fill($this->array);
 
-        $this->assertEquals('value', $this->instance->getItem('test'));
+        $this->assertEquals($this->value, $this->instance->getItem($this->key));
     }
 
 
@@ -62,15 +70,16 @@ class CollectionTest extends TestCase
      * @covers \NP\Common\Util\Collection::addItem
      * @covers \NP\Common\Util\Collection::getItem
      */
-    public function testAdd()
+    public function testAddItem()
     {
-        $this->instance->addItem($this->array, 'name');
-        $this->assertEquals($this->array, $this->instance->getItem());
+        $key2 = 'key2';
+        $value2 = 'value2';
+        $this->instance->addItem($value2, $key2);
+        $this->assertEquals($value2, $this->instance->getItem($key2));
 
-        $newArray = ['new' => 'array'];
-
-        $this->instance->addItem($newArray);
-        $this->assertEquals($newArray, $this->instance->getItem());
+        $value3 = 'value2';
+        $this->instance->addItem($value3);
+        $this->assertEquals($value3, $this->instance->getItem());
     }
 
 
@@ -79,11 +88,13 @@ class CollectionTest extends TestCase
      */
     public function testGetIterator()
     {
-        $this->instance->fill($this->array);
+        $key2 = 'key2';
+        $value2 = 'value2';
+        $this->instance->addItem($value2, $key2);
 
-        foreach ($this->instance as $name => $item) {
-            $this->assertEquals(key($this->array), $name);
-            $this->assertEquals(end($this->array), $item);
+        foreach ($this->instance as $k => $item) {
+            $this->assertEquals($key2, $k);
+            $this->assertEquals($value2, $item);
         }
     }
 }

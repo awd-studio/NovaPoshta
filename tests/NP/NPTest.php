@@ -9,22 +9,13 @@
  * @link    https://github.com/awd-studio/novaposhta
  */
 
-declare(strict_types=1); // strict mode
-
-namespace NP\Test\Np;
+namespace NP\Test;
 
 use NP\Common\Task\TaskManager;
-use NP\Exception\ErrorException;
-use PHPUnit\Framework\TestCase;
+use NP\Http\Response;
 use NP\NP;
-use NP\Http\DriverInterface;
-use NP\Mock\Http\MockDriver;
+use PHPUnit\Framework\TestCase;
 
-
-/**
- * Class NPTest
- * @package NP\Test\Np
- */
 class NPTest extends TestCase
 {
 
@@ -36,61 +27,78 @@ class NPTest extends TestCase
     private $instance;
 
     /**
-     * API key.
-     *
      * @var string
      */
-    private $key = 'myAPIkey';
+    private $apiKey;
 
     /**
-     * Driver.
-     *
-     * @var DriverInterface
+     * @var string Test model name
      */
-    private $driver;
+    private $modelName;
+
+    /**
+     * @var string Test called method
+     */
+    private $calledMethod;
 
 
     /**
      * Settings up.
-     * @throws ErrorException
      */
     public function setUp()
     {
         parent::setUp();
 
-        $this->driver = new MockDriver('success');
-        $this->instance = NP::init(['key' => $this->key, 'driver' => $this->driver]);
-    }
-
-
-    /**
-     * @covers \NP\NP::getInstance
-     * @covers \NP\Common\Util\Singleton::getInstance
-     */
-    public function testNP()
-    {
-        $this->assertInstanceOf(NP::class, NP::getInstance());
-    }
-
-
-    /**
-     * @covers \NP\NP::execute
-     * @covers \NP\Common\Task\TaskManager::init
-     * @covers \NP\Common\Task\TaskManager::execute
-     */
-    public function testExecute()
-    {
-        $this->assertInstanceOf(TaskManager::class, $this->instance->execute());
+        $this->modelName = 'testModelName';
+        $this->calledMethod = 'testCalledMethod';
+        $this->apiKey = '';
+        $this->instance = NP::init($this->apiKey);
     }
 
 
     /**
      * @covers \NP\NP::init
-     * @covers \NP\Common\Config::setDefaultDriver
      */
     public function testInit()
     {
-        $this->assertInstanceOf(NP::class, NP::init(['key' => $this->key, 'driver' => $this->driver]));
-        $this->assertInstanceOf(NP::class, NP::init($this->key));
+        $np = NP::init($this->apiKey);
+
+        $this->assertInstanceOf(NP::class, $np);
+    }
+
+
+    /**
+     * @covers \NP\NP::with
+     * @covers \NP\NP::execute
+     */
+    public function testWith()
+    {
+        $this->instance->with($this->modelName, $this->calledMethod);
+        $tm = $this->instance->execute();
+
+        $this->assertInstanceOf(TaskManager::class, $tm);
+    }
+
+
+    /**
+     * @covers \NP\NP::send
+     */
+    public function testSend()
+    {
+        $this->instance->with($this->modelName, $this->calledMethod);
+        $response = $this->instance->send();
+
+        $this->assertInstanceOf(Response::class, $response);
+    }
+
+
+    /**
+     * @covers \NP\NP::sendWith
+     */
+    public function testSendWith()
+    {
+        $response = $this->instance->sendWith($this->modelName, $this->calledMethod);
+
+        $this->assertInstanceOf(Response::class, $response);
     }
 }

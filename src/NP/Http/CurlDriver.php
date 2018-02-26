@@ -45,11 +45,12 @@ class CurlDriver implements DriverInterface
             ]);
 
             $response = curl_exec($curl);
-            curl_close($curl);
 
-            if (($err = curl_error($curl))) {
-                throw new ErrorException("cURL Error #:" . $err);
+            if (curl_errno($curl)) {
+                throw new ErrorException("cURL Error #:" . curl_error($curl));
             }
+            
+            curl_close($curl);
 
             return (string) $response;
         } catch (ErrorException $exception) {

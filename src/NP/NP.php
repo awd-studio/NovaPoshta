@@ -16,6 +16,7 @@ namespace NP;
 use NP\Common\Config;
 use NP\Common\Task\TaskManager;
 use NP\Http\Response;
+use NP\Model\Model;
 use NP\Model\ModelBuilder;
 
 
@@ -60,14 +61,14 @@ final class NP
     /**
      * Model switcher.
      *
-     * @param string $modelName    API model name.
-     * @param string $calledMethod Model method.
-     * @param array  $data         Data to send.
-     * @param mixed  $key          Key to set item to task manager.
+     * @param string|Model $model        API model name.
+     * @param string       $calledMethod Model method.
+     * @param array        $data         Data to send.
+     * @param mixed        $key          Key to set item to task manager.
      */
-    public function with(string $modelName, string $calledMethod, array $data = [], $key = null)
+    public function with($model, string $calledMethod, array $data = [], $key = null)
     {
-        $modelBuilder = ModelBuilder::build($this->config, $modelName, $calledMethod, $data);
+        $modelBuilder = ModelBuilder::build($this->config, $model, $calledMethod, $data);
         $this->taskManager->add($modelBuilder, $this->config, $key);
     }
 

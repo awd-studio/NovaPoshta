@@ -39,7 +39,7 @@ interface ModelBuilderInterface
     /**
      * Get serialized object.
      *
-     * @return object
+     * @return array
      */
     public function getBody();
 }

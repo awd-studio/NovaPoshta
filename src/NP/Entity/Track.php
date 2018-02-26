@@ -63,7 +63,7 @@ class Track
             $this->documentNumber = $documentNumber;
         }
 
-        if ($this->phone === null) {
+        if ($phone) {
             $this->phone = $phone;
         }
     }
@@ -105,10 +105,12 @@ class Track
      */
     public function build()
     {
-        return [
-            'DocumentNumber' => $this->documentNumber,
-            'Phone'          => $this->phone,
-        ];
+        $build = ['DocumentNumber' => $this->documentNumber];
+        if ($this->phone) {
+            $build['Phone'] = $this->phone;
+        }
+
+        return $build;
     }
 
 
