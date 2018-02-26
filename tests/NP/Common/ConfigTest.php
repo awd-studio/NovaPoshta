@@ -35,7 +35,7 @@ class ConfigTest extends TestCase
     /**
      * Settings up.
      */
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
 
@@ -45,6 +45,16 @@ class ConfigTest extends TestCase
 
 
     /**
+     * Settings clear.
+     */
+    protected function tearDown()
+    {
+        $this->instance = null;
+    }
+
+
+    /**
+     * @covers \NP\Common\Config::__construct
      * @covers \NP\Common\Config::setUp
      * @covers \NP\Common\Config::setProperty
      * @covers \NP\Common\Config::setDefaults
@@ -60,12 +70,13 @@ class ConfigTest extends TestCase
 
 
     /**
+     * @covers \NP\Common\Config::__construct
      * @covers \NP\Common\Config::setUp
      * @covers \NP\Common\Config::getErrors
      */
     public function testGetErrors()
     {
-        $configFailed = Config::setUp([$this->key]);
+        $configFailed = Config::setUp(null);
 
         array_map(function ($error) {
             $this->assertInstanceOf(Error::class, $error);

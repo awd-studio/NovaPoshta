@@ -32,6 +32,8 @@ class MockModelBuilder implements ModelBuilderInterface
 {
     /**
      * MockModelBuilder constructor.
+     *
+     * @param bool $hasError
      */
     public function __construct(bool $hasError = true)
     {
@@ -53,14 +55,14 @@ class MockModelBuilder implements ModelBuilderInterface
      */
     public function hasError(): bool
     {
-        return isset($this->error);
+        return (isset($this->error) && $this->error);
     }
 
 
     /**
      * Get serialized object.
      *
-     * @return object
+     * @return array
      */
     public function getBody()
     {

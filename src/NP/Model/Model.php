@@ -101,42 +101,19 @@ class Model
         foreach ($this->methodParams as $name => $prop) {
             $class = $prop['callbackClass'];
             $method = $prop['callbackMethod'];
-            $dataCallback = $prop['callbackData'];
+            $callbackData = $prop['callbackData'];
 
             try {
-                $data = null;
-                try {
-                    $data = NPReflectionMethod::build($class, $dataCallback, [$class]);
-                } catch (ReflectionException $exception) {
-                    $className = is_string($class) ? $class : get_class($class);
-                    $message = "Data callback \"$className::$dataCallback\" - undefined!";
-                    $message .= ' Error: ';
-                    $message .= $exception->getMessage();
-
-                    throw new ErrorException($message);
-                }
-
+                $data = NPReflectionMethod::build($class, $callbackData, [$class]);
                 NPReflectionMethod::build($class, $method, [$class, $data]);
             } catch (ReflectionException $exception) {
-                $message = "Undefined callbackClass or callbackMethod \"$class::$method\"!";
+                $message = "Undefined callbackClass or callbackMethod!";
                 $message .= ' Error: ';
                 $message .= $exception->getMessage();
 
                 throw new ErrorException($message);
             }
         }
-    }
-
-
-    /**
-     * Set method property.
-     *
-     * @param string $name
-     * @param string $value
-     */
-    public function setMethodProperty(string $name, string $value)
-    {
-        $this->methodProperties[$name] = $value;
     }
 
 
