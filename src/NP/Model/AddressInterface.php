@@ -26,6 +26,8 @@ interface AddressInterface
     /**
      * Method "save" - Create counterpart.
      *
+     * @param array $options
+     *
      * @ActionParam(
      *     name = "CounterpartyRef",
      *     required = true,
@@ -67,11 +69,13 @@ interface AddressInterface
      * ToDo: Implement the method
      * ToDo: Check method correct name ("save" or "Save")
      */
-    //public function save(array $options = []);
+    //public function saveAction(array $options = []);
 
 
     /**
      * Method "update" - Update counterpart address.
+     *
+     * @param array $options
      *
      * @ActionParam(
      *     name = "Ref",
@@ -115,11 +119,13 @@ interface AddressInterface
      *
      * ToDo: Implement the method
      */
-    //public function update(array $options = []);
+    //public function updateAction(array $options = []);
 
 
     /**
      * Method "delete" - Delete counterpart address.
+     *
+     * @param array $options
      *
      * @ActionParam(
      *     name = "Ref",
@@ -133,11 +139,13 @@ interface AddressInterface
      *
      * ToDo: Implement the method
      */
-    //public function delete(array $options = []);
+    //public function deleteAction(array $options = []);
 
 
     /**
      * Method "getCities" - Get cities.
+     *
+     * @param array $options
      *
      * @ActionParam(
      *     name = "Ref",
@@ -163,11 +171,13 @@ interface AddressInterface
      *
      * ToDo: Implement the method
      */
-    // public function getCities(array $options = []);
+    // public function getCitiesAction(array $options = []);
 
 
     /**
      * Method "getSettlements" - Get Nova Poshta settlements.
+     *
+     * @param array $options
      *
      * @ActionParam(
      *     name = "Ref",
@@ -205,11 +215,13 @@ interface AddressInterface
      *
      * ToDo: Implement the method
      */
-    // public function getSettlements(array $options = []);
+    // public function getSettlementsAction(array $options = []);
 
 
     /**
      * Method "getAreas" - Get geographic areas.
+     *
+     * @param array $options
      *
      * @link https://devcenter.novaposhta.ua/docs/services/556d7ccaa0fe4f08e8f7ce43/operations/556d9130a0fe4f08e8f7ce48
      *
@@ -222,6 +234,8 @@ interface AddressInterface
 
     /**
      * Method "getWarehouses" - Get Nova Poshta warehouses.
+     *
+     * @param array $options
      *
      * @ActionParam(
      *     name = "CityName",
@@ -259,11 +273,13 @@ interface AddressInterface
      *
      * ToDo: Implement the method
      */
-    // public function getWarehouses(array $options = []);
+    // public function getWarehousesAction(array $options = []);
 
 
     /**
      * Method "getWarehouseTypes" - Get Nova Poshta warehouse types.
+     *
+     * @param array $options
      *
      * @see https://devcenter.novaposhta.ua/docs/services/556d7ccaa0fe4f08e8f7ce43/operations/556d8211a0fe4f08e8f7ce45
      *
@@ -276,6 +292,8 @@ interface AddressInterface
 
     /**
      * Method "getStreet" - Get Nova Poshta delivery streets.
+     *
+     * @param array $options
      *
      * @ActionParam(
      *     name = "CityRef",
@@ -303,17 +321,19 @@ interface AddressInterface
      *
      * ToDo: Implement the method
      */
-    // public function getStreet(array $options = []);
+    // public function getStreetAction(array $options = []);
 
 
     /**
      * Method "searchSettlements" - Search settlements online.
      *
+     * @param array $options
+     *
      * @ActionParam(
      *     name = "CityName",
      *     required = true,
      *     filters = "type=string|maxlen=36",
-     *     description = "City name or index (zip)"
+     *     description = "City name or index/zip"
      * )
      *
      * @ActionParam(
@@ -326,14 +346,14 @@ interface AddressInterface
      * @link https://devcenter.novaposhta.ua/docs/services/556d7ccaa0fe4f08e8f7ce43/operations/58e5ebeceea27017bc851d67
      *
      * @return Model
-     *
-     * ToDo: Implement the method
      */
-    // public function searchSettlements(array $options = []);
+    public function searchSettlementsAction(array $options = []);
 
 
     /**
      * Method "searchSettlementStreets" - Search streets online.
+     *
+     * @param array $options
      *
      * @ActionParam(
      *     name = "StreetName",
@@ -362,5 +382,5 @@ interface AddressInterface
      *
      * ToDo: Implement the method
      */
-    // public function searchSettlementStreets(array $options = []);
+    // public function searchSettlementStreetsAction(array $options = []);
 }

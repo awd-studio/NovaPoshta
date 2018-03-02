@@ -80,7 +80,6 @@ class Model
         $defaults = [
             'name'           => '',
             'required'       => false,
-            'callbackClass'  => $this,
             'callbackMethod' => 'setMethodProperties',
             'callbackData'   => 'getMethodProperties',
         ];
@@ -99,19 +98,18 @@ class Model
     protected function invokeMethod()
     {
         foreach ($this->methodParams as $name => $prop) {
-            $class = $prop['callbackClass'];
             $method = $prop['callbackMethod'];
             $callbackData = $prop['callbackData'];
 
-            try {
-                $data = NPReflectionMethod::build($class, $callbackData, [$class]);
-                NPReflectionMethod::build($class, $method, [$class, $data]);
-            } catch (ReflectionException $exception) {
-                $message = "Undefined callbackClass or callbackMethod!";
-                $message .= ' Error: ';
-                $message .= $exception->getMessage();
-
-                throw new ErrorException($message);
+            if (method_exists($this, $method)) {
+                try {
+                    $data = NPReflectionMethod::build($this, $callbackData, [$this]);
+                    NPReflectionMethod::build($this, $method, [$this, $data]);
+                } catch (ReflectionException $exception) {
+                    throw new ErrorException($exception->getMessage());
+                }
+            } else {
+                throw new ErrorException("Undefined callbackClass or callbackMethod!");
             }
         }
     }
