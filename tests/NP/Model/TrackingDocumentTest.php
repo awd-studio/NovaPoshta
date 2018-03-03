@@ -59,9 +59,9 @@ class TrackingDocumentTest extends TestCase
      */
     public function testSetDocumentsToMethodProperties()
     {
-        $this->instance->setDocumentsToMethodProperties([$this->track]);
+        $this->instance->setDocumentsToMethodProperties((object) [$this->track]);
 
-        $this->assertArrayHasKey('Documents', $this->instance->getMethodProperties());
+        $this->assertObjectHasAttribute('Documents', $this->instance->getMethodProperties());
     }
 
 

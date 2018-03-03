@@ -65,11 +65,8 @@ interface AddressInterface
      * @link https://devcenter.novaposhta.ua/docs/services/556d7ccaa0fe4f08e8f7ce43/operations/556d9925a0fe4f08e8f7ce4a
      *
      * @return Model
-     *
-     * ToDo: Implement the method
-     * ToDo: Check method correct name ("save" or "Save")
      */
-    //public function saveAction(array $options = []);
+    public function saveAction(array $options = []);
 
 
     /**
@@ -116,10 +113,8 @@ interface AddressInterface
      * @link https://devcenter.novaposhta.ua/docs/services/556d7ccaa0fe4f08e8f7ce43/operations/556d9db5a0fe4f08e8f7ce4b
      *
      * @return Model
-     *
-     * ToDo: Implement the method
      */
-    //public function updateAction(array $options = []);
+    public function updateAction(array $options = []);
 
 
     /**
@@ -136,10 +131,8 @@ interface AddressInterface
      * @link https://devcenter.novaposhta.ua/docs/services/556d7ccaa0fe4f08e8f7ce43/operations/556da062a0fe4f08e8f7ce4c
      *
      * @return Model
-     *
-     * ToDo: Implement the method
      */
-    //public function deleteAction(array $options = []);
+    public function deleteAction(array $options = []);
 
 
     /**
@@ -210,10 +203,8 @@ interface AddressInterface
      * @link https://devcenter.novaposhta.ua/docs/services/556d7ccaa0fe4f08e8f7ce43/operations/56248fffa0fe4f0da0550ea8
      *
      * @return Model
-     *
-     * ToDo: Implement the method
      */
-    // public function getSettlementsAction(array $options = []);
+    public function getSettlementsAction(array $options = []);
 
 
     /**
@@ -224,10 +215,8 @@ interface AddressInterface
      * @link https://devcenter.novaposhta.ua/docs/services/556d7ccaa0fe4f08e8f7ce43/operations/556d9130a0fe4f08e8f7ce48
      *
      * @return Model
-     *
-     * ToDo: Implement the method
      */
-    // public function getAreas();
+    public function getAreasAction(array $options = []);
 
 
     /**
@@ -268,10 +257,8 @@ interface AddressInterface
      * @link https://devcenter.novaposhta.ua/docs/services/556d7ccaa0fe4f08e8f7ce43/operations/556d8211a0fe4f08e8f7ce45
      *
      * @return Model
-     *
-     * ToDo: Implement the method
      */
-    // public function getWarehousesAction(array $options = []);
+    public function getWarehousesAction(array $options = []);
 
 
     /**
@@ -282,10 +269,8 @@ interface AddressInterface
      * @see https://devcenter.novaposhta.ua/docs/services/556d7ccaa0fe4f08e8f7ce43/operations/556d8211a0fe4f08e8f7ce45
      *
      * @return Model
-     *
-     * ToDo: Implement the method
      */
-    // public function getWarehouseTypes();
+    public function getWarehouseTypesAction(array $options = []);
 
 
     /**
@@ -316,10 +301,8 @@ interface AddressInterface
      * @link https://devcenter.novaposhta.ua/docs/services/556d7ccaa0fe4f08e8f7ce43/operations/556d8db0a0fe4f08e8f7ce47
      *
      * @return Model
-     *
-     * ToDo: Implement the method
      */
-    // public function getStreetAction(array $options = []);
+    public function getStreetAction(array $options = []);
 
 
     /**
@@ -377,8 +360,6 @@ interface AddressInterface
      * @link https://devcenter.novaposhta.ua/docs/services/556d7ccaa0fe4f08e8f7ce43/operations/58e5f369eea27017540b58ac
      *
      * @return Model
-     *
-     * ToDo: Implement the method
      */
-    // public function searchSettlementStreetsAction(array $options = []);
+    public function searchSettlementStreetsAction(array $options = []);
 }
