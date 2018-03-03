@@ -137,11 +137,11 @@ class Model
     /**
      * Get method properties.
      *
-     * @return array
+     * @return object
      */
-    public function getMethodProperties(): array
+    public function getMethodProperties()
     {
-        return $this->methodProperties;
+        return (object) $this->methodProperties;
     }
 
 
