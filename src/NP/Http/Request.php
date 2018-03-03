@@ -49,7 +49,7 @@ class Request
      *
      * @param bool $json JSON-encoded.
      *
-     * @return \stdClass|string
+     * @return array|string
      */
     public function getBody($json = false)
     {

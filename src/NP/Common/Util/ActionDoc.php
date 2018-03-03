@@ -67,13 +67,12 @@ class ActionDoc
      * Get annotations.
      *
      * @param string $tag
-     * @param bool   $entity
      *
      * @return array
      */
-    public function getAnnotation(string $tag = 'Action', bool $entity = true): array
+    public function getAnnotation(string $tag = 'ActionParam'): array
     {
-        return $this->parseAction($tag, $entity);
+        return $this->parseAction($tag);
     }
 
 
@@ -81,19 +80,19 @@ class ActionDoc
      * Parse method DocBlock.
      *
      * @param string $tag
-     * @param bool   $entity
      *
      * @return array
+     *
+     * ToDo: Replace with try/catch blocks, for catching ActionBlocs parsed with errors;
      */
-    protected function parseAction(string $tag, bool $entity = true): array
+    protected function parseAction(string $tag): array
     {
         $output = [];
-        $pattern = $entity ? "\(([\S\s\w\d]+)\)" : "([\s\w\d]+(?:\r?\n))";
-        preg_match_all("/(?:@{$tag}{$pattern})/u", $this->docBlock, $matches);
+        $pattern = "/(?:@{$tag}\((?P<{$tag}>[\s\w\-*=\",|\/`'^*_+@!$%?]+)\))/u";
+        preg_match_all($pattern, $this->docBlock, $matches, PREG_PATTERN_ORDER);
 
-        if ($matches[1]) {
-
-            foreach ($matches[1] as $k => $match) {
+        if ($matchesBlocks = $matches[$tag]) {
+            foreach ($matchesBlocks as $k => $match) {
                 $item = [];
                 $name = $k;
                 foreach (preg_split("/(\r?\n\r?)/", $match) as $line) {

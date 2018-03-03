@@ -12,6 +12,7 @@
 namespace NP\Test\Model;
 
 use NP\Exception\ErrorException;
+use NP\Mock\Model\MockModel;
 use NP\Model\Model;
 use PHPUnit\Framework\TestCase;
 
@@ -40,7 +41,7 @@ class ModelTest extends TestCase
 
     /**
      * @covers \NP\Model\Model::__construct
-     * @covers \NP\Model\Model::setMethodProperties
+     * @covers \NP\Model\Model::setMethodProperty
      * @covers \NP\Model\Model::setMethodParams
      * @covers \NP\Model\Model::processModel
      * @covers \NP\Model\Model::invokeMethod
@@ -55,6 +56,22 @@ class ModelTest extends TestCase
 
         $this->expectException(ErrorException::class);
         $this->assertInstanceOf(Model::class, new Model([], [['callbackMethod' => 'undefined']]));
+    }
+
+
+    /**
+     * @covers \NP\Model\Model::setMethodProperty
+     * @covers \NP\Model\Model::getMethodProperty
+     */
+    public function testSetGetMethodProperty()
+    {
+        $unavailablePropName = 'unavailable';
+        $availablePropName = 'available';
+        $availablePropData = 42;
+
+        $this->instance->setMethodProperty($availablePropName, $availablePropData);
+        $this->assertEquals($availablePropData, $this->instance->getMethodProperty($availablePropName));
+        $this->assertNull($this->instance->getMethodProperty($unavailablePropName));
     }
 
 
@@ -80,5 +97,12 @@ class ModelTest extends TestCase
                 'required' => 'true',
             ],
         ]));
+
+        $this->expectException(ErrorException::class);
+        (new MockModel([], ['undefined' => [
+            'name' => "MockRequiredParam",
+            'required' => true,
+            'description' => "Mock parameter for testing"
+        ]]))->mockModelMethodAction();
     }
 }

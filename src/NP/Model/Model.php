@@ -15,8 +15,6 @@ namespace NP\Model;
 
 use NP\Exception\ErrorException;
 use NP\Common\Util\Helper;
-use NP\Common\Util\NPReflectionMethod;
-use ReflectionException;
 
 
 /**
@@ -47,13 +45,11 @@ class Model
      *
      * @throws ErrorException
      */
-    final public function __construct(array $data = [], array $params = [])
+    public function __construct(array $data = [], array $params = [])
     {
-        $this->methodParams = $params;
-
         // Set up model data
-        $this->setMethodProperties($data);
-        $this->setMethodParams();
+        $this->methodParams = $params;
+        $this->methodProperties = $data;
 
         // Process model
         $this->processModel();
@@ -67,6 +63,7 @@ class Model
      */
     private function processModel()
     {
+        $this->setMethodParams();
         $this->invokeMethod();
         $this->checkRequiredProperties();
     }
@@ -80,9 +77,7 @@ class Model
         $defaults = [
             'name'           => '',
             'required'       => false,
-            'callbackClass'  => $this,
-            'callbackMethod' => 'setMethodProperties',
-            'callbackData'   => 'getMethodProperties',
+            'callbackMethod' => 'setMethodProperty',
         ];
 
         foreach ($this->methodParams as $name => $prop) {
@@ -98,21 +93,19 @@ class Model
      */
     protected function invokeMethod()
     {
-        foreach ($this->methodParams as $name => $prop) {
-            $class = $prop['callbackClass'];
-            $method = $prop['callbackMethod'];
-            $callbackData = $prop['callbackData'];
-
-            try {
-                $data = NPReflectionMethod::build($class, $callbackData, [$class]);
-                NPReflectionMethod::build($class, $method, [$class, $data]);
-            } catch (ReflectionException $exception) {
-                $message = "Undefined callbackClass or callbackMethod!";
-                $message .= ' Error: ';
-                $message .= $exception->getMessage();
-
-                throw new ErrorException($message);
+        try {
+            foreach ($this->methodParams as $name => $prop) {
+                $method = $prop['callbackMethod'];
+                if ($method !== 'setMethodProperty') {
+                    if (method_exists($this, $method)) {
+                        $this->methodParams[$prop['name']] = $this->{$method}($this->getMethodProperties());
+                    } else {
+                        throw new ErrorException("Undefined callback method!");
+                    }
+                }
             }
+        } catch (ErrorException $exception) {
+            throw new ErrorException($exception->getMessage());
         }
     }
 
@@ -120,11 +113,24 @@ class Model
     /**
      * Set method properties.
      *
-     * @param array $data
+     * @param string $name
+     * @param mixed  $data
      */
-    public function setMethodProperties(array $data)
+    public function setMethodProperty(string $name, $data)
     {
-        $this->methodProperties = $data;
+        $this->methodProperties[$name] = $data;
+    }
+
+
+    /**
+     * Get method properties.
+     *
+     * @param string $name
+     * @return mixed
+     */
+    public function getMethodProperty(string $name)
+    {
+        return isset($this->methodProperties[$name]) ? $this->methodProperties[$name] : null;
     }
 
 
@@ -143,25 +149,18 @@ class Model
      * Check required method properties.
      *
      * @throws ErrorException
-     *
-     * ToDo: Refactor;
      */
     public function checkRequiredProperties()
     {
         $errors = [];
         if ($this->methodParams) {
-            $required = array_filter($this->methodParams, function ($v) {
-                return (bool) $v['required'];
-            });
-
-            if ($required) {
-                $params = array_map(function ($i) {
-                    return $this->toActionCase($i);
-                }, array_keys($this->methodParams));
-
-                foreach ($params as $property) {
-                    if (empty($this->methodParams[$property])) {
-                        $errors[] = $property;
+            if ($required = array_filter($this->methodParams, function ($v) {
+                return $v['required'];
+            })) {
+                foreach ($required as $property) {
+                    $name = $property['name'];
+                    if (empty($this->methodProperties[$name])) {
+                        $errors[] = $name;
                     }
                 }
             }

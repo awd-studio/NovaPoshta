@@ -30,8 +30,8 @@ class Config
     /**
      * Languages.
      */
-    const LANGUAGE_UK = 'Uk';
-    const LANGUAGE_RU = 'Ru';
+    const LANGUAGE_UK = 'Uk'; // ToDo: Check right name "Uk" or "uk";
+    const LANGUAGE_RU = 'Ru'; // ToDo: Check right name "Ru" or "ru";
 
     /**
      * @var string API key.

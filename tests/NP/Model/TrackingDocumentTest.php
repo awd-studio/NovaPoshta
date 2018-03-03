@@ -72,4 +72,22 @@ class TrackingDocumentTest extends TestCase
     {
         $this->assertInstanceOf(Model::class, $this->instance->getStatusDocumentsAction());
     }
+
+
+    /**
+     * @covers \NP\Model\Model::invokeMethod
+     *
+     * @throws \NP\Exception\ErrorException
+     */
+    public function testInvokeMethod()
+    {
+        $this->assertInstanceOf(Model::class, (new TrackingDocument(['59000296674748'], [
+            'documents' => [
+                'name'           => 'Documents',
+                'required'       => true,
+                'callbackMethod' => 'setDocumentsToMethodProperties',
+                'description'    => 'Documents mixed Available track-list',
+            ],
+        ]))->getStatusDocumentsAction());
+    }
 }
