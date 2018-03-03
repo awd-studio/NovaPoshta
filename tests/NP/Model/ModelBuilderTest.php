@@ -81,11 +81,12 @@ class ModelBuilderTest extends TestCase
      */
     public function testHasError()
     {
-        // ToDo: Realize;
-        // $this->assertFalse(ModelBuilder::build($this->config, $this->modelName, $this->calledMethod)->hasError());
         $this->assertTrue(ModelBuilder::build($this->config, $this->modelName, 'undefined')->hasError());
         $this->assertTrue(ModelBuilder::build($this->config, null, $this->calledMethod)->hasError());
         $this->assertTrue(ModelBuilder::build(Config::setUp(null), $this->modelName, $this->calledMethod)->hasError());
+        $this->assertFalse(ModelBuilder::build($this->config, $this->model, $this->calledMethod, [
+            'MockRequiredParam' => 42
+        ])->hasError());
     }
 
 
@@ -94,7 +95,9 @@ class ModelBuilderTest extends TestCase
      */
     public function testGetBody()
     {
-        $array = ModelBuilder::build($this->config, $this->model, $this->calledMethod)->getBody();
+        $array = ModelBuilder::build($this->config, $this->model, $this->calledMethod, [
+            'MockRequiredParam' => 42
+        ])->getBody();
 
         $this->assertArrayHasKey('apiKey', $array);
         $this->assertArrayHasKey('modelName', $array);

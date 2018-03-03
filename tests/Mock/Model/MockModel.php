@@ -23,18 +23,24 @@ use NP\Model\Model;
 class MockModel extends Model
 {
 
+
     /**
      * Method "mockModelMethod" - Tracking documents statusOnly for testing.
      *
      * @ActionParam(
-     *     name = "MockParam",
+     *     name = "MockRequiredParam",
      *     required = true,
+     *     description = "Mock parameter for testing"
+     * )
+     *
+     * @ActionParam(
+     *     name = "MockParam",
      *     description = "Mock parameter for testing"
      * )
      *
      * @return Model
      */
-    public function mockModelMethodAction(): Model
+    function mockModelMethodAction(): Model
     {
         return $this;
     }

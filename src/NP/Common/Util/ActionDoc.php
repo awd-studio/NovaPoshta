@@ -88,7 +88,7 @@ class ActionDoc
     protected function parseAction(string $tag): array
     {
         $output = [];
-        $pattern = "/(?:@{$tag}\((?P<{$tag}>[\s\w\*\=\"\,\|\/]+)\))/u";
+        $pattern = "/(?:@{$tag}\((?P<{$tag}>[\s\w\-*=\",|\/`'^*_+@!$%?]+)\))/u";
         preg_match_all($pattern, $this->docBlock, $matches, PREG_PATTERN_ORDER);
 
         if ($matchesBlocks = $matches[$tag]) {

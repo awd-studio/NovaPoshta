@@ -73,12 +73,11 @@ class ModelBuilder implements ModelBuilderInterface
                 $params = (new ActionDoc($reflectionMethod))->getAnnotation('ActionParam');
 
                 // Create model
-                /* @var Model $model */
+                /* @var Model $reflectionModel */
                 $reflectionModel = $reflectionMethod->invoke(new $modelClass($data, $params));
 
                 // Set properties
                 $modelBuilder->apiKey = $config->getKey();
-                // $modelBuilder->modelName = ($modelClass);
                 $modelBuilder->modelName = (new \ReflectionClass($modelClass))->getShortName();
                 $modelBuilder->calledMethod = $calledMethod;
                 $modelBuilder->methodProperties = $reflectionModel->getMethodProperties();
