@@ -31,12 +31,12 @@ class TrackingDocument extends Model implements TrackingDocumentsInterface
     /**
      * Set Documents to method properties.
      *
-     * @param array $data
+     * @param object $data
      * @throws ErrorException
      */
-    public function setDocumentsToMethodProperties(array $data)
+    public function setDocumentsToMethodProperties($data)
     {
-        $this->setMethodProperty('Documents', (new TrackList($data))->getAllTracks());
+        $this->setMethodProperty('Documents', (new TrackList((array) $data))->getAllTracks());
     }
 
 
