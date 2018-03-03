@@ -168,10 +168,8 @@ interface AddressInterface
      * @link https://devcenter.novaposhta.ua/docs/services/556d7ccaa0fe4f08e8f7ce43/operations/556d885da0fe4f08e8f7ce46
      *
      * @return Model
-     *
-     * ToDo: Implement the method
      */
-    // public function getCitiesAction(array $options = []);
+    public function getCitiesAction(array $options = []);
 
 
     /**

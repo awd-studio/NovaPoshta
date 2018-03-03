@@ -49,4 +49,37 @@ class Address extends Model implements AddressInterface
     {
         return $this;
     }
+
+
+    /**
+     * Method "getCities" - Get cities.
+     *
+     * @param array $options
+     *
+     * @ActionParam(
+     *     name = "Ref",
+     *     filters = "type=string|maxlen=36",
+     *     description = "City REF"
+     * )
+     *
+     * @ActionParam(
+     *     name = "Page",
+     *     filters = "type=int",
+     *     description = "Page number"
+     * )
+     *
+     * @ActionParam(
+     *     name = "FindByString",
+     *     filters = "type=string",
+     *     description = "Find city by string"
+     * )
+     *
+     * @link https://devcenter.novaposhta.ua/docs/services/556d7ccaa0fe4f08e8f7ce43/operations/556d885da0fe4f08e8f7ce46
+     *
+     * @return Model
+     */
+    public function getCitiesAction(array $options = [])
+    {
+        return $this;
+    }
 }
