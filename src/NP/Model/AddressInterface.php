@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * This file is part of NovaPoshta PHP library.
