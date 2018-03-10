@@ -15,7 +15,7 @@ namespace NP;
 
 use NP\Common\Config;
 use NP\Common\Task\TaskManager;
-use NP\Http\Response;
+use NP\Http\ResponseInterface;
 use NP\Model\Model;
 use NP\Model\ModelBuilder;
 
@@ -91,9 +91,9 @@ final class NP
      *
      * @param mixed $id Task Id.
      *
-     * @return Response
+     * @return ResponseInterface
      */
-    public function send($id = null): Response
+    public function send($id = null): ResponseInterface
     {
         return $this->execute($id)->getResponse($id);
     }
@@ -106,9 +106,9 @@ final class NP
      * @param string $calledMethod Model method.
      * @param array  $data         Data to send.
      *
-     * @return Response
+     * @return ResponseInterface
      */
-    public function sendWith(string $modelName, string $calledMethod, array $data = []): Response
+    public function sendWith(string $modelName, string $calledMethod, array $data = []): ResponseInterface
     {
         $this->with($modelName, $calledMethod, $data);
 

@@ -33,6 +33,7 @@ class ResponseTest extends TestCase
 
     /**
      * Settings up.
+     *
      * @throws \NP\Exception\ErrorException
      */
     public function setUp()
@@ -55,6 +56,7 @@ class ResponseTest extends TestCase
 
     /**
      * @covers \NP\Http\Response::getRaw
+     *
      * @throws \NP\Exception\ErrorException
      */
     public function testGetRaw()
@@ -66,6 +68,7 @@ class ResponseTest extends TestCase
 
     /**
      * @covers \NP\Http\Response::getData
+     *
      * @throws \NP\Exception\ErrorException
      */
     public function testGetData()
@@ -76,10 +79,36 @@ class ResponseTest extends TestCase
 
     /**
      * @covers \NP\Http\Response::__toString
+     *
      * @throws \NP\Exception\ErrorException
      */
     public function test__toString()
     {
         $this->assertEquals(AssetsResponse::json(), $this->instance->__toString());
+    }
+
+
+    /**
+     * @covers \NP\Http\Response::isSuccess
+     *
+     * @throws \NP\Exception\ErrorException
+     */
+    public function testIsSuccess()
+    {
+        $this->assertTrue($this->instance->isSuccess());
+
+        $failedResponse = new Response(AssetsResponse::json('failed'));
+        $this->assertFalse($failedResponse->isSuccess());
+    }
+
+
+    /**
+     * @covers \NP\Http\Response::get
+     */
+    public function testGet()
+    {
+        foreach ((array) $this->instance->getData() as $k => $value) {
+            $this->assertEquals($value, $this->instance->get($k));
+        }
     }
 }

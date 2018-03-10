@@ -19,6 +19,7 @@ use NP\Common\Util\Collection;
 use NP\Exception\Error;
 use NP\Http\Request;
 use NP\Http\Response;
+use NP\Http\ResponseInterface;
 use NP\Model\ModelBuilderInterface;
 
 
@@ -99,7 +100,7 @@ class TaskManager extends Collection
      *
      * @param null $id
      *
-     * @return Response|null
+     * @return ResponseInterface|null
      */
     public function getResponse($id = null)
     {

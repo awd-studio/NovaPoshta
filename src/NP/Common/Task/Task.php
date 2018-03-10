@@ -18,6 +18,7 @@ use NP\Common\Config;
 use NP\Exception\ErrorException;
 use NP\Http\Request;
 use NP\Http\Response;
+use NP\Http\ResponseInterface;
 
 
 /**
@@ -79,9 +80,9 @@ class Task implements TaskInterface
     /**
      * Set response.
      *
-     * @param Response $response
+     * @param ResponseInterface $response
      */
-    public function setResponse(Response $response)
+    public function setResponse(ResponseInterface $response)
     {
         $this->response = $response;
     }
@@ -90,7 +91,7 @@ class Task implements TaskInterface
     /**
      * Get task response.
      *
-     * @return Response|null
+     * @return ResponseInterface|null
      */
     public function getResponse()
     {

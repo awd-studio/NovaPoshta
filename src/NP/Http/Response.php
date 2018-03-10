@@ -21,13 +21,18 @@ namespace NP\Http;
  *
  * @package NP\Http
  */
-class Response
+class Response implements ResponseInterface
 {
 
     /**
-     * @var string - Raw server data.
+     * @var string Raw server data.
      */
     private $response;
+
+    /**
+     * @var object Decoded data.
+     */
+    private $data;
 
 
     /**
@@ -38,6 +43,7 @@ class Response
     public function __construct(string $response)
     {
         $this->response = $response;
+        $this->data = $this->getData();
     }
 
 
@@ -46,7 +52,7 @@ class Response
      *
      * @return string
      */
-    public function getRaw()
+    public function getRaw(): string
     {
         return $this->response;
     }
@@ -69,5 +75,29 @@ class Response
     public function __toString()
     {
         return $this->getRaw();
+    }
+
+
+    /**
+     * Get response status.
+     *
+     * @return bool
+     */
+    public function isSuccess(): bool
+    {
+        return (isset($this->data->success) && $this->data->success);
+    }
+
+
+    /**
+     * Get response property.
+     *
+     * @param string $name
+     *
+     * @return mixed
+     */
+    public function get(string $name)
+    {
+        return isset($this->data->{$name}) ? $this->data->{$name} : null;
     }
 }
