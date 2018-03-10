@@ -11,6 +11,7 @@
 
 namespace NP\Test\Common;
 
+use NP\Mock\Common\MockConfig;
 use NP\Common\Config;
 use NP\Exception\Error;
 use NP\Http\DriverInterface;
@@ -108,5 +109,44 @@ class ConfigTest extends TestCase
     public function testGetLanguage()
     {
         $this->assertRegExp('/Uk|Ru/', $this->instance->getLanguage());
+    }
+
+
+    /**
+     * @covers \NP\Common\Config::isGuzzle
+     */
+    public function testIsGuzzle()
+    {
+        $this->assertEquals(class_exists(\GuzzleHttp\Client::class), $this->instance->isGuzzle());
+    }
+
+
+    /**
+     * @covers \NP\Common\Config::isCurl
+     */
+    public function testIsCurl()
+    {
+        $this->assertEquals(function_exists('curl_init'), $this->instance->isCurl());
+    }
+
+
+    /**
+     * @covers \NP\Common\Config::setUp
+     * @covers \NP\Common\Config::setDefaultDriver
+     * @covers \NP\Common\Config::getErrors
+     */
+    public function testSetDefaultDriver()
+    {
+        $ignoredDriverCurl = ['CurlDriver'];
+        $config = new MockConfig($this->key, $ignoredDriverCurl);
+        $this->assertArrayNotHasKey(0, $config->getErrors());
+
+        $ignoredDriverGuzzle = ['GuzzleDriver'];
+        $config = new MockConfig($this->key, $ignoredDriverGuzzle);
+        $this->assertArrayNotHasKey(1, $config->getErrors());
+
+        $ignoredDriverBoth = ['GuzzleDriver', 'CurlDriver'];
+        $config = new MockConfig($this->key, $ignoredDriverBoth);
+        $this->assertArrayNotHasKey(1, $config->getErrors());
     }
 }

@@ -125,21 +125,38 @@ class Config
 
     /**
      * Get default HTTP driver.
-     *
-     * ToDo: Refactor;
-     * ToDo: Make test-friendly & testable at all;
      */
     private function setDefaultDriver()
     {
-        try {
+        if ($this->isGuzzle()) {
             $this->driver = new GuzzleDriver();
-        } catch (\Exception $exception) {
-            try {
-                $this->driver = new CurlDriver();
-            } catch (\Exception $exception) {
-                $this->errors[] = new Error('There are no installed "Guzzle" library or "php_curl" extension!');
-            }
+        } elseif ($this->isCurl()) {
+            $this->driver = new CurlDriver();
+        } else {
+            $this->errors[] = new Error('There are no installed "Guzzle" library or "php_curl" extension!');
         }
+    }
+
+
+    /**
+     * Check Guzzle availability.
+     *
+     * @return bool
+     */
+    public function isGuzzle(): bool
+    {
+        return class_exists(\GuzzleHttp\Client::class);
+    }
+
+
+    /**
+     * Check CURL availability.
+     *
+     * @return bool
+     */
+    public function isCurl(): bool
+    {
+        return function_exists('curl_init');
     }
 
 
