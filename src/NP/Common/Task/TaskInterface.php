@@ -15,7 +15,7 @@ declare(strict_types=1); // strict mode
 namespace NP\Common\Task;
 
 use NP\Http\Request;
-use NP\Http\Response;
+use NP\Http\ResponseInterface;
 
 
 /**
@@ -42,7 +42,7 @@ interface TaskInterface
     /**
      * Get task response.
      *
-     * @return Response|null
+     * @return ResponseInterface|null
      */
     public function getResponse();
 }
