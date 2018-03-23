@@ -1,5 +1,3 @@
-
-<h6 align="right">(alpha version)</h6>
 <h1 align="center">Powerful & Simple NovaPoshta API SDK for PHP</h1>
 
 <p align="center">Fast and easy, integrate your PHP apps with <a href="https://devcenter.novaposhta.ua/docs/services/">official API</a>.</p>
@@ -61,15 +59,10 @@ Via [Composer](https://getcomposer.org/)
 composer require awd-studio/novaposhta
 ```
 
-Or add a dependency on **awd-studio/novaposhta** to your project’s composer.json file:
-```json
-{
-    "require": {
-        "awd-studio/novaposhta": "*"
-    }
-}
+## Uninstall
+```bash
+composer remove awd-studio/novaposhta
 ```
-
 
 ## Usage:
 
@@ -86,10 +79,6 @@ $response = $np->send();
 
 // Or more simple:
 $response = $np->sendWith('modelName', 'methodName', $data);
-
-
-// Some frequently used methods has more simple usage:
-$response = NPStat::track('key', ['01234567890123', '01234567890124']);
 ```
 
 [See details.](https://devcenter.novaposhta.ua/docs/services/55702570a0fe4f0cf4fc53ed) All methods implements.
