@@ -11,24 +11,21 @@
          processIsolation="false"
          stopOnFailure="false"
          forceCoversAnnotation="true">
-    <title>NovaPoshta</title>
 
     <testsuites>
         <testsuite name="NovaPoshta Test Suite">
-            <directory>./tests/</directory>
+            <directory>./tests/NovaPoshta/</directory>
         </testsuite>
     </testsuites>
 
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">./src/</directory>
+            <directory suffix=".php">./src/NovaPoshta/</directory>
         </whitelist>
     </filter>
 
     <logging>
         <log type="junit" target="build/report.junit.xml"/>
-        <log type="coverage-html" target="build/coverage" charset="UTF-8" yui="true" highlight="true"/>
-        <log type="coverage-text" target="build/coverage.txt"/>
         <log type="coverage-clover" target="build/logs/clover.xml"/>
     </logging>
 </phpunit>

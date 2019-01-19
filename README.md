@@ -1,15 +1,14 @@
-<h1 align="center">Powerful & Simple NovaPoshta API SDK for PHP</h1>
+<h1 align="center">NovaPoshta API SDK for PHP</h1>
 
-<p align="center">Fast and easy, integrate your PHP apps with <a href="https://devcenter.novaposhta.ua/docs/services/">official API</a>.</p>
+<p align="center">PHP-library to work with the <a href="https://devcenter.novaposhta.ua/docs/services/">NovaPoshta API v2</a>.</p>
 
 <p align="center">
-<a href="https://travis-ci.org/awd-studio/NovaPoshta" title="Build Status"><img src="https://travis-ci.org/awd-studio/NovaPoshta.svg?branch=master" alt="Build Status" /></a>
+<a href="https://travis-ci.org/awd-studio/NovaPoshta" title="Build Status"><img src="https://travis-ci.org/awd-studio/NovaPoshta.svg?branch=dev" alt="Build Status" /></a>
 <a href="https://coveralls.io/github/awd-studio/NovaPoshta" title="Coverage Status"><img src="https://coveralls.io/repos/github/awd-studio/NovaPoshta/badge.svg" alt="Coverage Status" /></a>
 <a href="https://packagist.org/packages/awd-studio/NovaPoshta" title="Latest Stable Version"><img src="https://poser.pugx.org/awd-studio/NovaPoshta/v/stable" alt="Latest Stable Version" /></a>
 <a href="https://packagist.org/packages/awd-studio/NovaPoshta" title="Total Downloads"><img src="https://poser.pugx.org/awd-studio/NovaPoshta/downloads" alt="Total Downloads" /></a>
-<a href="https://github.com/awd-studio/NovaPoshta/blob/master/LICENSE" title="License"><img src="https://poser.pugx.org/awd-studio/NovaPoshta/license" alt="License" /></a>
+<a href="https://github.com/awd-studio/NovaPoshta/blob/dev/LICENSE" title="License"><img src="https://poser.pugx.org/awd-studio/NovaPoshta/license" alt="License" /></a>
 </p>
-
 
 ### About Nova Poshta company:
 
@@ -32,53 +31,85 @@ Nova Poshta puts into your service:
 
 *[More information](https://novaposhta.ua/en/o_kompanii/nova_poshta_sogodni).*
 
-
-### Very simple usage (see more examples below):
-```php
-<?php
-
-use NP\NP;
-
-$response = NP::init($key)->sendWith('Address', 'searchSettlements', [
-    'StreetName'    => 'Шев',
-    'SettlementRef' => 'e715719e-4b33-11e4-ab6d-005056801329',
-    'Limit'         => 10,
-]);
-```
-
-## Requirements
-- PHP 7+
-- [Composer](https://getcomposer.org) package manager
-- [API token](https://devcenter.novaposhta.ua/blog/%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD%D0%B8%D0%B5-api-%D0%BA%D0%BB%D1%8E%D1%87%D0%B0)
-- [Guzzle](https://github.com/guzzle/guzzle) or [PHP_CURL](http://php.net/manual/book.curl.php) libraries for sending HTTP-requests *(optional - you can define custom HTTP-driver)*
-
-
-## Install
-Via [Composer](https://getcomposer.org/)
+### Install:
 ```bash
-composer require awd-studio/novaposhta
+composer require 'awd-studio/novaposhta:^2.0@dev'
 ```
 
-## Uninstall
+### Uninstall:
 ```bash
 composer remove awd-studio/novaposhta
 ```
 
-## Usage:
+## Requirements
+- PHP 7.2+
+- [Composer](https://getcomposer.org) package manager
+- [API token](https://devcenter.novaposhta.ua/blog/%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD%D0%B8%D0%B5-api-%D0%BA%D0%BB%D1%8E%D1%87%D0%B0)
+- [PHP_CURL](http://php.net/manual/book.curl.php) library for sending HTTP-requests *(you can define your custom HTTP-driver as well)*
 
+### Usage:
+
+#### POST request:
 ```php
 <?php
 
-use NP\NP;
+use \AwdStudio\NovaPoshta\Config;
+use \AwdStudio\NovaPoshta\Http\CurlRequestFactory;
+use \AwdStudio\NovaPoshta\Method\Address\SearchSettlements;
+use \AwdStudio\NovaPoshta\Serialization\JsonSerializer;
 
-$np = NP::init(['key' => 'yourApiKey', 'driver' => $yourDriver]);
+// Set up
+$apiKey = '[MY_API_KEY]';
+$config = Config::create($apiKey);
 
-// Simple usage methods:
-$np->with('modelName', 'methodName', $data);
-$response = $np->send();
+// Create needle method
+$cityName = 'київ';
+$limit = 5;
+$method = new SearchSettlements();
+$method->setCityName($cityName);
+$method->setLimit($limit);
 
-// Or more simple:
-$response = $np->sendWith('modelName', 'methodName', $data);
+// Serialization
+$serializer = new JsonSerializer();
+
+// Request
+$requestFactory = new CurlRequestFactory();
+$requestFactory->setConfig($config);
+$requestFactory->setMethod($method);
+$requestFactory->setSerializer($serializer);
+$request = $requestFactory->build();
+
+// Execute request
+$responseData = $request->execute();
+
+// Deserialize response
+$response = $serializer->deserialize($responseData);
 ```
 
-[See details.](https://devcenter.novaposhta.ua/docs/services/55702570a0fe4f0cf4fc53ed) All methods implements.
+#### GET request:
+```php
+<?php
+
+use \AwdStudio\NovaPoshta\Config;
+use \AwdStudio\NovaPoshta\Http\CurlRequestFactory;
+use \AwdStudio\NovaPoshta\Method\Orders\PrintDocument;
+
+// Set up
+$apiKey = '[MY_API_KEY]';
+$config = Config::create($apiKey);
+
+$docRefs = ['20600000002260'];
+$type = 'pdf';
+$method = new PrintDocument();
+$method->setOrders($docRefs);
+$method->setType($type);
+
+// Request
+$requestFactory = new CurlRequestFactory();
+$requestFactory->setConfig($config);
+$requestFactory->setMethod($method);
+$request = $requestFactory->build();
+
+// Response
+$response = $request->execute();
+```

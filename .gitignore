@@ -1,8 +1,4 @@
-# Ignore vendors
-/vendor
-
-# Ignore composer.lock file
+/build/
+/vendor/
 /composer.lock
-
-# Ignore build
-/build
+/phpunit.xml
