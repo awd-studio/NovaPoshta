@@ -1,15 +1,9 @@
 language: php
 
 php:
-  - 7.0
-  - 7.1
   - 7.2
+  - 7.3
   - nightly
-
-# blocklist
-branches:
-  except:
-  - dev
 
 sudo: false
 
@@ -23,11 +17,7 @@ script:
   - php vendor/bin/phpunit -c ./phpunit.xml.dist
 
 matrix:
-  allow_failures:
-    - rust: nightly
   fast_finish: true
-
-script: PHP_VERSION=7.0.1 vendor/bin/phpunit
 
 notifications:
     on_success: never
