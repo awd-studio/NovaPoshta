@@ -79,6 +79,9 @@ $requestFactory->setMethod($method);
 $requestFactory->setSerializer($serializer);
 $request = $requestFactory->build();
 
+// Or, use static factory
+$request = CurlRequestFactory::buildPostRequest($config, $method, $serializer);
+
 // Execute request
 $responseData = $request->execute();
 
@@ -109,6 +112,9 @@ $requestFactory = new CurlRequestFactory();
 $requestFactory->setConfig($config);
 $requestFactory->setMethod($method);
 $request = $requestFactory->build();
+
+// Or, use static factory
+$request = CurlRequestFactory::buildGetRequest($config, $method);
 
 // Response
 $response = $request->execute();

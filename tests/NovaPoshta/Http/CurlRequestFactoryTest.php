@@ -15,10 +15,13 @@ use AwdStudio\NovaPoshta\ConfigInterface;
 use AwdStudio\NovaPoshta\Http\CurlRequestFactory;
 use AwdStudio\NovaPoshta\Http\CurlRequestGet;
 use AwdStudio\NovaPoshta\Http\CurlRequestPost;
+use AwdStudio\NovaPoshta\Http\RequestInterface;
+use AwdStudio\NovaPoshta\Http\RequestInterfacePost;
 use AwdStudio\NovaPoshta\Method\MethodInterface;
 use AwdStudio\NovaPoshta\Serialization\SerializerInterface;
 use AwdStudio\NovaPoshta\Test\Stubs\Method\StubMethodGet;
 use AwdStudio\NovaPoshta\Test\Stubs\Method\StubMethodPost;
+use AwdStudio\NovaPoshta\Test\Stubs\Method\StubMethodUnknown;
 use AwdStudio\NovaPoshta\Test\Stubs\Serialization\StubJsonSerializer;
 use AwdStudio\NovaPoshta\Test\Stubs\StubConfig;
 use PHPUnit\Framework\TestCase;
@@ -42,6 +45,9 @@ class CurlRequestFactoryTest extends TestCase
     /** @var StubMethodPost */
     private $methodPost;
 
+    /** @var StubMethodUnknown */
+    private $methodUnknown;
+
     /** @var SerializerInterface */
     private $serializer;
 
@@ -56,6 +62,7 @@ class CurlRequestFactoryTest extends TestCase
         $this->config = new StubConfig();
         $this->methodGet = new StubMethodGet();
         $this->methodPost = new StubMethodPost();
+        $this->methodUnknown = new StubMethodUnknown();
         $this->serializer = new StubJsonSerializer();
     }
 
@@ -100,47 +107,6 @@ class CurlRequestFactoryTest extends TestCase
         $this->assertInstanceOf(CurlRequestFactory::class, $instance);
     }
 
-    /**
-     * @covers \AwdStudio\NovaPoshta\Http\CurlRequestFactory::generateQuery
-     */
-    public function testGenerateQuery()
-    {
-        $params = StubMethodGet::QUERY_PARAMETERS;
-        $data = $this->instance->generateQuery($params);
-
-        $this->assertInstanceOf(\Generator::class, $data);
-    }
-
-    /**
-     * @covers \AwdStudio\NovaPoshta\Http\CurlRequestFactory::generateQuery
-     * @covers \AwdStudio\NovaPoshta\Http\CurlRequestFactory::buildGetQuery
-     */
-    public function testBuildGetQuery()
-    {
-        $this->instance->setMethod($this->methodGet);
-        $data = $this->instance->buildGetQuery($this->methodGet);
-
-        $this->assertIsString($data);
-    }
-
-    /**
-     * @covers \AwdStudio\NovaPoshta\Http\CurlRequestFactory::buildPostData
-     */
-    public function testBuildPostData()
-    {
-        $this->instance->setConfig($this->config);
-        $this->instance->setMethod($this->methodGet);
-        $this->instance->setSerializer($this->serializer);
-        $data = $this->instance->buildPostData($this->methodPost);
-
-        $props = ['modelName', 'calledMethod', 'methodProperties', 'apiKey'];
-
-        $this->assertIsObject($data);
-        foreach ($props as $prop) {
-            $this->assertObjectHasAttribute($prop, $data);
-        }
-    }
-
     public function buildDataProviderInvalid()
     {
         return [
@@ -182,6 +148,19 @@ class CurlRequestFactoryTest extends TestCase
     }
 
     /**
+     * @covers \AwdStudio\NovaPoshta\Http\CurlRequestFactory::build
+     * @expectedException \AwdStudio\NovaPoshta\Exception\RequestException
+     * @throws \AwdStudio\NovaPoshta\Exception\RequestException
+     */
+    public function testBuildWrongMethod()
+    {
+        $this->instance->setConfig($this->config);
+        $this->instance->setMethod($this->methodUnknown);
+
+        $this->instance->build();
+    }
+
+    /**
      * @covers       \AwdStudio\NovaPoshta\Http\CurlRequestFactory::build
      * @dataProvider buildDataProvider
      * @param \AwdStudio\NovaPoshta\Method\MethodInterface $method
@@ -198,5 +177,27 @@ class CurlRequestFactoryTest extends TestCase
         $data = $this->instance->build();
 
         $this->assertInstanceOf($type, $data);
+    }
+
+    /**
+     * @covers \AwdStudio\NovaPoshta\Http\CurlRequestFactory::buildPostRequest
+     * @throws \AwdStudio\NovaPoshta\Exception\RequestException
+     */
+    public function testBuildPostRequest()
+    {
+        $instance = CurlRequestFactory::buildPostRequest($this->config, $this->methodPost, $this->serializer);
+
+        $this->assertInstanceOf(RequestInterfacePost::class, $instance);
+    }
+
+    /**
+     * @covers \AwdStudio\NovaPoshta\Http\CurlRequestFactory::buildGetRequest
+     * @throws \AwdStudio\NovaPoshta\Exception\RequestException
+     */
+    public function testBuildGetRequest()
+    {
+        $instance = CurlRequestFactory::buildGetRequest($this->config, $this->methodGet);
+
+        $this->assertInstanceOf(RequestInterface::class, $instance);
     }
 }
