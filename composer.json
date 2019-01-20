@@ -41,8 +41,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "AwdStudio\\NovaPoshta\\Test\\": "tests/NovaPoshta",
-            "AwdStudio\\NovaPoshta\\Mock\\": "tests/Mock"
+            "AwdStudio\\NovaPoshta\\Test\\": "tests/NovaPoshta"
         }
     },
     "scripts": {
