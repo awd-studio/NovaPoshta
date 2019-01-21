@@ -13,13 +13,13 @@ declare(strict_types=1); // strict mode
 
 namespace AwdStudio\NovaPoshta\Test\Stubs\Http;
 
-use AwdStudio\NovaPoshta\Http\RequestInterface;
+use AwdStudio\NovaPoshta\Http\RequestGetInterface;
 
 /**
  * Stub Class GetRequest
  * @package AwdStudio\NovaPoshta\Test\Stubs\Http
  */
-class StubCurlRequestGet implements RequestInterface
+class StubCurlRequestGet implements RequestGetInterface
 {
     /** @var string */
     const TEST_URL = 'http://testapi.novaposhta.ua/';
@@ -54,9 +54,9 @@ class StubCurlRequestGet implements RequestInterface
      *
      * @param array|null $headers
      *
-     * @return \AwdStudio\NovaPoshta\Http\RequestInterface
+     * @return \AwdStudio\NovaPoshta\Http\RequestGetInterface
      */
-    public function setHeaders(?array $headers = null): RequestInterface
+    public function setHeaders(?array $headers = null): RequestGetInterface
     {
         return $this;
     }
@@ -66,9 +66,9 @@ class StubCurlRequestGet implements RequestInterface
      *
      * @param string $url
      *
-     * @return \AwdStudio\NovaPoshta\Http\RequestInterface
+     * @return \AwdStudio\NovaPoshta\Http\RequestGetInterface
      */
-    public function setUrl(string $url): RequestInterface
+    public function setUrl(string $url): RequestGetInterface
     {
         return $this;
     }

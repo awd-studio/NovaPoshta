@@ -28,7 +28,7 @@ class JsonSerializerTest extends TestCase
     private $data;
 
     /** @var object */
-    private $jsonHeaders = ['Content-Type' => 'application/json'];
+    private $jsonHeaders = ['Content-Type: application/json'];
 
     /**
      * Settings up.

@@ -13,20 +13,20 @@ declare(strict_types=1); // strict mode
 
 namespace AwdStudio\NovaPoshta\Test\Stubs\Http;
 
-use AwdStudio\NovaPoshta\Http\RequestInterfacePost;
-use AwdStudio\NovaPoshta\Http\RequestInterface;
+use AwdStudio\NovaPoshta\Http\RequestPostInterface;
+use AwdStudio\NovaPoshta\Http\RequestGetInterface;
 
 /**
  * Stub Class to test CurlRequestPost
  * @package AwdStudio\NovaPoshta\Test\Http
  */
-class StubCurlRequestPost implements RequestInterfacePost
+class StubCurlRequestPost implements RequestPostInterface
 {
     /** @var string */
     const TEST_URL = 'http://testapi.novaposhta.ua/';
 
     /** @var array */
-    const TEST_HEADERS = ['Content-Type' => 'application/json'];
+    const TEST_HEADERS = ['Content-Type: application/json'];
 
     /** @var string */
     const TEST_EXCEPTION_MESSAGE = 'Test exception message';
@@ -62,9 +62,9 @@ class StubCurlRequestPost implements RequestInterfacePost
      *
      * @param array|null $headers
      *
-     * @return \AwdStudio\NovaPoshta\Http\RequestInterface
+     * @return \AwdStudio\NovaPoshta\Http\RequestGetInterface
      */
-    public function setHeaders(?array $headers = null): RequestInterface
+    public function setHeaders(?array $headers = null): RequestGetInterface
     {
         return $this;
     }
@@ -74,9 +74,9 @@ class StubCurlRequestPost implements RequestInterfacePost
      *
      * @param string $url
      *
-     * @return \AwdStudio\NovaPoshta\Http\RequestInterface
+     * @return \AwdStudio\NovaPoshta\Http\RequestGetInterface
      */
-    public function setUrl(string $url): RequestInterface
+    public function setUrl(string $url): RequestGetInterface
     {
         return $this;
     }
@@ -86,9 +86,9 @@ class StubCurlRequestPost implements RequestInterfacePost
      *
      * @param string $body
      *
-     * @return \AwdStudio\NovaPoshta\Http\RequestInterfacePost
+     * @return \AwdStudio\NovaPoshta\Http\RequestPostInterface
      */
-    public function setBody(string $body): RequestInterfacePost
+    public function setBody(string $body): RequestPostInterface
     {
         return $this;
     }

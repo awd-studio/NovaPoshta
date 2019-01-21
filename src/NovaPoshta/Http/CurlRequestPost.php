@@ -18,7 +18,7 @@ namespace AwdStudio\NovaPoshta\Http;
  *
  * @package AwdStudio\NovaPoshta\Http
  */
-class CurlRequestPost extends CurlRequestGet implements RequestInterfacePost
+class CurlRequestPost extends CurlRequestGet implements RequestPostInterface
 {
     /** @var string */
     protected $body;
@@ -31,14 +31,15 @@ class CurlRequestPost extends CurlRequestGet implements RequestInterfacePost
      *
      * @param string $body
      *
-     * @return \AwdStudio\NovaPoshta\Http\RequestInterfacePost
+     * @return \AwdStudio\NovaPoshta\Http\RequestPostInterface
      */
-    public function setBody(string $body): RequestInterfacePost
+    public function setBody(string $body): RequestPostInterface
     {
         $this->body = $body;
 
         return $this;
     }
+
     /**
      * Checks if the request is valid.
      *
@@ -50,21 +51,31 @@ class CurlRequestPost extends CurlRequestGet implements RequestInterfacePost
     {
         parent::validateRequest();
 
-        $bodyNodDefinedMessage = 'Body is not defined';
-        $this->throwRequestException(empty($this->body), $bodyNodDefinedMessage);
+        $headersNotDefinedMessage = 'Headers are not defined';
+        $this->throwRequestException(empty($this->headers), $headersNotDefinedMessage);
+
+        $bodyNotDefinedMessage = 'Body is not defined';
+        $this->throwRequestException(empty($this->body), $bodyNotDefinedMessage);
     }
 
     /**
-     * Execute request to API and return the request.
-     *
-     * @return string API response
+     * Initialize cURL with default properties.
      *
      * @throws \AwdStudio\NovaPoshta\Exception\RequestException
      */
-    public function handleRequest(): string
+    public function curlInit()
     {
-        curl_setopt($this->chanel, CURLOPT_POSTFIELDS, $this->body);
+        $this->validateRequest();
 
-        return parent::handleRequest();
+        $chanel = curl_init();
+        curl_setopt($chanel, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($chanel, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+        curl_setopt($chanel, CURLOPT_HTTPHEADER, $this->headers);
+        curl_setopt($chanel, CURLOPT_CUSTOMREQUEST, $this->method);
+        curl_setopt($chanel, CURLOPT_URL, $this->url);
+        curl_setopt($chanel, CURLOPT_POST, true);
+        curl_setopt($chanel, CURLOPT_POSTFIELDS, $this->body);
+
+        return $chanel;
     }
 }

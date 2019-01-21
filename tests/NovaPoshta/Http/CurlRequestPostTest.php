@@ -12,6 +12,7 @@
 namespace AwdStudio\NovaPoshta\Test\Http;
 
 use AwdStudio\NovaPoshta\Http\CurlRequestPost;
+use AwdStudio\NovaPoshta\Http\RequestPostInterface;
 use AwdStudio\NovaPoshta\Test\Stubs\Http\StubCurlRequestPost;
 use PHPUnit\Framework\TestCase;
 
@@ -84,10 +85,67 @@ class CurlRequestPostTest extends TestCase
     {
         $this->instance->setUrl(StubCurlRequestPost::TEST_URL);
         $this->instance->setBody(StubCurlRequestPost::TEST_BODY);
+        $this->instance->setHeaders(StubCurlRequestPost::TEST_HEADERS);
 
         $data = $this->instance->execute();
 
         $this->assertIsString($data);
+    }
+
+    /**
+     * Data provider to test cURL initialization.
+     *
+     * @return array
+     * @throws \AwdStudio\NovaPoshta\Exception\RequestException
+     */
+    public function curlInitExceptionDataProvider()
+    {
+        /** @var RequestPostInterface $withoutUrl */
+        $withoutUrl = (new CurlRequestPost())
+            ->setBody(StubCurlRequestPost::TEST_BODY)
+            ->setHeaders(StubCurlRequestPost::TEST_HEADERS);
+
+        /** @var RequestPostInterface $withoutBody */
+        $withoutBody = (new CurlRequestPost())
+            ->setHeaders(StubCurlRequestPost::TEST_HEADERS)
+            ->setUrl(StubCurlRequestPost::TEST_URL);
+
+        /** @var RequestPostInterface $withoutHeaders */
+        $withoutHeaders = (new CurlRequestPost())
+            ->setBody(StubCurlRequestPost::TEST_BODY)
+            ->setUrl(StubCurlRequestPost::TEST_URL);
+
+        return [
+            [$withoutUrl],
+            [$withoutBody],
+            [$withoutHeaders],
+        ];
+    }
+
+    /**
+     * @covers       \AwdStudio\NovaPoshta\Http\CurlRequestPost::curlInit
+     * @expectedException \AwdStudio\NovaPoshta\Exception\RequestException
+     * @dataProvider curlInitExceptionDataProvider
+     * @param \AwdStudio\NovaPoshta\Http\CurlRequestPost $instance
+     * @throws \AwdStudio\NovaPoshta\Exception\RequestException
+     */
+    public function testCurlInitException(CurlRequestPost $instance)
+    {
+        $instance->curlInit();
+    }
+
+    /**
+     * @covers \AwdStudio\NovaPoshta\Http\CurlRequestPost::curlInit
+     * @throws \AwdStudio\NovaPoshta\Exception\RequestException
+     */
+    public function testCurlInit()
+    {
+        $this->instance->setUrl(StubCurlRequestPost::TEST_URL);
+        $this->instance->setBody(StubCurlRequestPost::TEST_BODY);
+        $this->instance->setHeaders(StubCurlRequestPost::TEST_HEADERS);
+        $data = $this->instance->curlInit();
+
+        $this->assertNotNull($data);
     }
 
 }

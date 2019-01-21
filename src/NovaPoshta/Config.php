@@ -25,7 +25,7 @@ use AwdStudio\NovaPoshta\Exception\NoApiKeyException;
 class Config implements ConfigInterface
 {
     /** @var string API entry point */
-    private $apiEntry = 'https://api.novaposhta.ua/v2.0';
+    private $apiEntry = 'https://api.novaposhta.ua/v2.0/';
 
     /** @var string API key */
     private $apiKey;

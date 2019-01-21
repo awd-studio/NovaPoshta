@@ -51,7 +51,7 @@ class JsonSerializer implements SerializerInterface
      */
     public static function headers(): array
     {
-        return ['Content-Type' => 'application/json'];
+        return ['Content-Type: application/json'];
     }
 
     /**

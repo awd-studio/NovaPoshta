@@ -12,7 +12,7 @@
 namespace AwdStudio\NovaPoshta\Test\Http;
 
 use AwdStudio\NovaPoshta\Http\CurlRequestGet;
-use AwdStudio\NovaPoshta\Http\RequestInterface;
+use AwdStudio\NovaPoshta\Http\RequestGetInterface;
 use AwdStudio\NovaPoshta\Test\Stubs\Http\StubCurlRequestGet;
 use PHPUnit\Framework\TestCase;
 
@@ -57,7 +57,7 @@ class CurlRequestGetTest extends TestCase
      */
     public function testThrowRequestException()
     {
-        $this->instance->throwRequestException(true, self::TEST_EXCEPTION_MESSAGE);
+        $this->instance->throwRequestException(true, StubCurlRequestGet::TEST_EXCEPTION_MESSAGE);
     }
 
     /**
@@ -67,7 +67,7 @@ class CurlRequestGetTest extends TestCase
     {
         $instance = $this->instance->setUrl(StubCurlRequestGet::TEST_URL);
 
-        $this->assertInstanceOf(RequestInterface::class, $instance);
+        $this->assertInstanceOf(RequestGetInterface::class, $instance);
     }
 
     /**
@@ -77,7 +77,7 @@ class CurlRequestGetTest extends TestCase
     {
         $instance = $this->instance->setHeaders(StubCurlRequestGet::TEST_HEADERS);
 
-        $this->assertInstanceOf(RequestInterface::class, $instance);
+        $this->assertInstanceOf(RequestGetInterface::class, $instance);
     }
 
     /**
@@ -105,6 +105,27 @@ class CurlRequestGetTest extends TestCase
     }
 
     /**
+     * @covers \AwdStudio\NovaPoshta\Http\CurlRequestGet::curlInit
+     * @expectedException \AwdStudio\NovaPoshta\Exception\RequestException
+     */
+    public function testCurlInitException()
+    {
+        $this->instance->curlInit();
+    }
+
+    /**
+     * @covers \AwdStudio\NovaPoshta\Http\CurlRequestGet::curlInit
+     * @throws \AwdStudio\NovaPoshta\Exception\RequestException
+     */
+    public function testCurlInit()
+    {
+        $this->instance->setUrl(StubCurlRequestGet::TEST_URL);
+        $data = $this->instance->curlInit();
+
+        $this->assertNotNull($data);
+    }
+
+    /**
      * @covers \AwdStudio\NovaPoshta\Http\CurlRequestGet::validateRequest
      * @covers \AwdStudio\NovaPoshta\Http\CurlRequestGet::handleRequest
      * @covers \AwdStudio\NovaPoshta\Http\CurlRequestGet::execute
@@ -124,8 +145,8 @@ class CurlRequestGetTest extends TestCase
      */
     public function testCheckErrors()
     {
-        $this->instance->checkErrors(0);
-        $this->instance->checkErrors(1);
+        $this->instance->checkErrors(0, 'Test message');
+        $this->instance->checkErrors(1, 'Test message');
     }
 
 }

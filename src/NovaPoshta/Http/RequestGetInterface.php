@@ -13,14 +13,14 @@ declare(strict_types=1); // strict mode
 
 namespace AwdStudio\NovaPoshta\Http;
 
-interface RequestInterface
+interface RequestGetInterface
 {
     /**
      * Set up request with headers.
      *
      * @param array|null $headers
      *
-     * @return \AwdStudio\NovaPoshta\Http\RequestInterface
+     * @return \AwdStudio\NovaPoshta\Http\RequestGetInterface
      */
     public function setHeaders(?array $headers = null): self;
 
@@ -29,7 +29,7 @@ interface RequestInterface
      *
      * @param string $url
      *
-     * @return \AwdStudio\NovaPoshta\Http\RequestInterface
+     * @return \AwdStudio\NovaPoshta\Http\RequestGetInterface
      */
     public function setUrl(string $url): self;
 

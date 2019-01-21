@@ -12,13 +12,14 @@
 namespace AwdStudio\NovaPoshta\Test\Http;
 
 use AwdStudio\NovaPoshta\ConfigInterface;
-use AwdStudio\NovaPoshta\Http\CurlRequestFactory;
+use AwdStudio\NovaPoshta\Http\RequestFactory;
 use AwdStudio\NovaPoshta\Http\CurlRequestGet;
 use AwdStudio\NovaPoshta\Http\CurlRequestPost;
-use AwdStudio\NovaPoshta\Http\RequestInterface;
-use AwdStudio\NovaPoshta\Http\RequestInterfacePost;
+use AwdStudio\NovaPoshta\Http\RequestGetInterface;
+use AwdStudio\NovaPoshta\Http\RequestPostInterface;
 use AwdStudio\NovaPoshta\Method\MethodInterface;
 use AwdStudio\NovaPoshta\Serialization\SerializerInterface;
+use AwdStudio\NovaPoshta\Test\Stubs\Http\StubCurlRequestPost;
 use AwdStudio\NovaPoshta\Test\Stubs\Method\StubMethodGet;
 use AwdStudio\NovaPoshta\Test\Stubs\Method\StubMethodPost;
 use AwdStudio\NovaPoshta\Test\Stubs\Method\StubMethodUnknown;
@@ -26,13 +27,13 @@ use AwdStudio\NovaPoshta\Test\Stubs\Serialization\StubJsonSerializer;
 use AwdStudio\NovaPoshta\Test\Stubs\StubConfig;
 use PHPUnit\Framework\TestCase;
 
-class CurlRequestFactoryTest extends TestCase
+class RequestFactoryTest extends TestCase
 {
 
     /**
      * Instance.
      *
-     * @var CurlRequestFactory
+     * @var RequestFactory
      */
     private $instance;
 
@@ -53,12 +54,13 @@ class CurlRequestFactoryTest extends TestCase
 
     /**
      * Settings up.
+     * @throws \AwdStudio\NovaPoshta\Exception\RequestException
      */
     public function setUp()
     {
         parent::setUp();
 
-        $this->instance = new CurlRequestFactory();
+        $this->instance = new RequestFactory();
         $this->config = new StubConfig();
         $this->methodGet = new StubMethodGet();
         $this->methodPost = new StubMethodPost();
@@ -67,7 +69,7 @@ class CurlRequestFactoryTest extends TestCase
     }
 
     /**
-     * @covers \AwdStudio\NovaPoshta\Http\CurlRequestFactory::throwRequestException
+     * @covers \AwdStudio\NovaPoshta\Http\RequestFactory::throwRequestException
      * @expectedException \AwdStudio\NovaPoshta\Exception\RequestException
      * @expectedExceptionMessage Test message
      */
@@ -78,33 +80,63 @@ class CurlRequestFactoryTest extends TestCase
     }
 
     /**
-     * @covers \AwdStudio\NovaPoshta\Http\CurlRequestFactory::setMethod
+     * @covers \AwdStudio\NovaPoshta\Http\RequestFactory::__construct
+     */
+    public function testConstructor()
+    {
+        $instance = new RequestFactory();
+
+        $this->assertInstanceOf(RequestFactory::class, $instance);
+    }
+
+    /**
+     * @covers \AwdStudio\NovaPoshta\Http\RequestFactory::setMethod
      */
     public function testSetMethod()
     {
         $instance = $this->instance->setMethod($this->methodPost);
 
-        $this->assertInstanceOf(CurlRequestFactory::class, $instance);
+        $this->assertInstanceOf(RequestFactory::class, $instance);
     }
 
     /**
-     * @covers \AwdStudio\NovaPoshta\Http\CurlRequestFactory::setSerializer
+     * @covers \AwdStudio\NovaPoshta\Http\RequestFactory::setSerializer
      */
     public function testSetSerializer()
     {
         $instance = $this->instance->setSerializer($this->serializer);
 
-        $this->assertInstanceOf(CurlRequestFactory::class, $instance);
+        $this->assertInstanceOf(RequestFactory::class, $instance);
     }
 
     /**
-     * @covers \AwdStudio\NovaPoshta\Http\CurlRequestFactory::setConfig
+     * @covers \AwdStudio\NovaPoshta\Http\RequestFactory::setGetHttpDriver
+     */
+    public function testSetGetHttpDriver()
+    {
+        $instance = $this->instance->setGetHttpDriver(StubCurlRequestPost::class);
+
+        $this->assertInstanceOf(RequestFactory::class, $instance);
+    }
+
+    /**
+     * @covers \AwdStudio\NovaPoshta\Http\RequestFactory::setPostHttpDriver
+     */
+    public function testSetPostHttpDriver()
+    {
+        $instance = $this->instance->setPostHttpDriver(StubCurlRequestPost::class);
+
+        $this->assertInstanceOf(RequestFactory::class, $instance);
+    }
+
+    /**
+     * @covers \AwdStudio\NovaPoshta\Http\RequestFactory::setConfig
      */
     public function testSetConfig()
     {
         $instance = $this->instance->setConfig($this->config);
 
-        $this->assertInstanceOf(CurlRequestFactory::class, $instance);
+        $this->assertInstanceOf(RequestFactory::class, $instance);
     }
 
     public function buildDataProviderInvalid()
@@ -119,7 +151,7 @@ class CurlRequestFactoryTest extends TestCase
     }
 
     /**
-     * @covers       \AwdStudio\NovaPoshta\Http\CurlRequestFactory::build
+     * @covers       \AwdStudio\NovaPoshta\Http\RequestFactory::build
      * @expectedException \AwdStudio\NovaPoshta\Exception\RequestException
      * @dataProvider buildDataProviderInvalid
      * @param \AwdStudio\NovaPoshta\ConfigInterface|null $config
@@ -148,7 +180,7 @@ class CurlRequestFactoryTest extends TestCase
     }
 
     /**
-     * @covers \AwdStudio\NovaPoshta\Http\CurlRequestFactory::build
+     * @covers \AwdStudio\NovaPoshta\Http\RequestFactory::build
      * @expectedException \AwdStudio\NovaPoshta\Exception\RequestException
      * @throws \AwdStudio\NovaPoshta\Exception\RequestException
      */
@@ -161,7 +193,9 @@ class CurlRequestFactoryTest extends TestCase
     }
 
     /**
-     * @covers       \AwdStudio\NovaPoshta\Http\CurlRequestFactory::build
+     * @covers       \AwdStudio\NovaPoshta\Http\RequestFactory::build
+     * @covers       \AwdStudio\NovaPoshta\Http\RequestFactory::buildGetRequest
+     * @covers       \AwdStudio\NovaPoshta\Http\RequestFactory::buildPostRequest
      * @dataProvider buildDataProvider
      * @param \AwdStudio\NovaPoshta\Method\MethodInterface $method
      * @param \AwdStudio\NovaPoshta\Serialization\SerializerInterface|null $serializer
@@ -180,24 +214,24 @@ class CurlRequestFactoryTest extends TestCase
     }
 
     /**
-     * @covers \AwdStudio\NovaPoshta\Http\CurlRequestFactory::buildPostRequest
+     * @covers \AwdStudio\NovaPoshta\Http\RequestFactory::createPostRequest
      * @throws \AwdStudio\NovaPoshta\Exception\RequestException
      */
-    public function testBuildPostRequest()
+    public function testCreatePostRequest()
     {
-        $instance = CurlRequestFactory::buildPostRequest($this->config, $this->methodPost, $this->serializer);
+        $instance = RequestFactory::createPostRequest($this->config, $this->methodPost, $this->serializer);
 
-        $this->assertInstanceOf(RequestInterfacePost::class, $instance);
+        $this->assertInstanceOf(RequestPostInterface::class, $instance);
     }
 
     /**
-     * @covers \AwdStudio\NovaPoshta\Http\CurlRequestFactory::buildGetRequest
+     * @covers \AwdStudio\NovaPoshta\Http\RequestFactory::createGetRequest
      * @throws \AwdStudio\NovaPoshta\Exception\RequestException
      */
-    public function testBuildGetRequest()
+    public function testCreateGetRequest()
     {
-        $instance = CurlRequestFactory::buildGetRequest($this->config, $this->methodGet);
+        $instance = RequestFactory::createGetRequest($this->config, $this->methodGet);
 
-        $this->assertInstanceOf(RequestInterface::class, $instance);
+        $this->assertInstanceOf(RequestGetInterface::class, $instance);
     }
 }

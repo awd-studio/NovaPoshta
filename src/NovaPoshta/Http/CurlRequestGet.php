@@ -19,16 +19,13 @@ use AwdStudio\NovaPoshta\Exception\RequestException;
  * Base Request
  * @package AwdStudio\NovaPoshta\Http
  */
-class CurlRequestGet implements RequestInterface
+class CurlRequestGet implements RequestGetInterface
 {
     /** @var string */
     protected $url;
 
     /** @var array */
     protected $headers = [];
-
-    /** @var resource|false */
-    protected $chanel;
 
     /** @var string */
     protected $method = 'GET';
@@ -40,7 +37,6 @@ class CurlRequestGet implements RequestInterface
     public function __construct()
     {
         $this->tryCurl();
-        $this->curlInit();
     }
 
     /**
@@ -71,24 +67,13 @@ class CurlRequestGet implements RequestInterface
     }
 
     /**
-     * Initialize cURL with default properties.
-     */
-    public function curlInit()
-    {
-        $this->chanel = curl_init();
-        curl_setopt($this->chanel, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($this->chanel, CURLOPT_HTTP_VERSION, $this->method);
-        curl_setopt($this->chanel, CURLOPT_CUSTOMREQUEST, CURL_HTTP_VERSION_1_1);
-    }
-
-    /**
      * Set up request with headers.
      *
      * @param array|null $headers
      *
-     * @return \AwdStudio\NovaPoshta\Http\RequestInterface
+     * @return \AwdStudio\NovaPoshta\Http\RequestGetInterface
      */
-    public function setHeaders(?array $headers = null): RequestInterface
+    public function setHeaders(?array $headers = null): RequestGetInterface
     {
         $this->headers = $headers;
 
@@ -100,9 +85,9 @@ class CurlRequestGet implements RequestInterface
      *
      * @param string $url
      *
-     * @return \AwdStudio\NovaPoshta\Http\RequestInterface
+     * @return \AwdStudio\NovaPoshta\Http\RequestGetInterface
      */
-    public function setUrl(string $url): RequestInterface
+    public function setUrl(string $url): RequestGetInterface
     {
         $this->url = $url;
 
@@ -110,17 +95,38 @@ class CurlRequestGet implements RequestInterface
     }
 
     /**
+     * Initialize cURL with default properties.
+     *
+     * @throws \AwdStudio\NovaPoshta\Exception\RequestException
+     */
+    public function curlInit()
+    {
+        $this->validateRequest();
+
+        $chanel = curl_init();
+        curl_setopt($chanel, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($chanel, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+        curl_setopt($chanel, CURLOPT_CUSTOMREQUEST, $this->method);
+        curl_setopt($chanel, CURLOPT_URL, $this->url);
+        curl_setopt($chanel, CURLOPT_HTTPHEADER, $this->headers);
+
+        return $chanel;
+    }
+
+    /**
      * Check request errors.
      *
      * @param int $errorCode
+     * @param string $errorMessage
      *
      * @return void
+     *
      * @throws \AwdStudio\NovaPoshta\Exception\RequestException
      */
-    public function checkErrors(int $errorCode): void
+    public function checkErrors(int $errorCode, string $errorMessage): void
     {
         if ($errorCode !== 0) {
-            $message = sprintf("cURL Error #%d: %s", $errorCode, curl_error($this->chanel));
+            $message = sprintf("cURL Error #%d: %s", $errorCode, $errorMessage);
             $this->throwRequestException(true, $message);
         }
     }
@@ -134,8 +140,8 @@ class CurlRequestGet implements RequestInterface
      */
     public function validateRequest()
     {
-        $urlNodDefinedMessage = 'URL is not defined';
-        $this->throwRequestException(empty($this->url), $urlNodDefinedMessage);
+        $urlNotDefinedMessage = 'URL is not defined';
+        $this->throwRequestException(empty($this->url), $urlNotDefinedMessage);
 
         $notValidUrlMessage = sprintf('URL "%s" is not valid', $this->url);
         $this->throwRequestException(filter_var($this->url, FILTER_VALIDATE_URL) === false, $notValidUrlMessage);
@@ -150,12 +156,10 @@ class CurlRequestGet implements RequestInterface
      */
     public function handleRequest(): string
     {
-        curl_setopt($this->chanel, CURLOPT_URL, $this->url);
-        curl_setopt($this->chanel, CURLOPT_HTTPHEADER, $this->headers);
-
-        $response = curl_exec($this->chanel);
-        $this->checkErrors(curl_errno($this->chanel));
-        curl_close($this->chanel);
+        $chanel = $this->curlInit();
+        $response = curl_exec($chanel);
+        $this->checkErrors(curl_errno($chanel), curl_error($chanel));
+        curl_close($chanel);
 
         return (string)$response;
     }
@@ -169,8 +173,6 @@ class CurlRequestGet implements RequestInterface
      */
     public function execute(): string
     {
-        $this->validateRequest();
-
         return $this->handleRequest();
     }
 }

@@ -13,14 +13,14 @@ declare(strict_types=1); // strict mode
 
 namespace AwdStudio\NovaPoshta\Http;
 
-interface RequestInterfacePost extends RequestInterface
+interface RequestPostInterface extends RequestGetInterface
 {
     /**
      * Set requested body data.
      *
      * @param string $body
      *
-     * @return \AwdStudio\NovaPoshta\Http\RequestInterfacePost
+     * @return \AwdStudio\NovaPoshta\Http\RequestPostInterface
      */
     public function setBody(string $body): self;
 }

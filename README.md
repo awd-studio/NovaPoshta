@@ -54,7 +54,7 @@ composer remove awd-studio/novaposhta
 <?php
 
 use \AwdStudio\NovaPoshta\Config;
-use \AwdStudio\NovaPoshta\Http\CurlRequestFactory;
+use \AwdStudio\NovaPoshta\Http\RequestFactory;
 use \AwdStudio\NovaPoshta\Method\Address\SearchSettlements;
 use \AwdStudio\NovaPoshta\Serialization\JsonSerializer;
 
@@ -66,21 +66,14 @@ $config = Config::create($apiKey);
 $cityName = 'київ';
 $limit = 5;
 $method = new SearchSettlements();
-$method->setCityName($cityName);
-$method->setLimit($limit);
+$method->setCityName($cityName)
+       ->setLimit($limit);
 
 // Serialization
 $serializer = new JsonSerializer();
 
-// Request
-$requestFactory = new CurlRequestFactory();
-$requestFactory->setConfig($config);
-$requestFactory->setMethod($method);
-$requestFactory->setSerializer($serializer);
-$request = $requestFactory->build();
-
-// Or, use static factory
-$request = CurlRequestFactory::buildPostRequest($config, $method, $serializer);
+// Use static factory
+$request = RequestFactory::createPostRequest($config, $method, $serializer);
 
 // Execute request
 $responseData = $request->execute();
@@ -94,7 +87,7 @@ $response = $serializer->deserialize($responseData);
 <?php
 
 use \AwdStudio\NovaPoshta\Config;
-use \AwdStudio\NovaPoshta\Http\CurlRequestFactory;
+use \AwdStudio\NovaPoshta\Http\RequestFactory;
 use \AwdStudio\NovaPoshta\Method\Orders\PrintDocument;
 
 // Set up
@@ -104,17 +97,58 @@ $config = Config::create($apiKey);
 $docRefs = ['20600000002260'];
 $type = 'pdf';
 $method = new PrintDocument();
-$method->setOrders($docRefs);
-$method->setType($type);
+$method->setOrders($docRefs)
+       ->setType($type);
 
 // Request
-$requestFactory = new CurlRequestFactory();
-$requestFactory->setConfig($config);
-$requestFactory->setMethod($method);
+$requestFactory = new RequestFactory();
+$requestFactory->setConfig($config)
+               ->setMethod($method);
+
 $request = $requestFactory->build();
 
 // Or, use static factory
-$request = CurlRequestFactory::buildGetRequest($config, $method);
+$request = RequestFactory::createGetRequest($config, $method);
+
+// Response
+$response = $request->execute();
+```
+
+### Use custom HTTP-drivers and dynamic factory
+```php
+<?php
+
+use \AwdStudio\NovaPoshta\Config;
+use \AwdStudio\NovaPoshta\Entity\DocumentNumber;
+use \AwdStudio\NovaPoshta\Http\RequestFactory;
+use \AwdStudio\NovaPoshta\Method\TrackingDocument\GetStatusDocument;
+use \AwdStudio\NovaPoshta\Serialization\JsonSerializer;
+
+// Set up
+$apiKey = '[MY_API_KEY]';
+$config = Config::create($apiKey);
+
+// Create a document number to use
+$documentNumber = '20600000002260';
+$documents = new DocumentNumber();
+$documents->setDocumentNumber($documentNumber);
+
+// Create needle method
+$method = new GetStatusDocument();
+$method->setDocuments([$documents]);
+
+// Serialization
+$serializer = new JsonSerializer();
+
+// Or register custom HTTP driver
+$requestFactory = new RequestFactory();
+$requestFactory->setGetHttpDriver(MyOwnGetHttpDriver::class)
+               ->setPostHttpDriver(MyOwnPostHttpDriver::class)
+               ->setConfig($config)
+               ->setMethod($method)
+               ->setSerializer($serializer);
+
+$request = $requestFactory->build();
 
 // Response
 $response = $request->execute();
