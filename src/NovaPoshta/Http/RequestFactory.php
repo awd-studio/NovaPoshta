@@ -243,7 +243,7 @@ final class RequestFactory
 
         /** @var \AwdStudio\NovaPoshta\Http\RequestPostInterface $request */
         $request = new $this->postHttpDriver();
-        $request->setBody($this->serializer->serialize($postData));
+        $request->setBody($this->serializer->serialize($postData->getPostData()));
         $request->setUrl($this->buildPostUrl());
         $request->setHeaders($this->serializer::headers());
 
