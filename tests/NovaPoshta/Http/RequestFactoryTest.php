@@ -171,14 +171,6 @@ class RequestFactoryTest extends TestCase
         $this->instance->build();
     }
 
-    public function buildDataProvider()
-    {
-        return [
-            [new StubMethodGet(), null, CurlRequestGet::class],
-            [new StubMethodPost(), new StubJsonSerializer(), CurlRequestPost::class],
-        ];
-    }
-
     /**
      * @covers \AwdStudio\NovaPoshta\Http\RequestFactory::build
      * @expectedException \AwdStudio\NovaPoshta\Exception\RequestException
@@ -192,14 +184,29 @@ class RequestFactoryTest extends TestCase
         $this->instance->build();
     }
 
+    public function buildDataProvider()
+    {
+        return [
+            [new StubMethodGet(), null, CurlRequestGet::class],
+            [new StubMethodPost(), new StubJsonSerializer(), CurlRequestPost::class],
+        ];
+    }
+
     /**
-     * @covers       \AwdStudio\NovaPoshta\Http\RequestFactory::build
-     * @covers       \AwdStudio\NovaPoshta\Http\RequestFactory::buildGetRequest
-     * @covers       \AwdStudio\NovaPoshta\Http\RequestFactory::buildPostRequest
      * @dataProvider buildDataProvider
+     *
+     * @covers       \AwdStudio\NovaPoshta\Http\RequestFactory::build
+     * @covers       \AwdStudio\NovaPoshta\Http\RequestFactory::validateGetRequest
+     * @covers       \AwdStudio\NovaPoshta\Http\RequestFactory::buildGetUrl
+     * @covers       \AwdStudio\NovaPoshta\Http\RequestFactory::buildGetRequest
+     * @covers       \AwdStudio\NovaPoshta\Http\RequestFactory::validatePostRequest
+     * @covers       \AwdStudio\NovaPoshta\Http\RequestFactory::buildPostUrl
+     * @covers       \AwdStudio\NovaPoshta\Http\RequestFactory::buildPostRequest
+     *
      * @param \AwdStudio\NovaPoshta\Method\MethodInterface $method
      * @param \AwdStudio\NovaPoshta\Serialization\SerializerInterface|null $serializer
      * @param string $type
+     *
      * @throws \AwdStudio\NovaPoshta\Exception\RequestException
      */
     public function testBuild(MethodInterface $method, ?SerializerInterface $serializer, string $type)

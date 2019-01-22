@@ -15,7 +15,7 @@ namespace AwdStudio\NovaPoshta\Http;
 
 use AwdStudio\NovaPoshta\ConfigInterface;
 use AwdStudio\NovaPoshta\Entity\GetQuery;
-use AwdStudio\NovaPoshta\Entity\PostData;
+use AwdStudio\NovaPoshta\Entity\PostDataFactory;
 use AwdStudio\NovaPoshta\Exception\RequestException;
 use AwdStudio\NovaPoshta\Method\MethodGetInterface;
 use AwdStudio\NovaPoshta\Method\MethodInterface;
@@ -27,7 +27,7 @@ use AwdStudio\NovaPoshta\Serialization\SerializerInterface;
  *
  * @package AwdStudio\NovaPoshta\Http
  */
-class RequestFactory
+final class RequestFactory
 {
     /** @var \AwdStudio\NovaPoshta\ConfigInterface */
     private $config;
@@ -169,22 +169,62 @@ class RequestFactory
     }
 
     /**
+     * Validate GET request before create.
+     *
+     * @throws \AwdStudio\NovaPoshta\Exception\RequestException
+     */
+    private function validateGetRequest(): void
+    {
+        $this->throwRequestException($this->config === null, 'No configuration defined!');
+        $this->throwRequestException($this->method === null, 'No API method defined!');
+    }
+
+    /**
+     * Validate POST request before create.
+     *
+     * @throws \AwdStudio\NovaPoshta\Exception\RequestException
+     */
+    private function validatePostRequest(): void
+    {
+        $this->throwRequestException($this->config === null, 'No configuration defined!');
+        $this->throwRequestException($this->method === null, 'No API method defined!');
+        $this->throwRequestException($this->serializer === null, 'No serializer defined!');
+    }
+
+    /**
+     * @param \AwdStudio\NovaPoshta\Entity\GetQuery $query
+     * @return string
+     */
+    private function buildGetUrl(GetQuery $query): string
+    {
+        return $this->config->getApiEntry() . $query->buildQuery() . '/';
+    }
+
+    /**
+     * Build the URL for the POST request.
+     *
+     * @return string
+     */
+    private function buildPostUrl(): string
+    {
+        return $this->config->getApiEntry() . $this->serializer::format() . '/';
+    }
+
+    /**
      * Build get request.
      *
      * @return \AwdStudio\NovaPoshta\Http\RequestGetInterface
      * @throws \AwdStudio\NovaPoshta\Exception\RequestException
      */
-    protected function buildGetRequest(): RequestGetInterface
+    private function buildGetRequest(): RequestGetInterface
     {
-        $this->throwRequestException(!$this->config instanceof ConfigInterface, 'No configuration defined!');
-        $this->throwRequestException(!$this->method instanceof MethodGetInterface, 'No API method defined!');
+        $this->validateGetRequest();
 
         $query = new GetQuery($this->method);
-        $url = $this->config->getApiEntry() . $query->buildQuery();
 
         /** @var \AwdStudio\NovaPoshta\Http\RequestGetInterface $request */
         $request = new $this->getHttpDriver();
-        $request->setUrl($url);
+        $request->setUrl($this->buildGetUrl($query));
 
         return $request;
     }
@@ -195,26 +235,16 @@ class RequestFactory
      * @return \AwdStudio\NovaPoshta\Http\RequestPostInterface
      * @throws \AwdStudio\NovaPoshta\Exception\RequestException
      */
-    protected function buildPostRequest(): RequestPostInterface
+    private function buildPostRequest(): RequestPostInterface
     {
-        $this->throwRequestException(!$this->config instanceof ConfigInterface, 'No configuration defined!');
-        $this->throwRequestException(!$this->method instanceof MethodPostInterface, 'No API method defined!');
-        $this->throwRequestException(!$this->serializer instanceof SerializerInterface, 'No serializer defined!');
+        $this->validatePostRequest();
 
-        $url = $this->config->getApiEntry() . $this->serializer::format() . '/';
-
-        $postData = new PostData();
-        $postData->setModelName($this->method->getModelName());
-        $postData->setCalledMethod($this->method->getCalledMethod());
-        $postData->setMethodProperties($this->method->getMethodProperties());
-        $postData->setApiKey($this->config->getApiKey());
-
-        $body = $this->serializer->serialize($postData->getPostData());
+        $postData = PostDataFactory::create($this->config, $this->method);
 
         /** @var \AwdStudio\NovaPoshta\Http\RequestPostInterface $request */
         $request = new $this->postHttpDriver();
-        $request->setBody($body);
-        $request->setUrl($url);
+        $request->setBody($this->serializer->serialize($postData));
+        $request->setUrl($this->buildPostUrl());
         $request->setHeaders($this->serializer::headers());
 
         return $request;
