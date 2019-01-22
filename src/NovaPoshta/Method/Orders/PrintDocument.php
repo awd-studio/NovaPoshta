@@ -48,16 +48,6 @@ class PrintDocument extends Orders implements MethodGetInterface, PrintDocumentI
     }
 
     /**
-     * Get HTTP method.
-     *
-     * @return string
-     */
-    public function getHttpMethod(): string
-    {
-        return 'GET';
-    }
-
-    /**
      * Get the name of method.
      *
      * @return string

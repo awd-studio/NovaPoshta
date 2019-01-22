@@ -39,9 +39,6 @@ class StubMethodGet implements MethodGetInterface
     /** @var string */
     const MODEL_NAME = 'stubModelGet';
 
-    /** @var string */
-    const HTTP_METHOD = 'GET';
-
     /**
      * Get query parameters to use for request building.
      *
@@ -50,16 +47,6 @@ class StubMethodGet implements MethodGetInterface
     public function getQueryParameters(): array
     {
         return self::QUERY_PARAMETERS;
-    }
-
-    /**
-     * Get HTTP method.
-     *
-     * @return string
-     */
-    public function getHttpMethod(): string
-    {
-        return self::HTTP_METHOD;
     }
 
     /**

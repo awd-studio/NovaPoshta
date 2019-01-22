@@ -18,13 +18,6 @@ use AwdStudio\NovaPoshta\Model\ModelInterface;
 interface MethodInterface extends ModelInterface
 {
     /**
-     * Get HTTP method.
-     *
-     * @return string
-     */
-    public function getHttpMethod(): string;
-
-    /**
      * Get the name of method.
      *
      * @return string

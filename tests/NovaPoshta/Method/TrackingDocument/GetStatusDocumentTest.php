@@ -62,16 +62,6 @@ class GetStatusDocumentTest extends TestCase
     }
 
     /**
-     * @covers \AwdStudio\NovaPoshta\Method\TrackingDocument\GetStatusDocument::getHttpMethod
-     */
-    public function testGetHttpMethod()
-    {
-        $data = $this->instance->getHttpMethod();
-
-        $this->assertEquals('POST', $data);
-    }
-
-    /**
      * @covers \AwdStudio\NovaPoshta\Method\TrackingDocument\GetStatusDocument::getMethodProperties
      */
     public function testGetMethodProperties()

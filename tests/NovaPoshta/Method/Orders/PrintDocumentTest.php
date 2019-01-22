@@ -87,16 +87,6 @@ class PrintDocumentTest extends TestCase
     }
 
     /**
-     * @covers \AwdStudio\NovaPoshta\Method\Orders\PrintDocument::getHttpMethod
-     */
-    public function testGetHttpMethod()
-    {
-        $data = $this->instance->getHttpMethod();
-
-        $this->assertEquals('GET', $data);
-    }
-
-    /**
      * @covers \AwdStudio\NovaPoshta\Method\Orders\PrintDocument::getQueryParameters
      */
     public function testGetQueryParameters()

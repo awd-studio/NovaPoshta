@@ -31,9 +31,6 @@ class StubMethodUnknown implements MethodInterface
     /** @var string */
     const MODEL_NAME = 'stubModelUnknown';
 
-    /** @var string */
-    const HTTP_METHOD = 'UNKNOWN';
-
     /**
      * Get query parameters to use for request building.
      *
@@ -42,16 +39,6 @@ class StubMethodUnknown implements MethodInterface
     public function getQueryParameters(): array
     {
         return self::QUERY_PARAMETERS;
-    }
-
-    /**
-     * Get HTTP method.
-     *
-     * @return string
-     */
-    public function getHttpMethod(): string
-    {
-        return self::HTTP_METHOD;
     }
 
     /**

@@ -29,21 +29,8 @@ class StubMethodPost implements MethodPostInterface
     /** @var string */
     const MODEL_NAME = 'stubModelPost';
 
-    /** @var string */
-    const HTTP_METHOD = 'POST';
-
     /** @var array */
     const PROPERTIES = [];
-
-    /**
-     * Get HTTP method.
-     *
-     * @return string
-     */
-    public function getHttpMethod(): string
-    {
-        return self::HTTP_METHOD;
-    }
 
     /**
      * Get the name of method.

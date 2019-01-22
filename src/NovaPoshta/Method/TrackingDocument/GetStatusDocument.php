@@ -30,16 +30,6 @@ class GetStatusDocument extends TrackingDocument implements GetStatusDocumentsIn
     private $properties;
 
     /**
-     * Get HTTP method.
-     *
-     * @return string
-     */
-    public function getHttpMethod(): string
-    {
-        return 'POST';
-    }
-
-    /**
      * Get the name of method.
      *
      * @return string

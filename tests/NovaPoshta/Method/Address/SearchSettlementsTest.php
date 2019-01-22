@@ -77,16 +77,6 @@ class SearchSettlementsTest extends TestCase
     }
 
     /**
-     * @covers \AwdStudio\NovaPoshta\Method\Address\SearchSettlements::getHttpMethod
-     */
-    public function testGetHttpMethod()
-    {
-        $method = $this->instance->getHttpMethod();
-
-        $this->assertEquals('POST', $method);
-    }
-
-    /**
      * @covers \AwdStudio\NovaPoshta\Method\Address\SearchSettlements::getCalledMethod
      */
     public function testGetCalledMethod()

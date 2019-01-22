@@ -29,16 +29,6 @@ class SearchSettlements extends Address implements SearchSettlementsInterface, M
     private $properties = [];
 
     /**
-     * Get HTTP method.
-     *
-     * @return string
-     */
-    public function getHttpMethod(): string
-    {
-        return 'POST';
-    }
-
-    /**
      * Get the name of method.
      *
      * @return string
