@@ -101,10 +101,6 @@ $method->setOrders($docRefs)
        ->setType($type);
 
 // Request
-$requestFactory = new RequestFactory();
-$requestFactory->setConfig($config)
-               ->setMethod($method);
-
 $request = $requestFactory->build();
 
 // Or, use static factory
