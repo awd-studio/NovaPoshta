@@ -13,6 +13,8 @@ declare(strict_types=1); // strict mode
 
 namespace AwdStudio\NovaPoshta\Serialization;
 
+use AwdStudio\NovaPoshta\Exception\JsonException;
+
 /**
  * JsonSerializer implements serialization layer to use with JSON format of API.
  *
@@ -28,7 +30,7 @@ class JsonSerializer implements SerializerInterface
      *   - 'json' for JSON format,
      *
      * Read about supported formats in developer documentation:
-     * @link https://devcenter.novaposhta.ua/
+     * @link   https://devcenter.novaposhta.ua/
      *
      * @return string
      */
@@ -45,7 +47,7 @@ class JsonSerializer implements SerializerInterface
      *   - ['Content-Type' => 'application/json'] for JSON format,
      *
      * Read about supported formats in developer documentation:
-     * @link https://devcenter.novaposhta.ua/
+     * @link   https://devcenter.novaposhta.ua/
      *
      * @return array
      */
@@ -63,18 +65,32 @@ class JsonSerializer implements SerializerInterface
      */
     public function serializeHandler($data)
     {
-        return json_encode($data);
+        $json = \json_encode($data);
+        if (JSON_ERROR_NONE !== json_last_error()) {
+            throw new JsonException(
+                sprintf('JSON decoding error: %s', json_last_error_msg())
+            );
+        }
+        return $json;
     }
 
     /**
      * Handle the deserialization.
      *
      * @param string $data
+     *
      * @return mixed
      */
     public function deserializeHandler(string $data)
     {
-        return json_decode($data);
+        $data = \json_decode($data);
+        if (JSON_ERROR_NONE !== json_last_error()) {
+            throw new JsonException(
+                sprintf('JSON encoding error: %s', json_last_error_msg())
+            );
+        }
+
+        return $data;
     }
 
     /**

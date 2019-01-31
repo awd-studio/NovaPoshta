@@ -63,18 +63,55 @@ class JsonSerializerTest extends TestCase
 
     /**
      * @covers \AwdStudio\NovaPoshta\Serialization\JsonSerializer::serialize
-     * @covers \AwdStudio\NovaPoshta\Serialization\JsonSerializer::serializeHandler
      */
     public function testSerialize()
     {
-        $json = $this->instance->serialize($this->data);
+        $data = $this->instance->serialize($this->data);
 
-        $this->assertJson($json);
+        $this->assertJson($data);
+    }
+
+    /**
+     * @covers \AwdStudio\NovaPoshta\Serialization\JsonSerializer::serializeHandler
+     */
+    public function testSerializeHandler()
+    {
+        $data = $this->instance->serializeHandler(true);
+
+        $this->assertJson($data);
+        $this->assertSame('true', $data);
+    }
+
+    /**
+     * @covers \AwdStudio\NovaPoshta\Serialization\JsonSerializer::serializeHandler
+     * @expectedException \AwdStudio\NovaPoshta\Exception\JsonException
+     */
+    public function testSerializeHandlerException()
+    {
+        $this->instance->serializeHandler("\x99");
+    }
+
+    /**
+     * @covers \AwdStudio\NovaPoshta\Serialization\JsonSerializer::deserializeHandler
+     */
+    public function testDeserializeHandler()
+    {
+        $data = $this->instance->deserializeHandler('true');
+
+        $this->assertTrue($data);
+    }
+
+    /**
+     * @covers \AwdStudio\NovaPoshta\Serialization\JsonSerializer::deserializeHandler
+     * @expectedException \AwdStudio\NovaPoshta\Exception\JsonException
+     */
+    public function testDeserializeHandlerException()
+    {
+        $this->instance->deserializeHandler('{[}');
     }
 
     /**
      * @covers \AwdStudio\NovaPoshta\Serialization\JsonSerializer::deserialize
-     * @covers \AwdStudio\NovaPoshta\Serialization\JsonSerializer::deserializeHandler
      */
     public function testDeserialize()
     {
