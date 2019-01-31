@@ -77,6 +77,16 @@ class PrintDocumentTest extends TestCase
     }
 
     /**
+     * @covers \AwdStudio\NovaPoshta\Method\Orders\PrintDocument::getModelName
+     */
+    public function testGetModelName()
+    {
+        $data = $this->instance->getModelName();
+
+        $this->assertEquals('orders', $data);
+    }
+
+    /**
      * @covers \AwdStudio\NovaPoshta\Method\Orders\PrintDocument::getCalledMethod
      */
     public function testGetCalledMethod()

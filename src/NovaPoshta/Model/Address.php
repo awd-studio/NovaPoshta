@@ -19,7 +19,7 @@ namespace AwdStudio\NovaPoshta\Model;
  * @link https://devcenter.novaposhta.ua/docs/services/556d7ccaa0fe4f08e8f7ce43/operations/58e5ebeceea27017bc851d67
  * @package AwdStudio\NovaPoshta\Model\Address
  */
-class Address implements ModelInterface
+abstract class Address implements ModelInterface
 {
     /**
      * Get the model name.

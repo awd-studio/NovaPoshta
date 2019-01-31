@@ -20,7 +20,7 @@ namespace AwdStudio\NovaPoshta\Model;
  *
  * @package AwdStudio\NovaPoshta\Model
  */
-class Orders implements ModelInterface
+abstract class Orders implements ModelInterface
 {
 
     /**

@@ -52,6 +52,16 @@ class GetStatusDocumentTest extends TestCase
     }
 
     /**
+     * @covers \AwdStudio\NovaPoshta\Method\TrackingDocument\GetStatusDocument::getModelName
+     */
+    public function testGetModelName()
+    {
+        $method = $this->instance->getModelName();
+
+        $this->assertEquals('TrackingDocument', $method);
+    }
+
+    /**
      * @covers \AwdStudio\NovaPoshta\Method\TrackingDocument\GetStatusDocument::getCalledMethod
      */
     public function testGetCalledMethod()

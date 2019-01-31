@@ -77,6 +77,17 @@ class SearchSettlementsTest extends TestCase
     }
 
     /**
+     * @covers \AwdStudio\NovaPoshta\Method\Address\SearchSettlements::getModelName
+     */
+    public function testGetModelName()
+    {
+        $modelName = $this->instance->getModelName();
+
+        $this->assertIsString($modelName);
+        $this->assertEquals('Address', $modelName);
+    }
+
+    /**
      * @covers \AwdStudio\NovaPoshta\Method\Address\SearchSettlements::getCalledMethod
      */
     public function testGetCalledMethod()

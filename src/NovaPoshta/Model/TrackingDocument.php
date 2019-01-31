@@ -19,7 +19,7 @@ namespace AwdStudio\NovaPoshta\Model;
  * @link https://devcenter.novaposhta.ua/docs/services/556eef34a0fe4f02049c664e/operations/55702cbba0fe4f0cf4fc53ee
  * @package AwdStudio\NovaPoshta\Model\TrackingDocument
  */
-class TrackingDocument implements ModelInterface
+abstract class TrackingDocument implements ModelInterface
 {
 
     /**
